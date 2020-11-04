@@ -1,2 +1,2 @@
 # plantbuds-frontend
-hi
+hi plant buds :)
