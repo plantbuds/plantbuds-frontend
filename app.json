@@ -1,0 +1,12 @@
+{
+  "name": "plantbuds",
+  "displayName": "plantbuds",
+  "expo": {
+    "name": "plantbuds",
+    "slug": "plantbuds",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
