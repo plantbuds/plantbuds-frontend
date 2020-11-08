@@ -1,4 +1,4 @@
-import { Notifications } from "expo";
+import * as Notifications from "expo-notifications";
 import * as Permissions from "expo-permissions";
 import { Platform } from "react-native";
 import { storeExpoToken, getExpoToken } from "../utils/AsyncStorage";
