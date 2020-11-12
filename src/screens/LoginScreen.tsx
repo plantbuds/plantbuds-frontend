@@ -1,27 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, Button } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 // declare types for your props here
 interface Props {
   navigation: any;
 }
 
-export default function LandingScreen(props: Props) {
+export default function LoginScreen(props: Props) {
   const { navigation } = props;
 
   return (
     <View style={styles.container}>
-      <Text>Landing page for PlantBuds</Text>
-      <Button
-        title="Signup"
-        onPress={() => navigation.navigate("Login")}
-      />
-      <Button
-        title="login"
-        onPress={() => {
-          navigation.navigate("Signup");
-        }}
-      />
+      <Text>Profile!</Text>
     </View>
   );
 }
