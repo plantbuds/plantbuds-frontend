@@ -34,7 +34,6 @@ export default function HomeScreen(props: Props) {
 
   const { navigation } = props;
   const notificationListener = useRef(null);
-  const isDrawerOpen = useIsDrawerOpen();
 
   return (
     <View style={styles.container}>

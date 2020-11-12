@@ -11,7 +11,7 @@ export default function CalendarScreen(props: Props) {
 
   return (
     <View style={styles.container}>
-      <Text>Signup!</Text>
+      <Text>Calendar!</Text>
     </View>
   );
 }

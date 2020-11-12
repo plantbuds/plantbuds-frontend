@@ -39,6 +39,7 @@ const SidebarAppNavigator = () => {
     <AppDrawer.Navigator drawerContent={props => <Sidebar {...props} />}>
       <AppDrawer.Screen name="Home" component={AppNavigator} />
       <AppDrawer.Screen name="Settings" component={ProfileScreen} />
+      <AppDrawer.Screen name="Calendar" component={CalendarScreen} />
     </AppDrawer.Navigator>
   );
 };
