@@ -1,5 +1,6 @@
 import * as Google from 'expo-google-app-auth';
 
+// Method returns an access token that the backend handles. I've also added a console log to see what the access token looks like. 
 export async function signInWithGoogleAsync() {
   try {
     const result = await Google.logInAsync({
