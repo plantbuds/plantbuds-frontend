@@ -14,12 +14,12 @@ export default function LandingScreen(props: Props) {
       <Text>Landing page for PlantBuds</Text>
       <Button
         title="Signup"
-        onPress={() => navigation.navigate("Login")}
+        onPress={() => navigation.navigate("Signup")}
       />
       <Button
         title="login"
         onPress={() => {
-          navigation.navigate("Signup");
+          navigation.navigate("Login");
         }}
       />
     </View>
