@@ -90,9 +90,17 @@ const styles = StyleSheet.create({
 
   plantPicture: {
     flexDirection: 'row',
+<<<<<<< HEAD
     padding: 10,
+=======
+    padding: '10',
+>>>>>>> bd46f3d (skeleton of the skeleton for homepage)
     borderColor: 'black',
     width: 143,
     height: 170,
   },
+<<<<<<< HEAD
 });
+=======
+});
+>>>>>>> bd46f3d (skeleton of the skeleton for homepage)
