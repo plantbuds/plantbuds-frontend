@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, Vibration } from "react-native";
+import { StyleSheet, Text, View, Vibration, TextInput, Button } from "react-native";
 
 // declare types for your props here
 interface Props {
@@ -11,7 +11,19 @@ export default function SignupScreen(props: Props) {
 
   return (
     <View style={styles.container}>
-      <Text>Signup!</Text>
+      <Text>Signup</Text>
+      <TextInput
+        style={styles.username}
+        defaultValue="Username"
+      />
+      <TextInput
+        style={styles.password}
+        defaultValue="Password"
+      />
+      <Button
+        title="SIGN UP(google auth?)"
+        onPress={() =>signInWithGoogleAsync()}
+      />
     </View>
   );
 }
@@ -19,8 +31,14 @@ export default function SignupScreen(props: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#ECF1E6",
     alignItems: "center",
     justifyContent: "center"
+  },
+  username: {
+
+  },
+  password: {
+
   }
 });
