@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
 
   plantPicture: {
     flexDirection: 'row',
-    padding: '10',
+    padding: 10,
     borderColor: 'black',
     width: 143,
     height: 170,
