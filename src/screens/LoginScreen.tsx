@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, Button } from "react-native";
+import { StyleSheet, Text, View, Button, TextInput } from "react-native";
 import  { signInWithGoogleAsync }  from "../utils/GoogleOAuth";
 // declare types for your props here
 interface Props {
@@ -11,8 +11,16 @@ export default function LoginScreen(props: Props) {
 
   return (
     <View style={styles.container}>
-      <Text>Login!</Text>
-      <Button title="google oauth" onPress={() =>signInWithGoogleAsync()}/>
+      <Text>Login</Text>
+      <TextInput
+        style={styles.username}
+        defaultValue="Username"
+      />
+      <TextInput
+        style={styles.password}
+        defaultValue="Password"
+      />
+      <Button title="Login(google oauth)" onPress={() =>signInWithGoogleAsync()}/>
     </View>
   );
 }
@@ -20,8 +28,14 @@ export default function LoginScreen(props: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#ECF1E6",
     alignItems: "center",
     justifyContent: "center"
+  },
+  username: {
+
+  },
+  password: {
+    
   }
 });
