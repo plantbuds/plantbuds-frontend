@@ -48,7 +48,7 @@ const SidebarAppNavigator = () => {
 
 // RootNavigator to navigate between different stacks
 const RootNavigator = () => {
-  return OnboardingStack();
+  return SidebarAppNavigator();
   // If you want to work on home page flow/profile settings flow just change 'return OnboardingStack();' to 'return SidebarAppNavigator();'
   //TODO finish session reducer to enable switching from login flow to homepage flow
 };
