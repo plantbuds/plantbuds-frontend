@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, Button, TextInput } from "react-native";
 import  { signInWithGoogleAsync }  from "../utils/GoogleOAuth";
+
 // declare types for your props here
 interface Props {
   navigation: any;

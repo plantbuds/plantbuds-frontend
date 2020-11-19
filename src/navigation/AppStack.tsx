@@ -7,6 +7,7 @@ import CalendarScreen from "../screens/CalendarScreen";
 import LandingScreen from "../screens/LandingScreen";
 import SignupScreen from "../screens/SignupScreen";
 import LoginScreen from "../screens/LoginScreen";
+import TestScreen from "../screens/TestScreen";
 import Sidebar from "../components/Sidebar";
 
 // Onboarding stack navigator 
@@ -40,6 +41,7 @@ const SidebarAppNavigator = () => {
       <AppDrawer.Screen name="Home" component={AppNavigator} />
       <AppDrawer.Screen name="Settings" component={ProfileScreen} />
       <AppDrawer.Screen name="Calendar" component={CalendarScreen} />
+      <AppDrawer.Screen name="Test" component={TestScreen}/>
     </AppDrawer.Navigator>
   );
 };
