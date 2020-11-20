@@ -4,13 +4,17 @@ import {
   LOGOUT,
   LOGIN_SUCCESS,
   LOGIN_FAIL,
+  EDIT_PFP,
+  EDIT_PFP_SUCCESS,
+  EDIT_PFP_FAIL,
+  SET_PROFILE_IMAGE,
   LOGIN_REQUEST
 } from "./types";
 
 const initialState: SessionState = {
   loggedIn: false,
-  userId: null
-
+  userId: null,
+  profileURI: null, 
   //TODO
 };
 
@@ -19,10 +23,6 @@ export function sessionReducer(
   action: SessionActionTypes
 ): SessionState {
   switch (action.type) {
-    case LOGIN_REQUEST:
-      return {
-        ...state
-      };
     case LOGIN_SUCCESS:
       return {
         ...state,
@@ -38,8 +38,14 @@ export function sessionReducer(
       return {
         ...state,
         loggedIn: false,
-        userId: null
+        userId: null,
+        profileURI: null,
         //TODO
+      };
+    case SET_PROFILE_IMAGE:
+      return {
+        ...state,
+        profileURI: action.imageURI,
       };
     default:
       return state;

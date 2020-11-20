@@ -1,6 +1,7 @@
 export interface SessionState {
   loggedIn: boolean;
   userId: number;
+  profileURI: string;
   //TODO add more fields for session reducer state
 }
 
@@ -20,6 +21,10 @@ export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_FAIL = "LOGIN_FAIL";
 export const LOGOUT = "LOGOOUT";
 export const CREATE_USER = "CREATE_USER";
+export const SET_PROFILE_IMAGE = "SET_PROFILE_IMAGE";
+export const EDIT_PFP = "EDIT_PFP";
+export const EDIT_PFP_SUCCESS = "EDIT_PFP_SUCCESS";
+export const EDIT_PFP_FAIL = "EDIT_PFP_FAIL";
 
 interface LoginRequestAction {
   type: typeof LOGIN_REQUEST;
@@ -39,8 +44,14 @@ interface LoginFailAction {
   payload: any;
 }
 
+interface SetProfileImageAction {
+  type: typeof SET_PROFILE_IMAGE;
+  imageURI: string;
+}
+
 export type SessionActionTypes =
   | LoginRequestAction
   | LoginSuccessAction
   | LogoutAction
-  | LoginFailAction;
+  | LoginFailAction
+  | SetProfileImageAction;
