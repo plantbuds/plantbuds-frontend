@@ -12,7 +12,7 @@ export default function ProfileScreen(props: Props) {
   return (
     <View style={styles.container}>
       <View style = {styles.button}>
-        <Button title = "Edit" onPress={() => navigation.openDrawer()} />
+        <Button title = "Edit" onPress={() => navigation.navigate("EditProfileScreen")} />
       </View>
 
       <View style ={{flexDirection: 'row'}}>

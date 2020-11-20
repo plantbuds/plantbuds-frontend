@@ -7,6 +7,8 @@ import CalendarScreen from "../screens/CalendarScreen";
 import LandingScreen from "../screens/LandingScreen";
 import SignupScreen from "../screens/SignupScreen";
 import LoginScreen from "../screens/LoginScreen";
+import TestScreen from "../screens/TestScreen";
+import EditProfileScreen from "../screens/EditProfileScreen";
 import Sidebar from "../components/Sidebar";
 
 // Onboarding stack navigator 
@@ -32,14 +34,25 @@ const AppNavigator = () => {
   );
 };
 
+const ProfileStack = createStackNavigator(); 
+const ProfileNavigator = () => {
+  return (
+    <ProfileStack.Navigator headerMode="none" initialRouteName="ProfileScreen">
+      <ProfileStack.Screen name="Profile" component={ProfileScreen} />
+      <ProfileStack.Screen name="EditProfileScreen" component={EditProfileScreen}/>
+    </ProfileStack.Navigator>
+  )
+}
+
 // Sidebar stack navigator
 const AppDrawer = createDrawerNavigator();
 const SidebarAppNavigator = () => {
   return (
     <AppDrawer.Navigator drawerContent={props => <Sidebar {...props} />}>
       <AppDrawer.Screen name="Home" component={AppNavigator} />
-      <AppDrawer.Screen name="Settings" component={ProfileScreen} />
+      <AppDrawer.Screen name="Profile" component={ProfileNavigator} />
       <AppDrawer.Screen name="Calendar" component={CalendarScreen} />
+      <AppDrawer.Screen name="TestScreen" component={TestScreen} />
     </AppDrawer.Navigator>
   );
 };
