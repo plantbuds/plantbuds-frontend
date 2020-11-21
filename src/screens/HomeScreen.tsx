@@ -59,7 +59,8 @@ export default function HomeScreen(props: Props) {
           console.log(notif);
         }
       );
-
+      
+      // Will remove this for mvp. Temporarily gives an array of people to display
       const url = "https://api.randomuser.me/?results=40";
       const response = await fetch(url);
       const data = await response.json();
@@ -92,7 +93,6 @@ export default function HomeScreen(props: Props) {
       behavior={Platform.OS === "ios" ? "padding" : null}
       style={{ flex: 1 }}
     >
-      {/*TouchableWithoutFeedback allows users to press anywhere on the screen to dismiss the keyboard */}
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
           <Searchbar
@@ -169,10 +169,13 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 50,
     marginTop: 20,
-    width: windowWidth * 0.8
+    width: windowWidth * 0.8,
+    height: windowHeight * 0.06,
   },
   searchBarInput: {
-    backgroundColor: "#F2F2F2"
+    backgroundColor: "#F2F2F2",
+    height: windowHeight * 0.05,
+    right: windowWidth * 0.03,
   },
   plantPicture: {
     flexDirection: "row",
