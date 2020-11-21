@@ -40,6 +40,7 @@ const theme = {
 };
 
 export default function HomeScreen(props: Props) {
+  // local state
   const [loading, setLoading] = useState(true);
   const [plants, setPlant] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -72,16 +73,16 @@ export default function HomeScreen(props: Props) {
 
   if (loading) {
     return (
-      <View>
-        <Text>loading...</Text>
+      <View style={styles.container}>
+        <Text>Loading...</Text>
       </View>
     );
   }
 
-  if (!plants) {
+  if (plants.length === 0) {
     return (
       <View>
-        <Text>didn't get a plant</Text>
+        <Text>didn't get plants from backend</Text>
       </View>
     );
   }
@@ -91,6 +92,7 @@ export default function HomeScreen(props: Props) {
       behavior={Platform.OS === "ios" ? "padding" : null}
       style={{ flex: 1 }}
     >
+      {/*TouchableWithoutFeedback allows users to press anywhere on the screen to dismiss the keyboard */}
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
           <Searchbar
@@ -144,6 +146,7 @@ export default function HomeScreen(props: Props) {
   );
 }
 
+// use these values when doing width and height of components or containers to maintain consistent sizing across different iphone screens
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
