@@ -100,14 +100,7 @@ export default function EditProfileScreen(props: Props) {
           <Text style = {styles.inputFontStyleLabelTop}>Username</Text>
           <TextInput
             mode="flat"
-            style={{
-              borderColor: "black",
-              backgroundColor: "#fff",
-              height: 25,
-              width: windowWidth * 0.6,
-              color: "#666666",
-              fontSize: 18
-            }}
+            style={styles.inputFontStyle}
             placeholder="Name"
             underlineColor="#fff"
             value={textName}
