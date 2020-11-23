@@ -19,6 +19,8 @@ import {
   KeyboardAvoidingView
 } from "react-native";
 
+import { FAB } from "react-native-paper";
+
 // declare types for your props here
 interface Props {
   navigation: any;
@@ -59,7 +61,7 @@ export default function HomeScreen(props: Props) {
           console.log(notif);
         }
       );
-      
+
       // Will remove this for mvp. Temporarily gives an array of people to display
       const url = "https://api.randomuser.me/?results=40";
       const response = await fetch(url);
@@ -104,19 +106,6 @@ export default function HomeScreen(props: Props) {
             value={searchQuery}
           />
 
-          <View style={styles.fixToText}>
-            <Button
-              title="Sort"
-              disabled
-              onPress={() => navigation.openDrawer()}
-            />
-            <Button
-              title="Filter"
-              disabled
-              onPress={() => navigation.openDrawer()}
-            />
-          </View>
-
           <FlatList
             numColumns={2}
             columnWrapperStyle={styles.displayWrapper}
@@ -139,7 +128,12 @@ export default function HomeScreen(props: Props) {
               </TouchableHighlight>
             )}
           />
-          <Button title="Sidebar" onPress={() => navigation.openDrawer()} />
+          <FAB
+            style={styles.fab}
+            color="white"
+            icon="plus"
+            onPress={() => alert("Add Plant")}
+          />
         </View>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
@@ -170,12 +164,12 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     marginTop: 20,
     width: windowWidth * 0.8,
-    height: windowHeight * 0.06,
+    height: windowHeight * 0.06
   },
   searchBarInput: {
     backgroundColor: "#F2F2F2",
     height: windowHeight * 0.05,
-    right: windowWidth * 0.03,
+    right: windowWidth * 0.03
   },
   plantPicture: {
     flexDirection: "row",
@@ -195,5 +189,11 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     justifyContent: "space-around"
+  },
+  fab: {
+    backgroundColor: "#CBE4B1",
+    alignSelf: "flex-end",
+    bottom: 30,
+    right: windowWidth * 0.1
   }
 });
