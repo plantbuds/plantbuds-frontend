@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 50,
     marginTop: 20,
-    width: windowWidth * 0.8,
+    width: windowWidth * 0.85,
     height: windowHeight * 0.06
   },
   searchBarInput: {
