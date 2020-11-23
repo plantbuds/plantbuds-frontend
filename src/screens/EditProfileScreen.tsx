@@ -21,8 +21,8 @@ interface Props {
 export default function EditProfileScreen(props: Props) {
   const { navigation } = props;
   const [image, setImage] = useState(null);
-  const [textZone, setTextZone] = React.useState("");
-  const [textName, setTextName] = React.useState("");
+  const [textZone, setTextZone] = useState("");
+  const [textName, setTextName] = useState("");
   const windowWidth = Dimensions.get("window").width;
   const windowHeight = Dimensions.get("window").height;
 
