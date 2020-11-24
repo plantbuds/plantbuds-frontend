@@ -49,10 +49,7 @@ export default function EditProfileScreen(props: Props) {
       setImage(result.uri);
     }
   };
-  //      <Button onPress={() => navigation.navigate("Profile")}>Cancel</Button> <Text>Edit Profile</Text>
-  //<Button onPress={() => navigation.navigate("Profile")}>Done</Button>
-  //    paddingTop: 16,
-  //paddingHorizontal: 16,
+
   return (
     <View style={styles.container}>
       <View style={styles.row}>
