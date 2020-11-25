@@ -17,7 +17,7 @@ export default function PlantProfileScreen(props: Props) {
 
   return (
     <View style={styles.container}>
-      <Button onPress={() => navigation.navigate("EditProfileScreen")}>
+      <Button onPress={() => navigation.navigate("EditPlantProfileScreen")}>
         Edit
       </Button>
       <View style={{ flexDirection: "row" }}>
