@@ -5,8 +5,6 @@ import HomeScreen from "../screens/HomeScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import CalendarScreen from "../screens/CalendarScreen";
 import LandingScreen from "../screens/LandingScreen";
-import SignupScreen from "../screens/SignupScreen";
-import LoginScreen from "../screens/LoginScreen";
 import TestScreen from "../screens/TestScreen";
 import EditProfileScreen from "../screens/EditProfileScreen";
 import EditPlantProfileScreen from "../screens/EditPlantProfileScreen";
@@ -19,8 +17,6 @@ const OnboardingStack = () => {
   return (
     <Stack.Navigator headerMode="none">
       <Stack.Screen name="Landing" component={LandingScreen} />
-      <Stack.Screen name="Login" component={LoginScreen} />
-      <Stack.Screen name="Signup" component={SignupScreen} />
       <Stack.Screen name="Home" component={HomeScreen} />
     </Stack.Navigator>
   );
