@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Platform, StyleSheet, Text, View, Button } from "react-native";
 import * as Permissions from "expo-permissions";
 import * as Calendar from "expo-calendar";
-import { Calendar as ReactCalendar, CalendarList, Agenda } from 'react-native-calendars';
+import { Calendar as ReactCalendar } from "react-native-calendars";
 
 // declare types for your props here
 interface Props {
@@ -11,28 +11,37 @@ interface Props {
 
 export default function CalendarScreen(props: Props) {
   const { navigation } = props;
+  const [selectedDate, setSelectedDate] = useState("");
+
   useEffect(() => {
     (async () => {
       const { status } = await Calendar.requestCalendarPermissionsAsync();
       await Calendar.requestRemindersPermissionsAsync();
-      if (status === 'granted') {
+      if (status === "granted") {
         const calendars = await Calendar.getCalendarsAsync();
-        console.log('Here are all your calendars:');
+        console.log("Here are all your calendars:");
         console.log({ calendars });
       }
     })();
   }, []);
 
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: "#fff",
-        
-      }}
-    >
-      <Text>Calendar Module Example</Text>
-      <ReactCalendar current={'2020-11-20'} onDayPress={(day) => {console.log('selected day', day)}} />
+    <View style={styles.container}>
+      <ReactCalendar
+       onDayPress={(day) => setSelectedDate(day.dateString)}
+       current={new Date().toISOString().split('T')[0]}
+       markedDates={{[selectedDate]: {selected: true, marked: false, selectedColor: '#00adf5'}}}
+       theme={{
+         backgroundColor: '#ffffff',
+         calendarBackground: '#ffffff',
+         textSectionTitleColor: '#b6c1cd',
+         selectedDayTextColor: 'black',
+         todayTextColor: '#00adf5',
+         dayTextColor: 'black',
+         textDisabledColor: '#979797',
+       }}
+      />
+      <Text>{selectedDate}</Text>
       <Button title="Create a new calendar" onPress={createCalendar} />
     </View>
   );
@@ -63,3 +72,10 @@ export default function CalendarScreen(props: Props) {
     console.log(`Your new calendar ID is: ${newCalendarID}`);
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff"
+  }
+});
