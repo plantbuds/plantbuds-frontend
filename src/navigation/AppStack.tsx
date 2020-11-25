@@ -9,13 +9,15 @@ import SignupScreen from "../screens/SignupScreen";
 import LoginScreen from "../screens/LoginScreen";
 import TestScreen from "../screens/TestScreen";
 import EditProfileScreen from "../screens/EditProfileScreen";
+import EditPlantProfileScreen from "../screens/EditPlantProfileScreen";
+import PlantProfileScreen from "../screens/PlantProfileScreen";
 import Sidebar from "../components/Sidebar";
 
 // Onboarding stack navigator 
 const Stack = createStackNavigator();
 const OnboardingStack = () => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator headerMode="none">
       <Stack.Screen name="Landing" component={LandingScreen} />
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Signup" component={SignupScreen} />
@@ -28,8 +30,10 @@ const OnboardingStack = () => {
 const AppStack = createStackNavigator();
 const AppNavigator = () => {
   return (
-    <AppStack.Navigator headerMode="none" initialRouteName="HomeScreen">
+    <AppStack.Navigator headerMode="none" initialRouteName="Home">
       <AppStack.Screen name="Home" component={HomeScreen} />
+      <AppStack.Screen name="PlantProfile" component={PlantProfileScreen} />
+      <AppStack.Screen name="EditPlantProfile" component={EditPlantProfileScreen} />
     </AppStack.Navigator>
   );
 };
@@ -37,7 +41,7 @@ const AppNavigator = () => {
 const ProfileStack = createStackNavigator(); 
 const ProfileNavigator = () => {
   return (
-    <ProfileStack.Navigator headerMode="none" initialRouteName="ProfileScreen">
+    <ProfileStack.Navigator headerMode="none" initialRouteName="Profile">
       <ProfileStack.Screen name="Profile" component={ProfileScreen} />
       <ProfileStack.Screen name="EditProfileScreen" component={EditProfileScreen}/>
     </ProfileStack.Navigator>
@@ -49,7 +53,7 @@ const AppDrawer = createDrawerNavigator();
 const SidebarAppNavigator = () => {
   return (
     <AppDrawer.Navigator drawerContent={props => <Sidebar {...props} />}>
-      <AppDrawer.Screen name="Home" component={AppNavigator} />
+      <AppDrawer.Screen options={{ headerTitle: "PlantBuds" }} name="Home" component={AppNavigator} />
       <AppDrawer.Screen name="Profile" component={ProfileNavigator} />
       <AppDrawer.Screen name="Calendar" component={CalendarScreen} />
       <AppDrawer.Screen name="TestScreen" component={TestScreen} />

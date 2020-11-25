@@ -116,7 +116,13 @@ export default function HomeScreen(props: Props) {
                 key={item.key}
                 activeOpacity={0.6}
                 underlayColor="#DDDDDD"
-                onPress={() => alert("Pressed " + item.name.first)}
+                onPress={() => {
+                  navigation.navigate("PlantProfile", {
+                    itemName: item.name.first,
+                    itemURI: item.picture.large,
+                    //TODO add any other plant information that needs to be passed to the plant profile screen.
+                  });
+                }}
               >
                 <View>
                   <Image
