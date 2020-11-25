@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
   },
   displayWrapper: {
     width: windowWidth * 0.95,
-    height: windowHeight * 0.3,
+    height: windowHeight * 0.31,
     display: "flex",
     alignItems: "center",
     justifyContent: "space-around"

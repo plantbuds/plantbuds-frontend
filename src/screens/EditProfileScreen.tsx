@@ -6,6 +6,9 @@ import {
   View,
   Image,
   Dimensions,
+  TouchableWithoutFeedback,
+  Keyboard,
+  KeyboardAvoidingView,
   PixelRatio
 } from "react-native";
 import { Button, TextInput } from "react-native-paper";
@@ -59,80 +62,87 @@ export default function EditProfileScreen(props: Props) {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.row}>
-        <Button
-          labelStyle={styles.buttonStyle}
-          onPress={() => navigation.navigate("Profile")}
-        >
-          <Text style={styles.textTitleLeft}>Cancel</Text>
-        </Button>
-        <Text style={styles.textTitle}>Edit Profile</Text>
-        <Button
-          labelStyle={styles.buttonStyle}
-          onPress={() => navigation.navigate("Profile")}
-        >
-          <Text style={styles.textTitleRight}>Done</Text>
-        </Button>
-      </View>
-      <View style={styles.containerPicture}>
-        {(image && (
-          <Image style={styles.profilePicture} source={{ uri: image }} />
-        )) ||
-          (!image && (
-            <Image
-              style={styles.profilePicture}
-              source={{ uri: "https://i.imgur.com/oeojGAr.jpeg" }}
-            />
-          ))}
-        <Button
-          color="#64A3A3"
-          icon="camera"
-          labelStyle={styles.buttonStyle}
-          onPress={pickImage}
-        >
-          Change Profile Photo
-        </Button>
-      </View>
-      <View style={styles.containerTest}>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            backgroundColor: "#fff"
-          }}
-        >
-          <Text style={styles.inputFontStyleLabelTop}>Username</Text>
-          <TextInput
-            mode="flat"
-            theme={theme}
-            style={styles.inputFontStyle}
-            placeholder="Name"
-            underlineColor="#fff"
-            value={textName}
-            onChangeText={textName => setTextName(textName)}
-          />
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : null}
+      style={{ flex: 1 }}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.container}>
+          <View style={styles.row}>
+            <Button
+              labelStyle={styles.buttonStyle}
+              onPress={() => navigation.navigate("Profile")}
+            >
+              <Text style={styles.textTitleLeft}>Cancel</Text>
+            </Button>
+            <Text style={styles.textTitle}>Edit Profile</Text>
+            <Button
+              labelStyle={styles.buttonStyle}
+              onPress={() => navigation.navigate("Profile")}
+            >
+              <Text style={styles.textTitleRight}>Done</Text>
+            </Button>
+          </View>
+          <View style={styles.containerPicture}>
+            {(image && (
+              <Image style={styles.profilePicture} source={{ uri: image }} />
+            )) ||
+              (!image && (
+                <Image
+                  style={styles.profilePicture}
+                  source={{ uri: "https://i.imgur.com/oeojGAr.jpeg" }}
+                />
+              ))}
+            <Button
+              color="#64A3A3"
+              icon="camera"
+              labelStyle={styles.buttonStyle}
+              onPress={pickImage}
+            >
+              Change Profile Photo
+            </Button>
+          </View>
+          <View style={styles.containerTest}>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                backgroundColor: "#fff"
+              }}
+            >
+              <Text style={styles.inputFontStyleLabelTop}>Username</Text>
+              <TextInput
+                mode="flat"
+                theme={theme}
+                style={styles.inputFontStyle}
+                placeholder="Name"
+                underlineColor="#fff"
+                value={textName}
+                onChangeText={textName => setTextName(textName)}
+              />
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                backgroundColor: "#fff"
+              }}
+            >
+              <Text style={styles.inputFontStyleLabelBottom}>USDA Zone</Text>
+              <TextInput
+                mode="flat"
+                theme={theme}
+                style={styles.inputFontStyle}
+                underlineColor="#fff"
+                placeholder="Zone #"
+                value={textZone}
+                onChangeText={textZone => setTextZone(textZone)}
+              />
+            </View>
+          </View>
         </View>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            backgroundColor: "#fff"
-          }}
-        >
-          <Text style={styles.inputFontStyleLabelBottom}>USDA Zone</Text>
-          <TextInput
-            mode="flat"
-            theme={theme}
-            style={styles.inputFontStyle}
-            underlineColor="#fff"
-            placeholder="Zone #"
-            value={textZone}
-            onChangeText={textZone => setTextZone(textZone)}
-          />
-        </View>
-      </View>
-    </View>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 const windowWidth = Dimensions.get("window").width;
