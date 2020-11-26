@@ -46,6 +46,16 @@ export default function EditProfileScreen(props: Props) {
       <Text>Edit Profile Screen!</Text>
       {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
       <Button onPress={pickImage}>Pick an image from camera roll</Button>
+      <Button
+        mode="contained"
+        color="green"
+        labelStyle={styles.buttonText}
+        contentStyle={styles.innerButton}
+        style={styles.button}
+        onPress={() => navigation.navigate("Profile")}
+      >
+        Done
+      </Button>
     </View>
   );
 }
@@ -56,5 +66,18 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center"
+  },
+  buttonText: {
+    color: "white"
+  },
+
+  innerButton: {
+    padding: 10
+  },
+
+  button: {
+    alignItems: "flex-end",
+    backgroundColor: 'lightblue', 
+    borderRadius: 50
   }
 });

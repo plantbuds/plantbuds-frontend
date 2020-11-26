@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, Vibration, Button, Image } from "react-native";
+import { StyleSheet, Text, View, Vibration, Image } from "react-native";
+import {Button} from "react-native-paper";
 
 // declare types for your props here
 interface Props {
@@ -12,7 +13,16 @@ export default function ProfileScreen(props: Props) {
   return (
     <View style={styles.container}>
       <View style = {styles.button}>
-        <Button title = "Edit" onPress={() => navigation.navigate("EditProfileScreen")} />
+      <Button
+        mode="contained"
+        color="green"
+        labelStyle={styles.buttonText}
+        contentStyle={styles.innerButton}
+        style={styles.button}
+        onPress={() => navigation.navigate("EditProfileScreen")}
+      >
+        Edit
+      </Button>
       </View>
 
       <View style ={{flexDirection: 'row'}}>
@@ -50,12 +60,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#d6d3f0",
   },
 
-  button : {
-    alignItems: "flex-end",
-    backgroundColor: 'lightblue', 
-    borderRadius: 1
-  }, 
-
   profilePicture : {
     flexDirection: 'column',
     borderColor: 'black',
@@ -67,6 +71,20 @@ const styles = StyleSheet.create({
   notifications: {
     alignItems: "center",
     justifyContent: "center"
+  },
+
+  buttonText: {
+    color: "white"
+  },
+
+  innerButton: {
+    padding: 10
+  },
+
+  button: {
+    alignItems: "flex-end",
+    backgroundColor: 'lightblue', 
+    borderRadius: 50
   }
 
 });
