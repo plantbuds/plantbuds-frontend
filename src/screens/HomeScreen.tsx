@@ -116,7 +116,13 @@ export default function HomeScreen(props: Props) {
                 key={item.key}
                 activeOpacity={0.6}
                 underlayColor="#DDDDDD"
-                onPress={() => alert("Pressed!")}
+                onPress={() => {
+                  navigation.navigate("PlantProfile", {
+                    itemName: item.name.first,
+                    itemURI: item.picture.large,
+                    //TODO add any other plant information that needs to be passed to the plant profile screen.
+                  });
+                }}
               >
                 <View>
                   <Image
@@ -185,7 +191,7 @@ const styles = StyleSheet.create({
   },
   displayWrapper: {
     width: windowWidth * 0.95,
-    height: windowHeight * 0.3,
+    height: windowHeight * 0.31,
     display: "flex",
     alignItems: "center",
     justifyContent: "space-around"

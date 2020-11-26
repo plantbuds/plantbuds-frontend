@@ -4,8 +4,7 @@ import { loginUser } from "../../store/session/actions";
 
 // Method returns an access token that the backend handles. I've also added a console log to see what the access token looks like.
 export async function signInWithGoogleAsync() {
-  const dispatch = useDispatch();
-
+  
   try {
     const result = await Google.logInAsync({
       iosClientId:
@@ -15,7 +14,7 @@ export async function signInWithGoogleAsync() {
 
     if (result.type === "success") {
       console.log(result.accessToken);
-      dispatch(loginUser(result.accessToken));
+     
     } 
     else {
       return { cancelled: true };
