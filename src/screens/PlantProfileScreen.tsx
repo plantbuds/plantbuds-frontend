@@ -64,6 +64,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flex: 1,
     backgroundColor: "#fff"
+
   },
   button: {
     alignItems: "flex-end",
