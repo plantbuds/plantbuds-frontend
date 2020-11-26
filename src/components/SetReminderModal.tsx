@@ -1,6 +1,8 @@
 import React from "react";
 import { View, StyleSheet, Text, Modal, Dimensions } from "react-native";
 import { Button } from "react-native-paper";
+import { Calendar as ReactCalendar } from "react-native-calendars";
+
 
 interface Props {
   displayModal: boolean;
@@ -16,7 +18,20 @@ export default function SetReminderModal(props: Props) {
       <View style={styles.bottomView}>
         <View style={styles.modalView}>
           <Button onPress={onExit}>Done</Button>
-          <Text>Calendar Modal!</Text>
+          <ReactCalendar
+            //onDayPress={(day) => setSelectedDate(day.dateString)}
+            current={new Date().toISOString().split('T')[0]}
+            //markedDates={{[selectedDate]: {selected: true, marked: false, selectedColor: '#00adf5'}}}
+            theme={{
+              backgroundColor: '#ffffff',
+              calendarBackground: '#ffffff',
+              textSectionTitleColor: '#b6c1cd',
+              selectedDayTextColor: 'black',
+              todayTextColor: '#00adf5',
+              dayTextColor: 'black',
+              textDisabledColor: '#979797',
+            }}
+          />
         </View>
       </View>
     </Modal>
