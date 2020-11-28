@@ -181,6 +181,19 @@ const styles = StyleSheet.create({
     textTransform: 'none',
   },
 
+  columnStyle:{
+    flex:1,
+    flexDirection: 'column',
+  },
+
+  containerPicture: {
+    backgroundColor: "#fff",
+    alignItems: "center",
+    paddingTop: 10,
+    height: windowHeight * 0.23,
+    marginLeft:20
+  },
+
   editButtonStyle:{
     fontSize: 18,
     color:'#64A3A3',
@@ -194,14 +207,6 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
     borderRadius: 100
-  },
-
-  containerPicture: {
-    backgroundColor: "#fff",
-    alignItems: "center",
-    paddingTop: 10,
-    height: windowHeight * 0.23,
-    marginLeft:20
   },
     
   NRTChildStyle:{
@@ -242,11 +247,6 @@ const styles = StyleSheet.create({
     fontWeight: "normal",
     color: "#666666",
     paddingBottom: 3
-  },
-
-  columnStyle:{
-    flex:1,
-    flexDirection: 'column',
   },
 
 });
