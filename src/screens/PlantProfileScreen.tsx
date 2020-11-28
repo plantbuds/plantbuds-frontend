@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Image } from "react-native";
 import { Button } from "react-native-paper";
 import SetReminderModal from "../components/SetReminderModal";
 import AddEntryModal from "../components/AddEntryModal";
+import { Calendar as ReactCalendar } from "react-native-calendars";
 
 // declare types for your props here
 interface Props {
@@ -13,11 +14,53 @@ interface Props {
   //TODO add any other plant information
 }
 
+var entries = {
+  "2020-11-21": [false, false, true],
+  "2020-11-23": [true, false, false],
+  "2020-11-10": [true, false, false],
+  "2020-11-02": [true, false, true],
+  "2020-11-03": [true, true, false]
+};
+
 export default function PlantProfileScreen(props: Props) {
   const { navigation, route } = props;
   const { itemName, itemURI } = route.params;
+  const [selectedDate, setSelectedDate] = useState(new Date().toDateString());
+  const [markings, setMarkings] = useState({});
+  const [waterStatus, setWaterStatus] = useState(false);
+  const [repotStatus, setRepotStatus] = useState(false);
+  const [fertilizeStatus, setFertilizeStatus] = useState(false);
+  const waterDot = { key: "water", color: "blue" };
+  const repotDot = { key: "repot", color: "brown" };
+  const fertilizeDot = { key: "fertilize", color: "green" };
   const [displayAddEntryModal, setDisplayAddEntryModal] = useState(false);
   const [displayReminderModal, setDisplayReminderModal] = useState(false);
+
+  const updateCalendarMarkings = () => {
+    var newMarkings = {};
+    var selected = false;
+    for (const [date, value] of Object.entries(entries)) {
+      var dotData = [];
+      var entry = {};
+      if (value[0]) dotData.push(waterDot);
+      if (value[1]) dotData.push(repotDot);
+      if (value[2]) dotData.push(fertilizeDot);
+      entry["dots"] = dotData;
+      if (date === selectedDate) {
+        entry["selected"] = true;
+        selected = true;
+      }
+      newMarkings[date] = entry;
+    }
+    if (!selected) {
+      newMarkings[selectedDate] = { selected: true };
+    }
+    setMarkings(newMarkings);
+  };
+
+  useEffect(() => {
+    updateCalendarMarkings();
+  }, [selectedDate, displayAddEntryModal]);
 
   return (
     <View style={styles.container}>
@@ -33,18 +76,49 @@ export default function PlantProfileScreen(props: Props) {
             }}
           />
           <Text>{itemName}</Text>
+          <ReactCalendar
+            onDayPress={day => {
+              setSelectedDate(day.dateString);
+              if (entries[selectedDate] != null) {
+                setWaterStatus(entries[selectedDate][0]);
+                setRepotStatus(entries[selectedDate][1]);
+                setFertilizeStatus(entries[selectedDate][2]);
+              } else {
+                setWaterStatus(false);
+                setRepotStatus(false);
+                setFertilizeStatus(false);
+              }
+              updateCalendarMarkings();
+            }}
+            markedDates={markings}
+            maxDate={new Date()}
+            markingType={"multi-dot"}
+            theme={{
+              backgroundColor: "#ffffff",
+              calendarBackground: "#ffffff",
+              textSectionTitleColor: "#b6c1cd",
+              selectedDayTextColor: "black",
+              todayTextColor: "#00adf5",
+              dayTextColor: "black",
+              textDisabledColor: "#979797"
+            }}
+          />
+          <Button onPress={() => setDisplayAddEntryModal(true)}>
+            Edit Entry
+          </Button>
+
           <Button onPress={() => setDisplayReminderModal(true)}>
             Add start date for reminder (calendar + # of days modal)
           </Button>
-          <Button onPress={() => setDisplayAddEntryModal(true)}>
-            Add Entry for reminder
-          </Button>
           <AddEntryModal
+            selectedDate={selectedDate}
             displayModal={displayAddEntryModal}
             onPress={() => {
               setDisplayAddEntryModal(false);
             }}
             onExit={() => setDisplayAddEntryModal(false)}
+            entries={entries}
+            updateCalendarMarkings={() => updateCalendarMarkings}
           />
           <SetReminderModal
             displayModal={displayReminderModal}
@@ -64,7 +138,6 @@ const styles = StyleSheet.create({
     display: "flex",
     flex: 1,
     backgroundColor: "#fff"
-
   },
   button: {
     alignItems: "flex-end",
