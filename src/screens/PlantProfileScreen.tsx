@@ -36,7 +36,13 @@ export default function PlantProfileScreen(props: Props) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.buttonStyle}>
+      <View style={{flexDirection:'row'}}>
+        <Button
+          labelStyle={styles.buttonStyle}
+          onPress={() => navigation.navigate("Home")}>
+          <Text style={styles.homeButtonStyle}>Plant Home</Text>
+        </Button>
+        <Text style={styles.textTitle}></Text>
         <Button 
           labelStyle = {styles.buttonStyle}
           onPress={() => navigation.navigate("EditPlantProfile")}>
@@ -175,15 +181,18 @@ const styles = StyleSheet.create({
   },
 
   buttonStyle: {
-    alignItems: "flex-end",
     borderRadius: 1,
     fontSize: 18,
     textTransform: 'none',
+    color:'#64A3A3',
+    fontStyle: 'normal',
+    fontWeight: 'normal',
   },
 
   columnStyle:{
-    flex:1,
+    flex: 1,
     flexDirection: 'column',
+    width: '100%'
   },
 
   containerPicture: {
@@ -191,14 +200,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingTop: 10,
     height: windowHeight * 0.23,
-    marginLeft:20
+    marginLeft: 20
   },
 
   editButtonStyle:{
-    fontSize: 18,
-    color:'#64A3A3',
-    fontStyle: 'normal',
-    fontWeight: 'normal',
+    alignItems: 'flex-end',
+  },
+
+  homeButtonStyle:{
+    alignItems: 'flex-start',
   },
 
   profilePicture: {
@@ -248,5 +258,13 @@ const styles = StyleSheet.create({
     color: "#666666",
     paddingBottom: 3
   },
+
+  textTitle:{
+    fontSize: 24,
+    color: "#000000",
+    fontStyle: "normal",
+    fontWeight: "normal",
+    width: '50%'
+  }
 
 });
