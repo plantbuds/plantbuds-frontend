@@ -209,6 +209,7 @@ const styles = StyleSheet.create({
     fontStyle: "normal",
     fontWeight: "normal",
     color: "#000",
+    paddingBottom: 3
   },
 
   zoneStyle:{
@@ -219,5 +220,6 @@ const styles = StyleSheet.create({
     fontStyle: "normal",
     fontWeight: "normal",
     color: "#666666",
+    paddingBottom: 3
   },
 });
