@@ -157,7 +157,8 @@ const styles = StyleSheet.create({
     fontWeight: "normal", 
     color: "#666666",
     fontSize: 22,
-    lineHeight:30
+    lineHeight: 30,
+    paddingTop: 20
   },
 
   optionsStyle:{
