@@ -65,10 +65,10 @@ export default function ProfileScreen(props: Props) {
       
       <View style={{flexDirection:'column'}}>
         <View style={{flexDirection:'row'}}>
-          <View style={{flexDirection:'column'}}>
-            <Text style={styles.optionsStyle}>Watering  Reminder</Text>
+          <View style={styles.columnStyle}>
+            <Text style={styles.optionsStyle}>Watering Reminder</Text>
           </View>
-          <View style={{flexDirection:'column'}}>
+          <View style={styles.columnStyle}>
             <Switch style={styles.toggleStyle}
               trackColor={{ false: "#767577", true: "#34c759" }}
               thumbColor={isEnabled ? "#f4f3f4" : "#f4f3f4"}
@@ -79,10 +79,10 @@ export default function ProfileScreen(props: Props) {
         </View>
 
         <View style={{flexDirection:'row'}}>
-          <View style={{flexDirection:'column'}}>
+          <View style={styles.columnStyle}>
             <Text style={styles.optionsStyle}>Repotting Reminder</Text>
           </View>
-          <View style={{flexDirection:'column'}}>
+          <View style={styles.columnStyle}>
             <Switch style={styles.toggleStyle}
               trackColor={{ false: "#767577", true: "#34c759" }}
               thumbColor={isEnabled ? "#f4f3f4" : "#f4f3f4"}
@@ -93,10 +93,10 @@ export default function ProfileScreen(props: Props) {
         </View>
 
         <View style={{flexDirection:'row'}}>
-          <View style={{flexDirection:'column'}}>
+          <View style={styles.columnStyle}>
             <Text style={styles.optionsStyle}>Fertilizing Reminder</Text>
           </View>
-          <View style={{flexDirection:'column'}}>
+          <View style={styles.columnStyle}>
           <Switch style={styles.toggleStyle}
               trackColor={{ false: "#767577", true: "#34c759" }}
               thumbColor={isEnabled ? "#f4f3f4" : "#f4f3f4"}
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     marginLeft: 15, 
     fontStyle: "normal",
     fontWeight: "normal", 
-    color: "#666666",
+    color: "#000",
     fontSize: 22,
     lineHeight: 30,
     paddingTop: 20
@@ -222,4 +222,9 @@ const styles = StyleSheet.create({
     color: "#666666",
     paddingBottom: 3
   },
+
+  columnStyle:{
+    flex: 1,
+    flexDirection: 'column'
+  }
 });
