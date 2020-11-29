@@ -28,7 +28,6 @@ export const loginUser = (accessToken: string) => {
         }
       },
       options: {
-        onSuccess: () => console.log("login successful"),
         onError({ getState, dispatch, error }) {
           try {
             if (error) {
