@@ -7,10 +7,13 @@ import {
   EDIT_PFP_SUCCESS,
   EDIT_PFP_FAIL,
   CREATE_USER,
+  CREATE_USER_SUCCESS, 
+  CREATE_USER_FAIL,
   SET_PROFILE_IMAGE
 } from "./types";
 
 import { API_ROOT } from "../../src/constants/index";
+import { Alert } from "react-native";
 
 export const loginUser = (accessToken: string) => {
   return {
@@ -31,6 +34,22 @@ export const loginUser = (accessToken: string) => {
 export const logout = () => {
   return {
     type: LOGOUT
+  };
+};
+
+export const createUser = (idToken: string) => {
+  return {
+    types: [CREATE_USER, CREATE_USER_SUCCESS, CREATE_USER_FAIL],
+    payload: {
+      client: "default",
+      request: {
+        url: `${API_ROOT}/api/users/`,
+        method: "POST",
+        data: {
+          id_token: idToken
+        }
+      },
+    }
   };
 };
 
@@ -62,21 +81,5 @@ export const setProfileImage = (imageURI: string) => {
   return {
     type: SET_PROFILE_IMAGE,
     imageURI
-  };
-};
-
-export const createUser = (idToken: string) => {
-  return {
-    types: [LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAIL],
-    payload: {
-      client: "default",
-      request: {
-        url: `${API_ROOT}/api/users/`,
-        method: "POST",
-        data: {
-          id_token: idToken
-        }
-      }
-    }
   };
 };

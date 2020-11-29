@@ -37,6 +37,12 @@ export default function LandingScreen(props: Props) {
     }
   };
 
+  useEffect(() => {
+    if (loggedIn) {
+      navigation.navigate("Home");
+    }
+  }, [loggedIn]);
+
   return (
     <View style={styles.container}>
       <View style={styles.titleBox}>
@@ -67,9 +73,6 @@ export default function LandingScreen(props: Props) {
         >
           <Text style={styles.loginButtonText}>Login</Text>
         </Button>
-        <Text>{String(loggedIn)}</Text>
-        <Text>{String(username)}</Text>
-        <Image style={{ width: 90, height: 90 }} source={{ uri: profileURI }} />
       </View>
     </View>
   );

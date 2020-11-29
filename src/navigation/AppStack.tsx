@@ -1,4 +1,6 @@
 import React from "react";
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
 import {createStackNavigator} from "@react-navigation/stack";
 import {createDrawerNavigator} from "@react-navigation/drawer";
 import HomeScreen from "../screens/HomeScreen";
@@ -13,7 +15,7 @@ import Sidebar from "../components/Sidebar";
 
 // Onboarding stack navigator 
 const Stack = createStackNavigator();
-const OnboardingStack = () => {
+const OnboardingNavigator = () => {
   return (
     <Stack.Navigator headerMode="none">
       <Stack.Screen name="Landing" component={LandingScreen} />
@@ -59,10 +61,8 @@ const SidebarAppNavigator = () => {
 
 // RootNavigator to navigate between different stacks
 const RootNavigator = () => {
-    //return SidebarAppNavigator();
-    return SidebarAppNavigator();
-    // If you want to work on home page flow/profile settings flow just change 'return OnboardingStack();' to 'return SidebarAppNavigator();'
-    //TODO finish session reducer to enable switching from login flow to homepage flow
+  const loggedIn = useSelector((state: RootState) => state.session.loggedIn);
+    return (loggedIn) ? SidebarAppNavigator() : OnboardingNavigator();
 };
 
 export default RootNavigator;

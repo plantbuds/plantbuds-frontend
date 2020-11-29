@@ -15,6 +15,7 @@ const rootReducer = combineReducers({
 });
 
 const middlewareConfig = {
+  returnRejectedPromiseOnError: true,
   interceptors: {
     request: [
       function({ getState, dispatch, getSourceAction }, config) {
@@ -23,8 +24,16 @@ const middlewareConfig = {
       }
     ],
     response: [
-      (getState, response) => {
-        return response;
+      {
+        success: ({ dispatch }, response) => {
+          // Response interception
+          return response;
+        },
+        error: ({ dispatch }, error) => {
+          // Response Error Interception
+          return Promise.reject(error);
+         }
+        }
       }
     ]
   }
