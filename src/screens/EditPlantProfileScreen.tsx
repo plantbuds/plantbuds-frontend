@@ -59,10 +59,6 @@ export default function EditPlantProfileScreen(props: Props) {
   };
 
   return (
-    <KeyboardAvoidingView
-    behavior={Platform.OS === "ios" ? "padding" : null}
-    style={{ flex: 1 }}
-  >
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
         <View style={styles.row}>
@@ -229,7 +225,6 @@ export default function EditPlantProfileScreen(props: Props) {
         </View>
       </View>
     </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
   );
 }
 const windowWidth = Dimensions.get("window").width;
