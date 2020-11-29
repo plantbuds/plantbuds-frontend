@@ -1,5 +1,6 @@
 export interface SessionState {
   loggedIn: boolean;
+  error: boolean;
   userId: number;
   profileURI: string;
   username: string, 

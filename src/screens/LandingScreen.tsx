@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Alert, Image, StyleSheet, Text, View } from "react-native";
 import logo from "../../assets/logo.png";
 import { RootState } from "../../store/store";
 import { useSelector, useDispatch } from "react-redux";
@@ -17,6 +17,7 @@ interface Props {
 export default function LandingScreen(props: Props) {
   const { navigation } = props;
   const loggedIn = useSelector((state: RootState) => state.session.loggedIn);
+  const error = useSelector((state: RootState) => state.session.error);
   const username = useSelector((state: RootState) => state.session.username);
   const profileURI = useSelector(
     (state: RootState) => state.session.profileURI
@@ -33,17 +34,12 @@ export default function LandingScreen(props: Props) {
   const signUpWithGoogle = async () => {
     const idToken = await signUpWithGoogleAsync();
     if (idToken) {
-      try {
         dispatch(createUser(idToken));
-      }
-      catch (err) {
-        console.log(err);
-      }
     }
   };
 
   useEffect(() => {
-    if (loggedIn) {
+    if (loggedIn && error) {
       navigation.navigate("Home");
     }
   }, [loggedIn]);

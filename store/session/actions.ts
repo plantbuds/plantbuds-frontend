@@ -27,6 +27,18 @@ export const loginUser = (accessToken: string) => {
           access_token: accessToken
         }
       }
+    },
+    options: {
+      onError({ getState, dispatch, error }) {
+        try {
+          if (error) {
+            throw error;
+          }
+        }
+        catch(e) {
+          Alert.alert('Error: ' + e.response.data.msg);
+        }
+      }
     }
   };
 };
@@ -53,15 +65,14 @@ export const createUser = (idToken: string) => {
         onSuccess: () => {
           console.log("successfully created user in database");
         },
-        onError: ({ error }) => {
-          let errorObject;
-          if (error instanceof Error) {
-            errorObject = {
-              data: error.message,
-              status: 0
-            };
-          } else {
-            errorObject = error;
+        onError({ getState, dispatch, error }) {
+          try {
+            if (error) {
+              throw error;
+            }
+          }
+          catch(e) {
+            Alert.alert('Error: ' + e.response.data.error);
           }
         }
       }
