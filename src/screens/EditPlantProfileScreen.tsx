@@ -241,7 +241,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     paddingTop: 10,
-    height: windowHeight * 0.22
+    //height: windowHeight * 0.29
   },
   containerTest: {
     backgroundColor: "#fff",
