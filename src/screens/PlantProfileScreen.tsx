@@ -77,23 +77,17 @@ export default function PlantProfileScreen(props: Props) {
       <Text style={styles.NRTParentStyle}> Reminders </Text>
       </View>
       
-      <View> 
-        <View style={styles.smallerPhoneStyling}>
-          <Text style={styles.NRTChildStyle}>Watering Reminder</Text>
-          <Text style={styles.NRTChildStyle}>Last Watered Date</Text>
-        </View>
+      <View style={styles.smallerPhoneStyling}>
+        <Text style={styles.NRTChildStyle}>Watering Reminder</Text>
+        <Text style={styles.NRTChildStyle}>Last Watered Date</Text>
       </View>
-      <View> 
-        <View style={styles.smallerPhoneStyling}>
-          <Text style={styles.NRTChildStyle}>Repotting Reminder</Text>
-          <Text style={styles.NRTChildStyle}>Last Repotted Date</Text>
-        </View>
+      <View style={styles.smallerPhoneStyling}>
+        <Text style={styles.NRTChildStyle}>Repotting Reminder</Text>
+        <Text style={styles.NRTChildStyle}>Last Repotted Date</Text>
       </View>
-      <View> 
-        <View style={styles.smallerPhoneStyling}>
-          <Text style={styles.NRTChildStyle}>Fertilizing Reminder</Text>
-          <Text style={styles.NRTChildStyle}>Last Fertilized Date</Text>
-        </View>
+      <View style={styles.smallerPhoneStyling}>
+        <Text style={styles.NRTChildStyle}>Fertilizing Reminder</Text>
+        <Text style={styles.NRTChildStyle}>Last Fertilized Date</Text>
       </View>
       
 
@@ -101,24 +95,19 @@ export default function PlantProfileScreen(props: Props) {
       <Text style={styles.NRTParentStyle}> Task History </Text>
       </View>
 
-      <View> 
-        <View style={styles.smallerPhoneStyling}>
-          <Text style={styles.NRTChildStyle}>Watered</Text>
-          <Text style={styles.NRTChildStyle}>Date Placeholder</Text>
-        </View>
+      <View style={styles.smallerPhoneStyling}>
+        <Text style={styles.NRTChildStyle}>Watered</Text>
+        <Text style={styles.NRTChildStyle}>Date Placeholder</Text>
       </View>
-      <View> 
-        <View style={styles.smallerPhoneStyling}>
-          <Text style={styles.NRTChildStyle}>Repotted</Text>
-          <Text style={styles.NRTChildStyle}>Date Placeholder</Text>
-        </View>
+      <View style={styles.smallerPhoneStyling}>
+        <Text style={styles.NRTChildStyle}>Repotted</Text>
+        <Text style={styles.NRTChildStyle}>Date Placeholder</Text>
       </View>
-      <View> 
-        <View style={styles.smallerPhoneStyling}>
-          <Text style={styles.NRTChildStyle}>Fertilized</Text>
-          <Text style={styles.NRTChildStyle}>Date Placeholder</Text>
-        </View>
+      <View style={styles.smallerPhoneStyling}>
+        <Text style={styles.NRTChildStyle}>Fertilized</Text>
+        <Text style={styles.NRTChildStyle}>Date Placeholder</Text>
       </View>
+
 
       <View style={{ flexDirection: "row" }}>
         <View style={{ flexDirection: "column" }}>
@@ -247,7 +236,10 @@ const styles = StyleSheet.create({
 
   smallerPhoneStyling:{
     flexDirection: "row",
-    justifyContent: "space-around"
+    justifyContent: "space-between",
+    alignSelf: "center",
+    width: windowWidth * 0.78
+
   },
 
   textTitle:{
