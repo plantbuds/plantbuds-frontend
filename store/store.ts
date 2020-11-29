@@ -31,8 +31,8 @@ const middlewareConfig = {
         },
         error: ({ dispatch }, error) => {
           // Response Error Interception
-          return Promise.reject(error);
-         }
+          const err = Promise.reject(error);
+          err.catch((msg) => {console.error(msg)});
         }
       }
     ]
