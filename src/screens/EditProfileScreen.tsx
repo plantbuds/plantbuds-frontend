@@ -6,10 +6,14 @@ import {
   View,
   Image,
   Dimensions,
+<<<<<<< HEAD
   TouchableWithoutFeedback,
   Keyboard,
   KeyboardAvoidingView,
   PixelRatio
+=======
+  PixelRatio,
+>>>>>>> Edit Plant Profile Screen and slightly changed Edit Profile Screen
 } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
@@ -62,6 +66,7 @@ export default function EditProfileScreen(props: Props) {
   };
 
   return (
+<<<<<<< HEAD
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : null}
       style={{ flex: 1 }}
@@ -143,6 +148,92 @@ export default function EditProfileScreen(props: Props) {
         </View>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
+=======
+    <View style={styles.container}>
+      <View style={styles.row}>
+        <Button
+          labelStyle={styles.buttonStyle}
+          onPress={() => navigation.navigate("Profile")}
+        >
+          <Text style={styles.textTitleLeft}>Cancel</Text>
+        </Button>
+        <Text style={styles.textTitle}>Edit Profile</Text>
+        <Button
+          labelStyle={styles.buttonStyle}
+          onPress={() => navigation.navigate("Profile")}
+        >
+          <Text style={styles.textTitleRight}>Done</Text>
+        </Button>
+      </View>
+      <View style={styles.containerPicture}>
+        {(image && (
+          <Image style={styles.profilePicture} source={{ uri: image }} />
+        )) ||
+          (!image && (
+            <Image
+              style={styles.profilePicture}
+              source={{ uri: "https://i.imgur.com/oeojGAr.jpeg" }}
+            />
+          ))}
+        <Button
+          color="#64A3A3"
+          icon="camera"
+          labelStyle={styles.buttonStyle}
+          onPress={pickImage}
+        >
+          Change Profile Photo
+        </Button>
+      </View>
+      <View style={styles.containerTest}>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            backgroundColor: "#fff"
+          }}
+        >
+          <View style={{flex:1}}>
+            <Text style={styles.inputFontStyleLabelTop}>Username</Text>
+          </View>
+          <View style={{flex:2}}>
+            <TextInput
+              mode="flat"
+              style={styles.inputFontStyle}
+              placeholder="Name"
+              placeholderTextColor="#666"
+              underlineColor="#fff"
+              value={textName}
+              theme={{colors: {text: "#666"}}}
+              onChangeText={textName => setTextName(textName)}
+            />
+          </View>
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            backgroundColor: "#fff"
+          }}
+        >
+          <View style={{flex:1}}>
+          <Text style={styles.inputFontStyleLabelBottom}>USDA Zone</Text>
+          </View>
+          <View style={{flex:2}}>
+          <TextInput
+            mode="flat"
+            style={styles.inputFontStyle}
+            underlineColor="#fff"
+            placeholder="Zone #"
+            placeholderTextColor="#666"
+            value={textZone}
+            theme={{colors: {text: "#666"}}}
+            onChangeText={textZone => setTextZone(textZone)}
+          />
+          </View>
+        </View>
+      </View>
+    </View>
+>>>>>>> Edit Plant Profile Screen and slightly changed Edit Profile Screen
   );
 }
 const windowWidth = Dimensions.get("window").width;
@@ -221,12 +312,14 @@ const styles = StyleSheet.create({
   inputFontStyleLabelTop: {
     color: "#666666",
     fontSize: 18,
-    marginRight: 29
+    marginRight: 29,
+    fontWeight: "500"
   },
   inputFontStyleLabelBottom: {
     color: "#666666",
     fontSize: 18,
-    marginRight: 20
+    marginRight: 20,
+    fontWeight: "500"
   },
   buttonStyle: {
     textTransform: "none",
