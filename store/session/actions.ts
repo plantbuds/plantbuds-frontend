@@ -7,7 +7,7 @@ import {
   EDIT_PFP_SUCCESS,
   EDIT_PFP_FAIL,
   CREATE_USER,
-  CREATE_USER_SUCCESS, 
+  CREATE_USER_SUCCESS,
   CREATE_USER_FAIL,
   SET_PROFILE_IMAGE
 } from "./types";
@@ -25,7 +25,7 @@ export const loginUser = (accessToken: string) => {
         method: "POST",
         data: {
           access_token: accessToken
-        },
+        }
       }
     }
   };
@@ -49,6 +49,22 @@ export const createUser = (idToken: string) => {
           id_token: idToken
         }
       },
+      options: {
+        onSuccess: () => {
+          console.log("successfully created user in database");
+        },
+        onError: ({ error }) => {
+          let errorObject;
+          if (error instanceof Error) {
+            errorObject = {
+              data: error.message,
+              status: 0
+            };
+          } else {
+            errorObject = error;
+          }
+        }
+      }
     }
   };
 };

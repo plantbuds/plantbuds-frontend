@@ -33,7 +33,12 @@ export default function LandingScreen(props: Props) {
   const signUpWithGoogle = async () => {
     const idToken = await signUpWithGoogleAsync();
     if (idToken) {
-      dispatch(createUser(idToken));
+      try {
+        dispatch(createUser(idToken));
+      }
+      catch (err) {
+        console.log(err);
+      }
     }
   };
 
