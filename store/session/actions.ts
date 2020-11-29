@@ -26,20 +26,20 @@ export const loginUser = (accessToken: string) => {
         data: {
           access_token: accessToken
         }
-      }
-    },
-    options: {
-      onError({ getState, dispatch, error }) {
-        try {
-          if (error) {
-            throw error;
+      },
+      options: {
+        onSuccess: () => console.log("login successful"),
+        onError({ getState, dispatch, error }) {
+          try {
+            if (error) {
+              throw error;
+            }
+          } catch (e) {
+            Alert.alert("Error: " + e.response.data.msg);
           }
         }
-        catch(e) {
-          Alert.alert('Error: ' + e.response.data.msg);
-        }
       }
-    }
+    },
   };
 };
 
@@ -70,9 +70,8 @@ export const createUser = (idToken: string) => {
             if (error) {
               throw error;
             }
-          }
-          catch(e) {
-            Alert.alert('Error: ' + e.response.data.error);
+          } catch (e) {
+            Alert.alert("Error: " + e.response.data.error);
           }
         }
       }

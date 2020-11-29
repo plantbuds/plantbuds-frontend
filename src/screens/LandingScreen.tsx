@@ -39,7 +39,7 @@ export default function LandingScreen(props: Props) {
   };
 
   useEffect(() => {
-    if (loggedIn && error) {
+    if (loggedIn) {
       navigation.navigate("Home");
     }
   }, [loggedIn]);

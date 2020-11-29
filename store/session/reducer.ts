@@ -14,7 +14,6 @@ import {
 
 const initialState: SessionState = {
   loggedIn: false,
-  error: false, 
   userId: null,
   profileURI: null, 
   username: null, 
@@ -36,7 +35,6 @@ export function sessionReducer(
       return {
         ...state,
         loggedIn: true,
-        error: false,
         userId: action.payload.data.id,
         profileURI: action.payload.data.photo,
         username: action.payload.data.username,
@@ -46,7 +44,7 @@ export function sessionReducer(
     case LOGIN_FAIL:
       return {
         ...state,
-        error: true,
+        loggedIn: false
         //TODO
       };
     case LOGOUT:
