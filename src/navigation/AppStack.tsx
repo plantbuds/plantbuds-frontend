@@ -53,6 +53,7 @@ const SidebarAppNavigator = () => {
       <AppDrawer.Screen name="Profile" component={ProfileNavigator} />
       <AppDrawer.Screen name="Calendar" component={CalendarScreen} />
       <AppDrawer.Screen name="TestScreen" component={TestScreen} />
+      <AppDrawer.Screen name="Edit Plant Profile" component={EditPlantProfileScreen}/>
     </AppDrawer.Navigator>
   );
 };
