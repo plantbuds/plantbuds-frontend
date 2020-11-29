@@ -110,16 +110,20 @@ export default function EditProfileScreen(props: Props) {
                 backgroundColor: "#fff"
               }}
             >
-              <Text style={styles.inputFontStyleLabelTop}>Username</Text>
-              <TextInput
-                mode="flat"
-                theme={theme}
-                style={styles.inputFontStyle}
-                placeholder="Name"
-                underlineColor="#fff"
-                value={textName}
-                onChangeText={textName => setTextName(textName)}
-              />
+              <View style={{flex:1}}>
+                <Text style={styles.inputFontStyleLabelTop}>Username</Text>
+              </View>
+              <View style={{flex:2}}>
+                <TextInput
+                  mode="flat"
+                  theme={theme}
+                  style={styles.inputFontStyle}
+                  placeholder="Name"
+                  underlineColor="#fff"
+                  value={textName}
+                  onChangeText={textName => setTextName(textName)}
+                />
+              </View>
             </View>
             <View
               style={{
@@ -128,16 +132,20 @@ export default function EditProfileScreen(props: Props) {
                 backgroundColor: "#fff"
               }}
             >
-              <Text style={styles.inputFontStyleLabelBottom}>USDA Zone</Text>
-              <TextInput
-                mode="flat"
-                theme={theme}
-                style={styles.inputFontStyle}
-                underlineColor="#fff"
-                placeholder="Zone #"
-                value={textZone}
-                onChangeText={textZone => setTextZone(textZone)}
-              />
+              <View style={{flex:1}}>
+                <Text style={styles.inputFontStyleLabelBottom}>USDA Zone</Text>
+              </View>
+              <View style={{flex:2}}>
+                <TextInput
+                  mode="flat"
+                  theme={theme}
+                  style={styles.inputFontStyle}
+                  underlineColor="#fff"
+                  placeholder="Zone #"
+                  value={textZone}
+                  onChangeText={textZone => setTextZone(textZone)}
+                />
+              </View>
             </View>
           </View>
         </View>
