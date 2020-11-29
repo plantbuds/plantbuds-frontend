@@ -2,7 +2,10 @@ import React from "react";
 import { View, StyleSheet, Text, Modal, Dimensions } from "react-native";
 import { Button } from "react-native-paper";
 import { Calendar as ReactCalendar } from "react-native-calendars";
+<<<<<<< HEAD
 import { useState } from "react";
+=======
+>>>>>>> 03fcca3 (copy pasta calendar for reminder module)
 
 
 interface Props {
@@ -22,9 +25,15 @@ const [selectedDate, setSelectedDate] = useState("");
         <View style={styles.modalView}>
           <Button onPress={onExit}>Done</Button>
           <ReactCalendar
+<<<<<<< HEAD
             onDayPress={(day) => setSelectedDate(day.dateString)}
             current={new Date().toISOString().split('T')[0]}
             markedDates={{[selectedDate]: {selected: true, marked: false, selectedColor: '#00adf5'}}}
+=======
+            //onDayPress={(day) => setSelectedDate(day.dateString)}
+            current={new Date().toISOString().split('T')[0]}
+            //markedDates={{[selectedDate]: {selected: true, marked: false, selectedColor: '#00adf5'}}}
+>>>>>>> 03fcca3 (copy pasta calendar for reminder module)
             theme={{
               backgroundColor: '#ffffff',
               calendarBackground: '#ffffff',
