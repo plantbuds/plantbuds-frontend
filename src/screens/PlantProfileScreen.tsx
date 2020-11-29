@@ -70,7 +70,7 @@ export default function PlantProfileScreen(props: Props) {
 
       <View>
       <Text style={styles.NRTParentStyle}> Notes </Text>
-      <Text style = {styles.NRTChildStyle}> Placeholder for notes! </Text> 
+      <Text style = {styles.randomStyling}> Placeholder for notes! </Text> 
       </View>
 
       <View>
@@ -249,6 +249,11 @@ const styles = StyleSheet.create({
   },
 
   randomStyling: {
+    fontStyle: "normal",
+    fontWeight: "normal", 
+    color: "#666666",
+    fontSize: 16,
+    lineHeight:30,
     marginLeft: 40
   },
 
