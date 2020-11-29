@@ -4,7 +4,6 @@ import logo from '../../assets/logo.png';
 import { Button } from 'react-native-paper';
 import {signInWithGoogleAsync} from "../utils/GoogleOAuth";
 
-// declare types for your props here
 interface Props {
   navigation: any;
 }
@@ -53,7 +52,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 18,
     right: 17,
-    //top: `calc(50% - 16px/2)`,
     top: '74%',
     display: 'flex',
     alignItems: 'center',
@@ -62,7 +60,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 18,
     right: 17,
-    //top: `calc(50% - 16px/2)`,
     top: '82%',
     display: 'flex',
     alignItems: 'center',

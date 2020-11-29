@@ -1,12 +1,10 @@
 import React from "react";
-import { createStackNavigator } from "@react-navigation/stack";
-import { createDrawerNavigator } from "@react-navigation/drawer";
+import {createStackNavigator} from "@react-navigation/stack";
+import {createDrawerNavigator} from "@react-navigation/drawer";
 import HomeScreen from "../screens/HomeScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import CalendarScreen from "../screens/CalendarScreen";
 import LandingScreen from "../screens/LandingScreen";
-import SignupScreen from "../screens/SignupScreen";
-import LoginScreen from "../screens/LoginScreen";
 import TestScreen from "../screens/TestScreen";
 import EditProfileScreen from "../screens/EditProfileScreen";
 import EditPlantProfileScreen from "../screens/EditPlantProfileScreen";
@@ -19,8 +17,6 @@ const OnboardingStack = () => {
   return (
     <Stack.Navigator headerMode="none">
       <Stack.Screen name="Landing" component={LandingScreen} />
-      <Stack.Screen name="Login" component={LoginScreen} />
-      <Stack.Screen name="Signup" component={SignupScreen} />
       <Stack.Screen name="Home" component={HomeScreen} />
     </Stack.Navigator>
   );
@@ -38,7 +34,7 @@ const AppNavigator = () => {
   );
 };
 
-const ProfileStack = createStackNavigator(); 
+const ProfileStack = createStackNavigator();
 const ProfileNavigator = () => {
   return (
     <ProfileStack.Navigator headerMode="none" initialRouteName="Profile">
@@ -63,10 +59,10 @@ const SidebarAppNavigator = () => {
 
 // RootNavigator to navigate between different stacks
 const RootNavigator = () => {
-  //return SidebarAppNavigator();
-    return OnboardingStack();
+    //return SidebarAppNavigator();
+    return SidebarAppNavigator();
     // If you want to work on home page flow/profile settings flow just change 'return OnboardingStack();' to 'return SidebarAppNavigator();'
-  //TODO finish session reducer to enable switching from login flow to homepage flow
+    //TODO finish session reducer to enable switching from login flow to homepage flow
 };
 
 export default RootNavigator;
