@@ -36,7 +36,7 @@ export default function PlantProfileScreen(props: Props) {
 
   return (
     <View style={styles.container}>
-      <View style={{flexDirection:'row'}}>
+      <View style={{flexDirection:'row', alignSelf:'center'}}>
         <Button
           labelStyle={styles.buttonStyle}
           onPress={() => navigation.navigate("Home")}>
@@ -220,7 +220,6 @@ const styles = StyleSheet.create({
   },
     
   NRTChildStyle:{
-    marginLeft: 40, 
     fontStyle: "normal",
     fontWeight: "normal", 
     color: "#666666",
@@ -234,7 +233,8 @@ const styles = StyleSheet.create({
     fontWeight: "normal", 
     color: "#000",
     fontSize: 22,
-    lineHeight:30
+    lineHeight:30,
+    justifyContent:'space-around'
   },
 
   plantNameStyle: {
@@ -246,6 +246,10 @@ const styles = StyleSheet.create({
     fontWeight: "normal",
     color: "#000",
     paddingBottom: 3
+  },
+
+  randomStyling: {
+    marginLeft: 40
   },
 
   scientificZoneStyle:{
