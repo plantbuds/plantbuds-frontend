@@ -2,17 +2,20 @@ export interface SessionState {
   loggedIn: boolean;
   userId: number;
   profileURI: string;
+  username: string, 
+  email: string, 
+  USDA_zone: number, 
+  receive_water_notif: boolean,
+  receive_repot_notif: boolean, 
+  receive_fertilizing_notif: boolean,
+  notif_time: string
   //TODO add more fields for session reducer state
 }
 
 export interface JSONObject {
   id: number;
-  first_name: string;
-  last_name: string;
+  username: string;
   email: string;
-  password: string;
-  last_login: number;
-  date_joined: number;
   //TODO add any more additional fields depending on what backend gives us.
 }
 

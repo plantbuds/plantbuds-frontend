@@ -18,11 +18,11 @@ export const loginUser = (accessToken: string) => {
     payload: {
       client: "default",
       request: {
-        url: `${API_ROOT}/users/`,
+        url: `${API_ROOT}/api/users/login/`,
         method: "POST",
         data: {
           access_token: accessToken
-        }
+        },
       }
     }
   };
@@ -47,10 +47,10 @@ export const editProfilePic = (imageURI: string, userID: number) => {
         }
       },
       options: {
-        onSuccess: ({dispatch}) => {
-            // set the new pfp locally
-            dispatch(setProfileImage);
-            console.log("successfully updated pfp");
+        onSuccess: ({ dispatch }) => {
+          // set the new pfp locally
+          dispatch(setProfileImage);
+          console.log("successfully updated pfp");
         },
         onError: () => console.log("failed to update pfp")
       }
@@ -59,8 +59,24 @@ export const editProfilePic = (imageURI: string, userID: number) => {
 };
 
 export const setProfileImage = (imageURI: string) => {
-    return {
-        type: SET_PROFILE_IMAGE,
-        imageURI
+  return {
+    type: SET_PROFILE_IMAGE,
+    imageURI
+  };
+};
+
+export const createUser = (idToken: string) => {
+  return {
+    types: [LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAIL],
+    payload: {
+      client: "default",
+      request: {
+        url: `${API_ROOT}/api/users/`,
+        method: "POST",
+        data: {
+          id_token: idToken
+        }
+      }
     }
-}
+  };
+};
