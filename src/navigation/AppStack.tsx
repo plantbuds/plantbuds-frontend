@@ -1,6 +1,6 @@
 import React from "react";
-import {createStackNavigator} from "@react-navigation/stack";
-import {createDrawerNavigator} from "@react-navigation/drawer";
+import { createStackNavigator } from "@react-navigation/stack";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 import HomeScreen from "../screens/HomeScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import CalendarScreen from "../screens/CalendarScreen";
@@ -34,7 +34,7 @@ const AppNavigator = () => {
   );
 };
 
-const ProfileStack = createStackNavigator();
+const ProfileStack = createStackNavigator(); 
 const ProfileNavigator = () => {
   return (
     <ProfileStack.Navigator headerMode="none" initialRouteName="Profile">
@@ -53,17 +53,15 @@ const SidebarAppNavigator = () => {
       <AppDrawer.Screen name="Profile" component={ProfileNavigator} />
       <AppDrawer.Screen name="Calendar" component={CalendarScreen} />
       <AppDrawer.Screen name="TestScreen" component={TestScreen} />
-      <AppDrawer.Screen name="Edit Plant Profile" component={EditPlantProfileScreen}/>
     </AppDrawer.Navigator>
   );
 };
 
 // RootNavigator to navigate between different stacks
 const RootNavigator = () => {
-    //return SidebarAppNavigator();
-    return SidebarAppNavigator();
-    // If you want to work on home page flow/profile settings flow just change 'return OnboardingStack();' to 'return SidebarAppNavigator();'
-    //TODO finish session reducer to enable switching from login flow to homepage flow
+  return SidebarAppNavigator();
+  // If you want to work on home page flow/profile settings flow just change 'return OnboardingStack();' to 'return SidebarAppNavigator();'
+  //TODO finish session reducer to enable switching from login flow to homepage flow
 };
 
 export default RootNavigator;

@@ -6,8 +6,10 @@ import {
   View,
   Image,
   Dimensions,
+  TouchableWithoutFeedback,
+  Keyboard,
+  KeyboardAvoidingView,
   PixelRatio,
-  Picker,
 } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
@@ -57,170 +59,177 @@ export default function EditPlantProfileScreen(props: Props) {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.row}>
-        <Button
-          labelStyle={styles.buttonStyle}
-          onPress={() => navigation.navigate("Profile")}
-        >
-          <Text style={styles.textTitleLeft}>Cancel</Text>
-        </Button>
-        <Text style={styles.textTitle}>Edit Plant Profile</Text>
-        <Button
-          labelStyle={styles.buttonStyle}
-          onPress={() => navigation.navigate("Profile")}
-        >
-          <Text style={styles.textTitleRight}>Done</Text>
-        </Button>
+    <KeyboardAvoidingView
+    behavior={Platform.OS === "ios" ? "padding" : null}
+    style={{ flex: 1 }}
+  >
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.container}>
+        <View style={styles.row}>
+          <Button
+            labelStyle={styles.buttonStyle}
+            onPress={() => navigation.navigate("PlantProfile")}
+          >
+            <Text style={styles.textTitleLeft}>Cancel</Text>
+          </Button>
+          <Text style={styles.textTitle}>Edit Plant Profile</Text>
+          <Button
+            labelStyle={styles.buttonStyle}
+            onPress={() => navigation.navigate("Profile")}
+          >
+            <Text style={styles.textTitleRight}>Done</Text>
+          </Button>
+        </View>
+        <View style={styles.containerPicture}>
+          {(image && (
+            <Image style={styles.profilePicture} source={{ uri: image }} />
+          )) ||
+            (!image && (
+              <Image
+                style={styles.profilePicture}
+                source={{ uri: "https://i.imgur.com/oeojGAr.jpeg" }}
+              />
+            ))}
+          <Button
+            color="#64A3A3"
+            icon="camera"
+            labelStyle={styles.buttonStyle}
+            onPress={pickImage}
+          >
+            Change Plant Photo
+          </Button>
+        </View>
+        <View style={styles.containerTest}>
+          <View style={styles.profileRows}>
+            <View style={styles.halfFlex}>
+              <Text style={styles.inputFontStyleLabelBottom}>Scientific Name</Text>
+            </View>
+            <View style={styles.halfFlex}>
+              <TextInput
+                mode="flat"
+                style={styles.inputFontStyle}
+                placeholder="Name"
+                placeholderTextColor="#666"
+                underlineColor="#fff"
+                value={textSciName}
+                theme={{colors: {text: "#666"}}}
+                onChangeText={textSciName => setTextSciName(textSciName)}
+              />
+            </View>
+            
+          </View>
+          <View style={styles.profileRows}>
+            <View style={styles.halfFlex}>
+              <Text style={styles.inputFontStyleLabelBottom}>Nickname</Text>
+            </View>
+            <View style={styles.halfFlex}>
+              <TextInput
+                mode="flat"
+                style={styles.inputFontStyle}
+                underlineColor="#fff"
+                placeholder="Nickname"
+                placeholderTextColor="#666"
+                value={textNickname}
+                theme={{colors: {text: "#666"}}}
+                onChangeText={textNickname => setTextNickname(textNickname)}
+              />
+            </View>
+          </View>
+          <View style={styles.profileRows}>
+            <View style={styles.halfFlex}>
+              <Text style={styles.inputFontStyleLabelBottom}>USDA Zone</Text>
+            </View>
+            <View style={styles.halfFlex}>
+              <TextInput
+                mode="flat"
+                style={styles.inputFontStyle}
+                underlineColor="#fff"
+                placeholder="Zone #"
+                placeholderTextColor="#666"
+                value={textZone}
+                theme={{colors: {text: "#666"}}}
+                onChangeText={textZone => setTextZone(textZone)}
+              />
+            </View>
+          </View>
+          <View style={{paddingTop: 10}}>
+            <View>
+              <Text style={styles.inputFontStyleLabelBottom}>Notes</Text>
+            </View>
+            <View>
+              <TextInput
+                multiline={true}
+                numberOfLines={5}
+                //mode="flat"
+                style={styles.inputFontStyleMultiline}
+                underlineColor="#fff"
+                placeholder="Add Notes"
+                placeholderTextColor="#666"
+                value={textNotes}
+                theme={{colors: {text: "#666"}}}
+                onChangeText={textNotes => setTextNotes(textNotes)}
+              />
+            </View>
+            
+          </View>
+          <View style={styles.profileRows}>
+            <View style={styles.halfFlex}>
+              <Text style={styles.inputFontStyleLabelBottom}>Watering Frequency</Text>
+            </View>
+            <View style={styles.halfFlex}>
+              <TextInput
+                keyboardType="number-pad"
+                mode="flat"
+                style={styles.inputFontStyle}
+                underlineColor="#fff"
+                placeholder="# Days"
+                placeholderTextColor="#666"
+                value={textWatFreq}
+                theme={{colors: {text: "#666"}}}
+                onChangeText={textWatFreq => setTextWatFreq(textWatFreq)}
+              />
+            </View>
+          </View>
+          <View style={styles.profileRows}>
+            <View style={styles.halfFlex}>
+              <Text style={styles.inputFontStyleLabelBottom}>Repotting Frequency</Text>
+            </View>
+            <View style={styles.halfFlex}>
+              <TextInput
+                keyboardType="number-pad"
+                mode="flat"
+                style={styles.inputFontStyle}
+                underlineColor="#fff"
+                placeholder="# Days"
+                placeholderTextColor="#666"
+                value={textRepFreq}
+                theme={{colors: {text: "#666"}}}
+                onChangeText={textRepFreq => setTextRepFreq(textRepFreq)}
+              />
+            </View>
+          </View>
+          <View style={styles.profileRows}>
+            <View style={styles.halfFlex}>
+              <Text style={styles.inputFontStyleLabelBottom}>Fertilizing Frequency</Text>
+            </View>
+            <View style={styles.halfFlex}>
+              <TextInput
+                keyboardType="number-pad"
+                mode="flat"
+                style={styles.inputFontStyle}
+                underlineColor="#fff"
+                placeholder="# Days"
+                placeholderTextColor="#666"
+                value={textFertFreq}
+                theme={{colors: {text: "#666"}}}
+                onChangeText={textFertFreq => setTextFertFreq(textFertFreq)}
+              />
+            </View>
+          </View>
+        </View>
       </View>
-      <View style={styles.containerPicture}>
-        {(image && (
-          <Image style={styles.profilePicture} source={{ uri: image }} />
-        )) ||
-          (!image && (
-            <Image
-              style={styles.profilePicture}
-              source={{ uri: "https://i.imgur.com/oeojGAr.jpeg" }}
-            />
-          ))}
-        <Button
-          color="#64A3A3"
-          icon="camera"
-          labelStyle={styles.buttonStyle}
-          onPress={pickImage}
-        >
-          Change Plant Photo
-        </Button>
-      </View>
-      <View style={styles.containerTest}>
-        <View style={styles.profileRows}>
-          <View style={styles.halfFlex}>
-            <Text style={styles.inputFontStyleLabelBottom}>Scientific Name</Text>
-          </View>
-          <View style={styles.halfFlex}>
-            <TextInput
-              mode="flat"
-              style={styles.inputFontStyle}
-              placeholder="Name"
-              placeholderTextColor="#666"
-              underlineColor="#fff"
-              value={textSciName}
-              theme={{colors: {text: "#666"}}}
-              onChangeText={textSciName => setTextSciName(textSciName)}
-            />
-          </View>
-          
-        </View>
-        <View style={styles.profileRows}>
-          <View style={styles.halfFlex}>
-            <Text style={styles.inputFontStyleLabelBottom}>Nickname</Text>
-          </View>
-          <View style={styles.halfFlex}>
-            <TextInput
-              mode="flat"
-              style={styles.inputFontStyle}
-              underlineColor="#fff"
-              placeholder="Nickname"
-              placeholderTextColor="#666"
-              value={textNickname}
-              theme={{colors: {text: "#666"}}}
-              onChangeText={textNickname => setTextNickname(textNickname)}
-            />
-          </View>
-        </View>
-        <View style={styles.profileRows}>
-          <View style={styles.halfFlex}>
-            <Text style={styles.inputFontStyleLabelBottom}>USDA Zone</Text>
-          </View>
-          <View style={styles.halfFlex}>
-            <TextInput
-              mode="flat"
-              style={styles.inputFontStyle}
-              underlineColor="#fff"
-              placeholder="Zone #"
-              placeholderTextColor="#666"
-              value={textZone}
-              theme={{colors: {text: "#666"}}}
-              onChangeText={textZone => setTextZone(textZone)}
-            />
-          </View>
-        </View>
-        <View style={{paddingTop: 10}}>
-          <View>
-            <Text style={styles.inputFontStyleLabelBottom}>Notes</Text>
-          </View>
-          <View>
-            <TextInput
-              multiline={true}
-              numberOfLines={5}
-              //mode="flat"
-              style={styles.inputFontStyleMultiline}
-              underlineColor="#fff"
-              placeholder="Add Notes"
-              placeholderTextColor="#666"
-              value={textNotes}
-              theme={{colors: {text: "#666"}}}
-              onChangeText={textNotes => setTextNotes(textNotes)}
-            />
-          </View>
-          
-        </View>
-        <View style={styles.profileRows}>
-          <View style={styles.halfFlex}>
-            <Text style={styles.inputFontStyleLabelBottom}>Watering Frequency</Text>
-          </View>
-          <View style={styles.halfFlex}>
-            <TextInput
-              keyboardType="number-pad"
-              mode="flat"
-              style={styles.inputFontStyle}
-              underlineColor="#fff"
-              placeholder="# Days"
-              placeholderTextColor="#666"
-              value={textWatFreq}
-              theme={{colors: {text: "#666"}}}
-              onChangeText={textWatFreq => setTextWatFreq(textWatFreq)}
-            />
-          </View>
-        </View>
-        <View style={styles.profileRows}>
-          <View style={styles.halfFlex}>
-            <Text style={styles.inputFontStyleLabelBottom}>Repotting Frequency</Text>
-          </View>
-          <View style={styles.halfFlex}>
-            <TextInput
-              keyboardType="number-pad"
-              mode="flat"
-              style={styles.inputFontStyle}
-              underlineColor="#fff"
-              placeholder="# Days"
-              placeholderTextColor="#666"
-              value={textRepFreq}
-              theme={{colors: {text: "#666"}}}
-              onChangeText={textRepFreq => setTextRepFreq(textRepFreq)}
-            />
-          </View>
-        </View>
-        <View style={styles.profileRows}>
-          <View style={styles.halfFlex}>
-            <Text style={styles.inputFontStyleLabelBottom}>Fertilizing Frequency</Text>
-          </View>
-          <View style={styles.halfFlex}>
-            <TextInput
-              keyboardType="number-pad"
-              mode="flat"
-              style={styles.inputFontStyle}
-              underlineColor="#fff"
-              placeholder="# Days"
-              placeholderTextColor="#666"
-              value={textFertFreq}
-              theme={{colors: {text: "#666"}}}
-              onChangeText={textFertFreq => setTextFertFreq(textFertFreq)}
-            />
-          </View>
-        </View>
-      </View>
-    </View>
+    </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 const windowWidth = Dimensions.get("window").width;
