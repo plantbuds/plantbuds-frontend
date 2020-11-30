@@ -36,7 +36,7 @@ const AppNavigator = () => {
   );
 };
 
-const ProfileStack = createStackNavigator();
+const ProfileStack = createStackNavigator(); 
 const ProfileNavigator = () => {
   return (
     <ProfileStack.Navigator headerMode="none" initialRouteName="Profile">
