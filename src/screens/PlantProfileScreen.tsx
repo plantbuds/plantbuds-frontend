@@ -78,7 +78,7 @@ export default function PlantProfileScreen(props: Props) {
           </View>
         </View>
 
-        <View>
+        <View style={{paddingTop: 10}}>
           <Text style={styles.NRTParentStyle}> Notes </Text>
           <Text style={styles.randomStyling}> Placeholder for notes! </Text>
         </View>
