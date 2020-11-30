@@ -13,6 +13,7 @@ import { Button, TextInput } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
 import Constants from "expo-constants";
 import { CardStyleInterpolators } from "@react-navigation/stack";
+
 // declare types for your props here
 interface Props {
   navigation: any;
@@ -37,7 +38,7 @@ export default function ProfileScreen(props: Props) {
           onPress={() => navigation.navigate("EditProfileScreen")}
         >
           <Text style={styles.editButtonStyle}>Edit</Text>
-        </Button>
+       </Button>
       </View>
 
       <View style ={{flexDirection: 'row'}}>
@@ -169,7 +170,6 @@ const styles = StyleSheet.create({
     marginLeft: 30,
     lineHeight: 30
   },
-  
   profilePicture : {
     flexDirection: 'column',
     borderColor: 'black',
