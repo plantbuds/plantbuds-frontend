@@ -13,6 +13,7 @@ export async function signInWithGoogleAsync() {
       return result.accessToken;
     } else {
       console.log("cancelled");
+      return { cancelled: true };
     }
   } catch (e) {
     console.log("error", e);
@@ -34,6 +35,7 @@ export async function signUpWithGoogleAsync() {
       return tokens;
     } else {
       console.log("cancelled");
+      return { cancelled: true };
     }
   } catch (e) {
     console.log("error", e);

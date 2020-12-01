@@ -25,15 +25,15 @@ export default function LandingScreen(props: Props) {
 
   const signInWithGoogle = async () => {
     const accessToken = await signInWithGoogleAsync();
-    if (accessToken) {
+    if (typeof accessToken === "string") {
       dispatch(loginUser(accessToken));
     }
   };
 
   const signUpWithGoogle = async () => {
-    const idToken = await signUpWithGoogleAsync();
-    if (idToken[0] && idToken[1]) {
-        dispatch(createUser(idToken[0], idToken[1]));
+    const tokens = await signUpWithGoogleAsync();
+    if (typeof tokens[0] === "string" && typeof tokens[1] === "string") {
+        dispatch(createUser(tokens[0], tokens[1]));
     }
   };
 
