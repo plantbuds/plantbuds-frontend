@@ -71,7 +71,7 @@ export default function EditPlantProfileScreen(props: Props) {
           <Text style={styles.textTitle}>Edit Plant Profile</Text>
           <Button
             labelStyle={styles.buttonStyle}
-            onPress={() => navigation.navigate("Profile")}
+            onPress={() => navigation.navigate("PlantProfile")}
           >
             <Text style={styles.textTitleRight}>Done</Text>
           </Button>
