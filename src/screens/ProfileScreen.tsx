@@ -12,6 +12,7 @@ import {
 import { Button, TextInput } from "react-native-paper";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { CardStyleInterpolators } from "@react-navigation/stack";
 
 // declare types for your props here
@@ -29,10 +30,20 @@ export default function ProfileScreen(props: Props) {
   const [waterNotif, setWaterNotif] = useState(false);
   const [repotNotif, setRepotNotif] = useState(false);
   const [fertilizeNotif, setFertilizeNotif] = useState(false);
+  const [time, setTime] = useState(new Date(1598051730000));
+  const [show, setShow ] = useState(false);
   const toggleWater = () => setWaterNotif(previousState => !previousState);
   const toggleRepot = () => setRepotNotif(previousState => !previousState);
   const toggleFertilize = () =>
     setFertilizeNotif(previousState => !previousState);
+  const showTimepicker = () => {
+    setShow(true);
+  }
+  const onChange = (event, selectedTime) => {
+    const currentTime = selectedTime || time;
+    setShow(Platform.OS === 'ios');
+    setTime(currentTime);
+  }
 
   return (
     <View style={styles.container}>
@@ -121,6 +132,8 @@ export default function ProfileScreen(props: Props) {
 
       <Text style={styles.notificationSettingStyle}>Settings</Text>
       <Text style={styles.optionsStyle}>Notification Delivery</Text>
+      <Button onPress={showTimepicker}>{String(time)}</Button>
+      {show && <DateTimePicker value={time} mode="time" display="compact" onChange={onChange}/>}
     </View>
   );
 }

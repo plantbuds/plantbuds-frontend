@@ -63,7 +63,7 @@ export default function HomeScreen(props: Props) {
       );
 
       // Will remove this for mvp. Temporarily gives an array of people to display
-      const url = "https://api.randomuser.me/?results=40";
+      const url = "https://api.randomuser.me/?results=5";
       const response = await fetch(url);
       const data = await response.json();
       setPlant(data.results);
