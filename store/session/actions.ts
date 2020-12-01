@@ -71,7 +71,12 @@ export const createUser = (idToken: string, accessToken: string) => {
               throw error;
             }
           } catch (e) {
-            Alert.alert("Error: " + e.response.data.error);
+            if (e.response.data.error === 'user already exists in user profile table') {
+              dispatch(loginUser(accessToken));
+            }
+            else {
+              Alert.alert("Error: " + e.response.data.error);
+            }
           }
         }
       }
