@@ -17,7 +17,6 @@ interface Props {
 export default function LandingScreen(props: Props) {
   const { navigation } = props;
   const loggedIn = useSelector((state: RootState) => state.session.loggedIn);
-  const error = useSelector((state: RootState) => state.session.error);
   const username = useSelector((state: RootState) => state.session.username);
   const profileURI = useSelector(
     (state: RootState) => state.session.profileURI
@@ -33,8 +32,8 @@ export default function LandingScreen(props: Props) {
 
   const signUpWithGoogle = async () => {
     const idToken = await signUpWithGoogleAsync();
-    if (idToken) {
-        dispatch(createUser(idToken));
+    if (idToken[0] && idToken[1]) {
+        dispatch(createUser(idToken[0], idToken[1]));
     }
   };
 

@@ -14,6 +14,7 @@ import {
 
 import { API_ROOT } from "../../src/constants/index";
 import { Alert } from "react-native";
+import { signInWithGoogleAsync } from "../../src/utils/GoogleOAuth";
 
 export const loginUser = (accessToken: string) => {
   return {
@@ -38,7 +39,7 @@ export const loginUser = (accessToken: string) => {
           }
         }
       }
-    },
+    }
   };
 };
 
@@ -48,7 +49,7 @@ export const logout = () => {
   };
 };
 
-export const createUser = (idToken: string) => {
+export const createUser = (idToken: string, accessToken: string) => {
   return {
     types: [CREATE_USER, CREATE_USER_SUCCESS, CREATE_USER_FAIL],
     payload: {
@@ -61,8 +62,8 @@ export const createUser = (idToken: string) => {
         }
       },
       options: {
-        onSuccess: () => {
-          console.log("successfully created user in database");
+        onSuccess: async ({ dispatch }) => {
+          dispatch(loginUser(accessToken));
         },
         onError({ getState, dispatch, error }) {
           try {

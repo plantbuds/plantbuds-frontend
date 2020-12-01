@@ -20,6 +20,7 @@ export async function signInWithGoogleAsync() {
 }
 
 export async function signUpWithGoogleAsync() {
+  let tokens = [];
   try {
     const result = await Google.logInAsync({
       iosClientId:
@@ -28,7 +29,9 @@ export async function signUpWithGoogleAsync() {
     });
 
     if (result.type === "success") {
-      return result.idToken;
+      tokens.push(result.idToken);
+      tokens.push(result.accessToken);
+      return tokens;
     } else {
       console.log("cancelled");
     }
