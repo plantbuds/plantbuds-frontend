@@ -137,7 +137,7 @@ export const editZone = (zone: string, userID: number) => {
         url: `${API_ROOT}/api/users/${userID}/`,
         method: "PATCH",
         data: {
-          USDA_Zone: zone
+          USDA_zone: zone
         }
       },
       options: {
