@@ -8,13 +8,20 @@ import {
   Dimensions,
   TouchableWithoutFeedback,
   Keyboard,
+  GestureResponderEvent,
   KeyboardAvoidingView,
   PixelRatio
 } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
-import Constants from "expo-constants";
-import { CardStyleInterpolators } from "@react-navigation/stack";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../../store/store";
+import {
+  editProfilePic,
+  editUsername,
+  editZone
+} from "../../store/session/actions";
+
 // declare types for your props here
 interface Props {
   navigation: any;
@@ -32,8 +39,17 @@ export default function EditProfileScreen(props: Props) {
   const [image, setImage] = useState(null);
   const [textZone, setTextZone] = useState("");
   const [textName, setTextName] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const username = useSelector((state: RootState) => state.session.username);
+  const USDAZone = useSelector((state: RootState) => state.session.USDA_zone);
+  const userID = useSelector((state: RootState) => state.session.userID);
+  const profilePic = useSelector(
+    (state: RootState) => state.session.profileURI
+  );
+  const dispatch = useDispatch();
   const windowWidth = Dimensions.get("window").width;
   const windowHeight = Dimensions.get("window").height;
+
   // check if user has given permission to access image gallery from phone
   useEffect(() => {
     (async () => {
@@ -47,6 +63,7 @@ export default function EditProfileScreen(props: Props) {
       }
     })();
   }, []);
+
   // method that gets image from the phone
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -60,6 +77,12 @@ export default function EditProfileScreen(props: Props) {
       setImage(result.uri);
     }
   };
+
+  function onPress() {
+    console.log("on submission");
+
+    navigation.navigate("Profile");
+  }
 
   return (
     <KeyboardAvoidingView
@@ -78,7 +101,19 @@ export default function EditProfileScreen(props: Props) {
             <Text style={styles.textTitle}>Edit Profile</Text>
             <Button
               labelStyle={styles.buttonStyle}
-              onPress={() => navigation.navigate("Profile")}
+              onPress={() => {
+                console.log("on submission");
+                if (textName) {
+                  dispatch(editUsername(textName, userID));
+                }
+                if (textZone) {
+                  dispatch(editZone(textZone, userID));
+                }
+                if (image) {
+                  dispatch(editProfilePic(image, userID));
+                }
+                navigation.navigate("Profile");
+              }}
             >
               <Text style={styles.textTitleRight}>Done</Text>
             </Button>
@@ -90,7 +125,7 @@ export default function EditProfileScreen(props: Props) {
               (!image && (
                 <Image
                   style={styles.profilePicture}
-                  source={{ uri: "https://i.imgur.com/oeojGAr.jpeg" }}
+                  source={{ uri: profilePic }}
                 />
               ))}
             <Button
@@ -110,15 +145,15 @@ export default function EditProfileScreen(props: Props) {
                 backgroundColor: "#fff"
               }}
             >
-              <View style={{flex:1}}>
+              <View style={{ flex: 1 }}>
                 <Text style={styles.inputFontStyleLabelTop}>Username</Text>
               </View>
-              <View style={{flex:2}}>
+              <View style={{ flex: 2 }}>
                 <TextInput
                   mode="flat"
                   theme={theme}
                   style={styles.inputFontStyle}
-                  placeholder="Name"
+                  placeholder={username}
                   underlineColor="#fff"
                   value={textName}
                   onChangeText={textName => setTextName(textName)}
@@ -132,16 +167,17 @@ export default function EditProfileScreen(props: Props) {
                 backgroundColor: "#fff"
               }}
             >
-              <View style={{flex:1}}>
+              <View style={{ flex: 1 }}>
                 <Text style={styles.inputFontStyleLabelBottom}>USDA Zone</Text>
               </View>
-              <View style={{flex:2}}>
+              <View style={{ flex: 2 }}>
                 <TextInput
+                  keyboardType="number-pad"
                   mode="flat"
                   theme={theme}
                   style={styles.inputFontStyle}
                   underlineColor="#fff"
-                  placeholder="Zone #"
+                  placeholder={USDAZone ? "Zone " + USDAZone : "Zone #"}
                   value={textZone}
                   onChangeText={textZone => setTextZone(textZone)}
                 />

@@ -1,6 +1,6 @@
 export interface SessionState {
   loggedIn: boolean;
-  userId: number;
+  userID: number;
   profileURI: string;
   username: string, 
   email: string, 
@@ -30,6 +30,12 @@ export const SET_PROFILE_IMAGE = "SET_PROFILE_IMAGE";
 export const EDIT_PFP = "EDIT_PFP";
 export const EDIT_PFP_SUCCESS = "EDIT_PFP_SUCCESS";
 export const EDIT_PFP_FAIL = "EDIT_PFP_FAIL";
+export const EDIT_USERNAME = "EDIT_USERNAME";
+export const EDIT_USERNAME_SUCCESS = "EDIT_USERNAME_SUCCESS";
+export const EDIT_USERNAME_FAIL = "EDIT_USERNAME_FAIL";
+export const EDIT_ZONE = "EDIT_ZONE";
+export const EDIT_ZONE_SUCCESS = "EDIT_ZONE_SUCCESS";
+export const EDIT_ZONE_FAIL = "EDIT_ZONE_FAIL";
 
 interface LoginRequestAction {
   type: typeof LOGIN_REQUEST;
@@ -49,9 +55,19 @@ interface LoginFailAction {
   payload: any;
 }
 
-interface SetProfileImageAction {
-  type: typeof SET_PROFILE_IMAGE;
+interface EditPFPSuccessAction {
+  type: typeof EDIT_PFP_SUCCESS;
   imageURI: string;
+}
+
+interface EditUsernameSuccessAction {
+  type: typeof EDIT_USERNAME_SUCCESS;
+  username: string
+}
+
+interface EditZoneSuccessAction {
+  type: typeof EDIT_ZONE_SUCCESS;
+  zone: string;
 }
 
 export type SessionActionTypes =
@@ -59,4 +75,6 @@ export type SessionActionTypes =
   | LoginSuccessAction
   | LogoutAction
   | LoginFailAction
-  | SetProfileImageAction;
+  | EditPFPSuccessAction
+  | EditUsernameSuccessAction
+  | EditZoneSuccessAction;

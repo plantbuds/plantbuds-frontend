@@ -7,14 +7,13 @@ import {
   LOGIN_FAIL,
   EDIT_PFP,
   EDIT_PFP_SUCCESS,
-  EDIT_PFP_FAIL,
-  SET_PROFILE_IMAGE,
-  LOGIN_REQUEST
+  EDIT_USERNAME_SUCCESS,
+  EDIT_ZONE_SUCCESS,
 } from "./types";
 
 const initialState: SessionState = {
   loggedIn: false,
-  userId: null,
+  userID: null,
   profileURI: null, 
   username: null, 
   email: null, 
@@ -35,7 +34,7 @@ export function sessionReducer(
       return {
         ...state,
         loggedIn: true,
-        userId: action.payload.data.id,
+        userID: action.payload.data.id,
         profileURI: action.payload.data.photo,
         username: action.payload.data.username,
         email: action.payload.data.email,
@@ -51,15 +50,27 @@ export function sessionReducer(
       return {
         ...state,
         loggedIn: false,
-        userId: null,
+        userID: null,
+        username: null,
+        USDA_zone: null,
         profileURI: null,
         //TODO
       };
-    case SET_PROFILE_IMAGE:
+    case EDIT_PFP_SUCCESS:
       return {
         ...state,
         profileURI: action.imageURI,
       };
+    case EDIT_USERNAME_SUCCESS:
+      return {
+        ...state,
+        username: action.username,
+      };
+    case EDIT_ZONE_SUCCESS: 
+    return {
+      ...state,
+      USDA_zone: parseInt(action.zone),
+    };
     default:
       return state;
   }

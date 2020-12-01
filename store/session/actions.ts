@@ -9,6 +9,12 @@ import {
   CREATE_USER,
   CREATE_USER_SUCCESS,
   CREATE_USER_FAIL,
+  EDIT_USERNAME,
+  EDIT_USERNAME_SUCCESS,
+  EDIT_USERNAME_FAIL,
+  EDIT_ZONE,
+  EDIT_ZONE_SUCCESS,
+  EDIT_ZONE_FAIL,
   SET_PROFILE_IMAGE
 } from "./types";
 
@@ -90,27 +96,75 @@ export const editProfilePic = (imageURI: string, userID: number) => {
     payload: {
       client: "default",
       request: {
-        url: `${API_ROOT}/users/${userID}`,
+        url: `${API_ROOT}/api/users/${userID}/`,
         method: "PATCH",
         data: {
-          //TODO
+          photo: imageURI
         }
       },
       options: {
-        onSuccess: ({ dispatch }) => {
-          // set the new pfp locally
-          dispatch(setProfileImage);
-          console.log("successfully updated pfp");
-        },
-        onError: () => console.log("failed to update pfp")
+        onSuccess: ({dispatch}) =>  dispatch(setProfilePic(imageURI))
       }
     }
   };
 };
 
-export const setProfileImage = (imageURI: string) => {
+export const editUsername = (username: string, userID: number) => {
   return {
-    type: SET_PROFILE_IMAGE,
-    imageURI
+    type: [EDIT_USERNAME, EDIT_USERNAME_SUCCESS, EDIT_USERNAME_FAIL],
+    payload: {
+      client: "default",
+      request: {
+        url: `${API_ROOT}/api/users/${userID}/`,
+        method: "PATCH",
+        data: {
+          username: username
+        }
+      },
+      options: {
+        onSuccess: ({dispatch}) =>  dispatch(setUsername(username))
+      }
+    }
   };
 };
+
+export const editZone = (zone: string, userID: number) => {
+  return {
+    type: [EDIT_ZONE, EDIT_ZONE_SUCCESS, EDIT_ZONE_FAIL],
+    payload: {
+      client: "default",
+      request: {
+        url: `${API_ROOT}/api/users/${userID}/`,
+        method: "PATCH",
+        data: {
+          USDA_Zone: zone
+        }
+      },
+      options: {
+       
+        onSuccess: ({dispatch}) =>  dispatch(setZone(zone))
+      }
+    }
+  };
+};
+
+export const setProfilePic = (imageURI: string) => {
+  return {
+    type: EDIT_PFP_SUCCESS,
+    imageURI
+  }
+}
+
+export const setUsername = (username: string) => {
+  return {
+    type: EDIT_USERNAME_SUCCESS,
+    username
+  }
+}
+
+export const setZone = (zone: string) => {
+  return {
+    type: EDIT_ZONE_SUCCESS,
+    zone
+  }
+}

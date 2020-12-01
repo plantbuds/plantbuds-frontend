@@ -10,8 +10,8 @@ import {
   Switch
 } from "react-native";
 import { Button, TextInput } from "react-native-paper";
-import * as ImagePicker from "expo-image-picker";
-import Constants from "expo-constants";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/store";
 import { CardStyleInterpolators } from "@react-navigation/stack";
 
 // declare types for your props here
@@ -24,10 +24,15 @@ export default function ProfileScreen(props: Props) {
   const [image, setImage] = useState(null);
   const [textZone, setTextZone] = useState("");
   const [textName, setTextName] = useState("");
-  const windowWidth = Dimensions.get("window").width;
-  const windowHeight = Dimensions.get("window").height;
-  const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+  const username = useSelector((state: RootState) => state.session.username);
+  const USDAZone = useSelector((state: RootState) => state.session.USDA_zone);
+  const profilePic = useSelector((state: RootState) => state.session.profileURI);
+  const [waterNotif, setWaterNotif] = useState(false);
+  const [repotNotif, setRepotNotif] = useState(false);
+  const [fertilizeNotif, setFertilizeNotif] = useState(false);
+  const toggleWater = () => setWaterNotif(previousState => !previousState);
+  const toggleRepot = () => setRepotNotif(previousState => !previousState);
+  const toggleFertilize = () => setFertilizeNotif(previousState => !previousState);
 
   return (
     <View style={styles.container}>
@@ -47,14 +52,14 @@ export default function ProfileScreen(props: Props) {
             <Image
               style={styles.profilePicture}
               source={{
-                uri: 'https://media1.fdncms.com/illinoistimes/imager/u/original/11623518/news01.jpg',
+                uri: profilePic,
               }}
             />
           </View>
         </View>
         <View style = {{flexDirection: 'column'}}>
-          <Text style = {styles.usernameStyle}>Name</Text>
-          <Text style = {styles.zoneStyle}>USDA Zone</Text>
+            <Text style = {styles.usernameStyle}>{username}</Text>
+          <Text style = {styles.zoneStyle}>USDA Zone: {(USDAZone) ? USDAZone : "N/A"}</Text>
         </View>
       </View>
 
@@ -72,10 +77,10 @@ export default function ProfileScreen(props: Props) {
           <View style={styles.columnStyle}>
             <Switch style={styles.toggleStyle}
               trackColor={{ false: "#767577", true: "#34c759" }}
-              thumbColor={isEnabled ? "#f4f3f4" : "#f4f3f4"}
+              thumbColor={waterNotif ? "#f4f3f4" : "#f4f3f4"}
               ios_backgroundColor="#3e3e3e"
-              onValueChange={toggleSwitch}
-              value={isEnabled}/>
+              onValueChange={toggleWater}
+              value={waterNotif}/>
           </View>
         </View>
 
@@ -86,10 +91,10 @@ export default function ProfileScreen(props: Props) {
           <View style={styles.columnStyle}>
             <Switch style={styles.toggleStyle}
               trackColor={{ false: "#767577", true: "#34c759" }}
-              thumbColor={isEnabled ? "#f4f3f4" : "#f4f3f4"}
+              thumbColor={repotNotif ? "#f4f3f4" : "#f4f3f4"}
               ios_backgroundColor="#3e3e3e"
-              onValueChange={toggleSwitch}
-              value={isEnabled}/>
+              onValueChange={toggleRepot}
+              value={repotNotif}/>
           </View>
         </View>
 
@@ -100,10 +105,10 @@ export default function ProfileScreen(props: Props) {
           <View style={styles.columnStyle}>
           <Switch style={styles.toggleStyle}
               trackColor={{ false: "#767577", true: "#34c759" }}
-              thumbColor={isEnabled ? "#f4f3f4" : "#f4f3f4"}
+              thumbColor={fertilizeNotif ? "#f4f3f4" : "#f4f3f4"}
               ios_backgroundColor="#3e3e3e"
-              onValueChange={toggleSwitch}
-              value={isEnabled}/>
+              onValueChange={toggleFertilize}
+              value={fertilizeNotif}/>
           </View>
         </View>
       </View>
