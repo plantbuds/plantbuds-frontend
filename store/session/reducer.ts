@@ -1,4 +1,5 @@
 import { ActionSheetIOS } from "react-native";
+import { ActivityIndicator } from "react-native-paper";
 import {
   SessionState,
   SessionActionTypes,
@@ -38,7 +39,11 @@ export function sessionReducer(
         profileURI: action.payload.data.photo,
         username: action.payload.data.username,
         email: action.payload.data.email,
-        //TODO
+        USDA_zone: action.payload.data.USDA_zone,
+        receive_water_notif: action.payload.data.receive_water_notif,
+        receive_repot_notif: action.payload.data.receive_water_notif,
+        receive_fertilizing_notif: action.payload.data.receive_fertilizing_notif,
+        notif_time: action.payload.data.notif_time
       };
     case LOGIN_FAIL:
       return {
@@ -54,7 +59,11 @@ export function sessionReducer(
         username: null,
         USDA_zone: null,
         profileURI: null,
-        //TODO
+        email: null,
+        notif_time: null,
+        receive_fertilizing_notif: null,
+        receive_water_notif: null,
+        receive_repot_notif: null,
       };
     case EDIT_PFP_SUCCESS:
       return {
