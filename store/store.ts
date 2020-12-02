@@ -2,6 +2,7 @@ import { createStore, combineReducers, applyMiddleware } from "redux";
 import axios from "axios";
 import axiosMiddleware from "redux-axios-middleware";
 import { sessionReducer } from "./session/reducer";
+import { plantgroupReducer } from "./plantgroup/reducer";
 import { API_ROOT, BASIC_TOKEN } from "../src/constants/index";
 
 const client = axios.create({
@@ -11,7 +12,8 @@ const client = axios.create({
 });
 
 const rootReducer = combineReducers({
-  session: sessionReducer
+  session: sessionReducer,
+  plantgroup: plantgroupReducer
 });
 
 const middlewareConfig = {

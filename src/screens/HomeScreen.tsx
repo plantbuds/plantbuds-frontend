@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as Notifications from "expo-notifications";
 import { registerForPushNotificationsAsync } from "../utils/Notifications";
+import { useSelector, useDispatch } from "react-redux";
+import { getAllPlants } from "../../store/plantgroup/actions";
 import { removeAllNotificationListeners } from "expo-notifications";
 import { Searchbar } from "react-native-paper";
 import {
@@ -20,6 +22,7 @@ import {
 } from "react-native";
 
 import { FAB } from "react-native-paper";
+import { RootState } from "../../store/store";
 
 // declare types for your props here
 interface Props {
@@ -36,9 +39,11 @@ const theme = {
 export default function HomeScreen(props: Props) {
   // local state
   const [loading, setLoading] = useState(true);
-  const [plants, setPlant] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-
+  const username = useSelector((state: RootState) => state.session.username);
+  const plants = useSelector((state: RootState) => state.plantgroup.plants);
+  
+  const dispatch = useDispatch(); 
   const onChangeSearch = (query: string) => setSearchQuery(query);
 
   useEffect(() => {
@@ -54,11 +59,7 @@ export default function HomeScreen(props: Props) {
         }
       );
 
-      // Will remove this for mvp. Temporarily gives an array of people to display
-      const url = "https://api.randomuser.me/?results=40";
-      const response = await fetch(url);
-      const data = await response.json();
-      setPlant(data.results);
+      dispatch(getAllPlants(username));
       setLoading(false);
     })();
   }, []);
@@ -77,7 +78,13 @@ export default function HomeScreen(props: Props) {
   if (plants.length === 0) {
     return (
       <View>
-        <Text>didn't get plants from backend</Text>
+        <Text>Looks like you do not have any plants! Add a plant to get started!</Text>
+        <FAB
+            style={styles.fab}
+            color="white"
+            icon="plus"
+            onPress={() => alert("Add Plant")}
+          />
       </View>
     );
   }
@@ -101,7 +108,7 @@ export default function HomeScreen(props: Props) {
           <FlatList
             numColumns={2}
             columnWrapperStyle={styles.displayWrapper}
-            keyExtractor={item => item.login.uuid}
+            keyExtractor={item => item.url.split("/")[5]}
             data={plants}
             renderItem={({ item }) => (
               <TouchableHighlight
@@ -110,8 +117,8 @@ export default function HomeScreen(props: Props) {
                 underlayColor="#DDDDDD"
                 onPress={() => {
                   navigation.navigate("PlantProfile", {
-                    itemName: item.name.first,
-                    itemURI: item.picture.large,
+                    itemName: item.nickname,
+                    itemURI: item.photo,
                     //TODO add any other plant information that needs to be passed to the plant profile screen.
                   });
                 }}
@@ -119,9 +126,10 @@ export default function HomeScreen(props: Props) {
                 <View>
                   <Image
                     style={styles.item}
-                    source={{ uri: item.picture.large }}
+                    source={{ uri: item.photo }}
                   />
-                  <Text style={{ alignSelf: "center" }}>{item.name.first}</Text>
+                  <Text style={{ alignSelf: "center" }}>{item.nickname}</Text>
+                  <Text style={{ alignSelf: "center" }}>{item.url.split("/")[5]}</Text>
                 </View>
               </TouchableHighlight>
             )}
