@@ -19,7 +19,7 @@ interface Props {
   navigation: any;
 }
 
-export default function ProfileScreen(props: Props) {
+export default function SettingsScreen(props: Props) {
   const { navigation } = props;
   const [image, setImage] = useState(null);
   const [textZone, setTextZone] = useState("");
@@ -35,7 +35,7 @@ export default function ProfileScreen(props: Props) {
         <Text style={styles.textTitle}></Text>
         <Button
           labelStyle={styles.buttonStyle}
-          onPress={() => navigation.navigate("EditProfileScreen")}
+          onPress={() => navigation.navigate("EditSettingsScreen")}
         >
           <Text style={styles.editButtonStyle}>Edit</Text>
        </Button>

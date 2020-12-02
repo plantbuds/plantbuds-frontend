@@ -17,10 +17,6 @@ interface Props {
 export default function LandingScreen(props: Props) {
   const { navigation } = props;
   const loggedIn = useSelector((state: RootState) => state.session.loggedIn);
-  const username = useSelector((state: RootState) => state.session.username);
-  const profileURI = useSelector(
-    (state: RootState) => state.session.profileURI
-  );
   const dispatch = useDispatch();
 
   const signInWithGoogle = async () => {

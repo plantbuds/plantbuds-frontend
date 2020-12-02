@@ -27,7 +27,7 @@ const theme = {
   }
 };
 
-export default function EditProfileScreen(props: Props) {
+export default function EditSettingsScreen(props: Props) {
   const { navigation } = props;
   const [image, setImage] = useState(null);
   const [textZone, setTextZone] = useState("");
@@ -71,14 +71,14 @@ export default function EditProfileScreen(props: Props) {
           <View style={styles.row}>
             <Button
               labelStyle={styles.buttonStyle}
-              onPress={() => navigation.navigate("Profile")}
+              onPress={() => navigation.navigate("Settings")}
             >
               <Text style={styles.textTitleLeft}>Cancel</Text>
             </Button>
             <Text style={styles.textTitle}>Edit Profile</Text>
             <Button
               labelStyle={styles.buttonStyle}
-              onPress={() => navigation.navigate("Profile")}
+              onPress={() => navigation.navigate("Settings")}
             >
               <Text style={styles.textTitleRight}>Done</Text>
             </Button>
