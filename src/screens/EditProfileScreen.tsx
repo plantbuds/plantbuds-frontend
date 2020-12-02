@@ -104,13 +104,10 @@ export default function EditProfileScreen(props: Props) {
                   }
                   dispatch(editUsername(textName, userID));
                 }
-                else {
-                  setTextErr(true);
-                  return;
-                }
                 if (textZone) {
                   dispatch(editZone(textZone, userID));
                 }
+              
                 if (image) {
                   dispatch(editProfilePic(image, userID));
                 }
