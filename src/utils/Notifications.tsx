@@ -4,6 +4,7 @@ import { Platform } from "react-native";
 import { storeExpoToken, getExpoToken } from "../utils/AsyncStorage";
 
 export async function registerForPushNotificationsAsync() {
+  let token;
   try {
 
     const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
@@ -19,10 +20,11 @@ export async function registerForPushNotificationsAsync() {
     }
     
     const value = await getExpoToken();
-    console.log(value);
+
     if (value === null) {
-    // Get the token that identifies this device
-    let token = await Notifications.getExpoPushTokenAsync();
+    
+      // Get the token that identifies this device
+    token = (await Notifications.getExpoPushTokenAsync()).data;
     console.log(status, token);
     
     // POST the token to your backend server from where you can retrieve it to send push notifications.
