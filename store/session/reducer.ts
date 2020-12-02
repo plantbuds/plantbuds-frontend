@@ -1,3 +1,4 @@
+import { ActionSheetIOS } from "react-native";
 import {
   SessionState,
   SessionActionTypes,
@@ -15,6 +16,13 @@ const initialState: SessionState = {
   loggedIn: false,
   userId: null,
   profileURI: null, 
+  username: null, 
+  email: null, 
+  USDA_zone: null, 
+  receive_water_notif: null,
+  receive_repot_notif: null, 
+  receive_fertilizing_notif: null,
+  notif_time: null
   //TODO
 };
 
@@ -26,12 +34,17 @@ export function sessionReducer(
     case LOGIN_SUCCESS:
       return {
         ...state,
-        loggedIn: true
+        loggedIn: true,
+        userId: action.payload.data.id,
+        profileURI: action.payload.data.photo,
+        username: action.payload.data.username,
+        email: action.payload.data.email,
         //TODO
       };
     case LOGIN_FAIL:
       return {
-        ...state
+        ...state,
+        loggedIn: false
         //TODO
       };
     case LOGOUT:

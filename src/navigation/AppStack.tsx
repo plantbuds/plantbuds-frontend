@@ -1,19 +1,23 @@
 import React from "react";
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
 import {createStackNavigator} from "@react-navigation/stack";
 import {createDrawerNavigator} from "@react-navigation/drawer";
 import HomeScreen from "../screens/HomeScreen";
-import ProfileScreen from "../screens/ProfileScreen";
+import SettingsScreen from "../screens/SettingsScreen";
 import CalendarScreen from "../screens/CalendarScreen";
 import LandingScreen from "../screens/LandingScreen";
 import TestScreen from "../screens/TestScreen";
-import EditProfileScreen from "../screens/EditProfileScreen";
+import EditSettingsScreen from "../screens/EditSettingsScreen";
 import EditPlantProfileScreen from "../screens/EditPlantProfileScreen";
 import PlantProfileScreen from "../screens/PlantProfileScreen";
+import EncyclopediaSearchScreen from "../screens/EncyclopediaSearchScreen";
+import EncyclopediaProfileScreen from "../screens/EncyclopediaProfileScreen";
 import Sidebar from "../components/Sidebar";
 
 // Onboarding stack navigator 
 const Stack = createStackNavigator();
-const OnboardingStack = () => {
+const OnboardingNavigator = () => {
   return (
     <Stack.Navigator headerMode="none">
       <Stack.Screen name="Landing" component={LandingScreen} />
@@ -34,13 +38,23 @@ const AppNavigator = () => {
   );
 };
 
-const ProfileStack = createStackNavigator();
-const ProfileNavigator = () => {
+const SettingsStack = createStackNavigator(); 
+const SettingsNavigator = () => {
   return (
-    <ProfileStack.Navigator headerMode="none" initialRouteName="Profile">
-      <ProfileStack.Screen name="Profile" component={ProfileScreen} />
-      <ProfileStack.Screen name="EditProfileScreen" component={EditProfileScreen}/>
-    </ProfileStack.Navigator>
+    <SettingsStack.Navigator headerMode="none" initialRouteName="Settings">
+      <SettingsStack.Screen name="Settings" component={SettingsScreen} />
+      <SettingsStack.Screen name="EditSettingsScreen" component={EditSettingsScreen}/>
+    </SettingsStack.Navigator>
+  )
+}
+
+const EncyclopediaStack = createStackNavigator(); 
+const EncyclopediaNavigator = () => {
+  return (
+    <EncyclopediaStack.Navigator headerMode="none" initialRouteName="Search">
+      <EncyclopediaStack.Screen name="Search" component={EncyclopediaSearchScreen}/>
+      <EncyclopediaStack.Screen name="EncyclopediaProfile" component={EncyclopediaProfileScreen}/>
+    </EncyclopediaStack.Navigator>
   )
 }
 
@@ -50,19 +64,16 @@ const SidebarAppNavigator = () => {
   return (
     <AppDrawer.Navigator drawerContent={props => <Sidebar {...props} />}>
       <AppDrawer.Screen options={{ headerTitle: "PlantBuds" }} name="Home" component={AppNavigator} />
-      <AppDrawer.Screen name="Profile" component={ProfileNavigator} />
-      <AppDrawer.Screen name="Calendar" component={CalendarScreen} />
-      <AppDrawer.Screen name="TestScreen" component={TestScreen} />
+      <AppDrawer.Screen name="Search" component={EncyclopediaNavigator} />
+      <AppDrawer.Screen name="Settings" component={SettingsNavigator} />
     </AppDrawer.Navigator>
   );
 };
 
 // RootNavigator to navigate between different stacks
 const RootNavigator = () => {
-    //return SidebarAppNavigator();
-    return SidebarAppNavigator();
-    // If you want to work on home page flow/profile settings flow just change 'return OnboardingStack();' to 'return SidebarAppNavigator();'
-    //TODO finish session reducer to enable switching from login flow to homepage flow
+  const loggedIn = useSelector((state: RootState) => state.session.loggedIn);
+    return (loggedIn) ? SidebarAppNavigator() : OnboardingNavigator();
 };
 
 export default RootNavigator;
