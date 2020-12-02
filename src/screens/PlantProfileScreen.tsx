@@ -38,9 +38,161 @@ var entries = {
   "2020-11-03": [true, true, false]
 };
 
+const greenBlueBrown = {
+  container: {
+      backgroundColor: 'white',
+      borderWidth:4,
+      borderBottomColor:'#1CA7EC',
+      borderTopColor:'#31e627',
+      borderLeftColor:'#AA6F5D',
+      borderRightColor:'#1CA7EC'
+  },
+  text: {
+      bottom: 3,
+      color: 'black',
+  }
+}
+const brown = {
+  container: {
+      backgroundColor: 'white',
+      borderWidth:4,
+      borderBottomColor:'#AA6F5D',
+      borderTopColor:'#AA6F5D',
+      borderLeftColor:'#AA6F5D',
+      borderRightColor:'#AA6F5D'
+  },
+  text: {
+      bottom: 3,
+      color: 'black',
+  }
+}
+const green= {
+  container: {
+      backgroundColor: 'white',
+      borderWidth:4,
+      borderBottomColor:'#31e627',
+      borderTopColor:'#31e627',
+      borderLeftColor:'#31e627',
+      borderRightColor:'#31e627'
+  },
+  text: {
+      bottom: 3,
+      color: 'black',
+  }
+}
+const blue= {
+  container: {
+      backgroundColor: 'white',
+      borderWidth:4,
+      borderBottomColor:'#1CA7EC',
+      borderTopColor:'#1CA7EC',
+      borderLeftColor:'#1CA7EC',
+      borderRightColor:'#1CA7EC'
+  },
+  text: {
+      bottom: 3,
+      color: 'black',
+  }
+}
+
+const blueBrown = {
+  container: {
+      backgroundColor: 'white',
+      borderWidth:4,
+      borderBottomColor:'#1CA7EC',
+      borderTopColor:'#AA6F5D',
+      borderLeftColor:'#1CA7EC',
+      borderRightColor:'#AA6F5D'
+  },
+  text: {
+      bottom: 3,
+      color: 'black',
+  }
+}
+const blueGreen = {
+  container: {
+      backgroundColor: 'white',
+      borderWidth:4,
+      borderBottomColor:'#1CA7EC',
+      borderTopColor:'#31e627',
+      borderLeftColor:'#1CA7EC',
+      borderRightColor:'#31e627'
+  },
+  text: {
+      bottom: 3,
+      color: 'black',
+  }
+}
+const greenBrown = {
+  container: {
+      backgroundColor: 'white',
+      borderWidth:4,
+      borderBottomColor:'#31e627',
+      borderTopColor:'#AA6F5D',
+      borderLeftColor:'#31e627',
+      borderRightColor:'#AA6F5D'
+  },
+  text: {
+      bottom: 3,
+      color: 'black',
+  }
+}
+
+
 export default function PlantProfileScreen(props: Props) {
   const { navigation, route } = props;
   const { itemName, itemURI } = route.params;
+  const [selectedDate, setSelectedDate] = useState(new Date().toDateString());
+  const [markings, setMarkings] = useState({});
+  const [waterStatus, setWaterStatus] = useState(false);
+  const [repotStatus, setRepotStatus] = useState(false);
+  const [fertilizeStatus, setFertilizeStatus] = useState(false);
+  const waterDot = { key: "water", color: "blue" };
+  const repotDot = { key: "repot", color: "brown" };
+  const fertilizeDot = { key: "fertilize", color: "green" };
+  const [displayAddEntryModal, setDisplayAddEntryModal] = useState(false);
+  const [displayReminderModal, setDisplayReminderModal] = useState(false);
+
+  const updateCalendarMarkings = () => {
+    var markings = {};
+        var selected = false;
+        for (const [date, value] of Object.entries(entries)) {
+            var entry = {};
+            //Deep copy shenanigans
+            if(value[0] == true && value[1] == false && value[2] == false){
+                entry["customStyles"]=JSON.parse(JSON.stringify(blue));
+            }else if(value[0] == false && value[1] == true && value[2] == false){
+                entry["customStyles"] = JSON.parse(JSON.stringify(brown));
+            }else if(value[0] == false && value[1] == false && value[2] == true){
+                entry["customStyles"] = JSON.parse(JSON.stringify(green));
+            }else if(value[0] == true && value[1] == true && value[2] == false){
+                entry["customStyles"] = JSON.parse(JSON.stringify(blueBrown));
+            }else if(value[0] == true && value[1] == false && value[2] == true){
+                entry["customStyles"] = JSON.parse(JSON.stringify(blueGreen));
+            }else if(value[0] == false && value[1] == true && value[2] == true){
+                entry["customStyles"] = JSON.parse(JSON.stringify(greenBrown));
+            }else if(value[0] == true && value[1] == true && value[2] == true){
+                entry["customStyles"] = JSON.parse(JSON.stringify(greenBlueBrown));
+            }else{
+
+            }
+            if (date === selectedDate) {
+                entry["selected"] = true;
+                entry["customStyles"]["container"]["backgroundColor"] = "green";
+                entry["customStyles"]["text"]["color"] = "white";
+                selected = true;
+            }
+            markings[date] = entry;
+        }
+        if (!selected) {
+            markings[selectedDate] = { selected: true, customStyles: { container: { backgroundColor: "green" }}};
+        }
+        setMarkings(markings);
+  };
+
+  useEffect(() => {
+    updateCalendarMarkings();
+  }, [selectedDate, displayAddEntryModal]);
 
   return (
     <View style={styles.container}>
@@ -78,7 +230,7 @@ export default function PlantProfileScreen(props: Props) {
           </View>
         </View>
 
-        <View style={{paddingTop: 10}}>
+        <View style={{ paddingTop: 10 }}>
           <Text style={styles.NRTParentStyle}> Notes </Text>
           <Text style={styles.randomStyling}> Placeholder for notes! </Text>
         </View>
@@ -102,19 +254,57 @@ export default function PlantProfileScreen(props: Props) {
 
         <View>
           <Text style={styles.NRTParentStyle}> Task History </Text>
-        </View>
+          <ReactCalendar
+            onDayPress={day => {
+              setSelectedDate(day.dateString);
+              if (entries[selectedDate] != null) {
+                setWaterStatus(entries[selectedDate][0]);
+                setRepotStatus(entries[selectedDate][1]);
+                setFertilizeStatus(entries[selectedDate][2]);
+              } else {
+                setWaterStatus(false);
+                setRepotStatus(false);
+                setFertilizeStatus(false);
+              }
+              updateCalendarMarkings();
+            }}
+            markedDates={markings}
+            maxDate={new Date()}
+            markingType={"custom"}
+            theme={{
+              backgroundColor: "#ffffff",
+              calendarBackground: "#ffffff",
+              textSectionTitleColor: "#b6c1cd",
+              selectedDayTextColor: "white",
+              todayTextColor: "#00adf5",
+              dayTextColor: "black",
+              textDisabledColor: "#979797"
+            }}
+          />
+          <Button onPress={() => setDisplayAddEntryModal(true)}>
+            Edit Entry
+          </Button>
 
-        <View style={styles.smallerPhoneStyling}>
-          <Text style={styles.NRTChildStyle}>Watered</Text>
-          <Text style={styles.NRTChildStyle}>Date Placeholder</Text>
-        </View>
-        <View style={styles.smallerPhoneStyling}>
-          <Text style={styles.NRTChildStyle}>Repotted</Text>
-          <Text style={styles.NRTChildStyle}>Date Placeholder</Text>
-        </View>
-        <View style={styles.smallerPhoneStyling}>
-          <Text style={styles.NRTChildStyle}>Fertilized</Text>
-          <Text style={styles.NRTChildStyle}>Date Placeholder</Text>
+          <Button onPress={() => setDisplayReminderModal(true)}>
+            Add start date for reminder 
+          </Button>
+          <AddEntryModal
+            selectedDate={selectedDate}
+            displayModal={displayAddEntryModal}
+            onPress={() => {
+              setDisplayAddEntryModal(false);
+            }}
+            onExit={() => setDisplayAddEntryModal(false)}
+            entries={entries}
+            updateCalendarMarkings={() => updateCalendarMarkings}
+          />
+          <SetReminderModal
+            displayModal={displayReminderModal}
+            onPress={() => {
+              setDisplayReminderModal(false);
+            }}
+            onExit={() => setDisplayReminderModal(false)}
+          />
         </View>
       </ScrollView>
     </View>

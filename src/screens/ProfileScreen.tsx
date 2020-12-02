@@ -13,7 +13,6 @@ import { Button, TextInput } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
 import Constants from "expo-constants";
 import { CardStyleInterpolators } from "@react-navigation/stack";
-
 // declare types for your props here
 interface Props {
   navigation: any;
@@ -38,7 +37,7 @@ export default function ProfileScreen(props: Props) {
           onPress={() => navigation.navigate("EditProfileScreen")}
         >
           <Text style={styles.editButtonStyle}>Edit</Text>
-       </Button>
+        </Button>
       </View>
 
       <View style ={{flexDirection: 'row'}}>
@@ -66,10 +65,10 @@ export default function ProfileScreen(props: Props) {
       
       <View style={{flexDirection:'column'}}>
         <View style={{flexDirection:'row'}}>
-          <View style={styles.columnStyle}>
-            <Text style={styles.optionsStyle}>Watering Reminder</Text>
+          <View style={{flexDirection:'column'}}>
+            <Text style={styles.optionsStyle}>Watering  Reminder</Text>
           </View>
-          <View style={styles.columnStyle}>
+          <View style={{flexDirection:'column'}}>
             <Switch style={styles.toggleStyle}
               trackColor={{ false: "#767577", true: "#34c759" }}
               thumbColor={isEnabled ? "#f4f3f4" : "#f4f3f4"}
@@ -80,10 +79,10 @@ export default function ProfileScreen(props: Props) {
         </View>
 
         <View style={{flexDirection:'row'}}>
-          <View style={styles.columnStyle}>
+          <View style={{flexDirection:'column'}}>
             <Text style={styles.optionsStyle}>Repotting Reminder</Text>
           </View>
-          <View style={styles.columnStyle}>
+          <View style={{flexDirection:'column'}}>
             <Switch style={styles.toggleStyle}
               trackColor={{ false: "#767577", true: "#34c759" }}
               thumbColor={isEnabled ? "#f4f3f4" : "#f4f3f4"}
@@ -94,10 +93,10 @@ export default function ProfileScreen(props: Props) {
         </View>
 
         <View style={{flexDirection:'row'}}>
-          <View style={styles.columnStyle}>
+          <View style={{flexDirection:'column'}}>
             <Text style={styles.optionsStyle}>Fertilizing Reminder</Text>
           </View>
-          <View style={styles.columnStyle}>
+          <View style={{flexDirection:'column'}}>
           <Switch style={styles.toggleStyle}
               trackColor={{ false: "#767577", true: "#34c759" }}
               thumbColor={isEnabled ? "#f4f3f4" : "#f4f3f4"}
@@ -156,10 +155,9 @@ const styles = StyleSheet.create({
     marginLeft: 15, 
     fontStyle: "normal",
     fontWeight: "normal", 
-    color: "#000",
+    color: "#666666",
     fontSize: 22,
-    lineHeight: 30,
-    paddingTop: 20
+    lineHeight:30
   },
 
   optionsStyle:{
@@ -170,6 +168,7 @@ const styles = StyleSheet.create({
     marginLeft: 30,
     lineHeight: 30
   },
+  
   profilePicture : {
     flexDirection: 'column',
     borderColor: 'black',
@@ -209,7 +208,6 @@ const styles = StyleSheet.create({
     fontStyle: "normal",
     fontWeight: "normal",
     color: "#000",
-    paddingBottom: 3
   },
 
   zoneStyle:{
@@ -220,11 +218,5 @@ const styles = StyleSheet.create({
     fontStyle: "normal",
     fontWeight: "normal",
     color: "#666666",
-    paddingBottom: 3
   },
-
-  columnStyle:{
-    flex: 1,
-    flexDirection: 'column'
-  }
 });

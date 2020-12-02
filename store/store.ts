@@ -25,9 +25,6 @@ const middlewareConfig = {
     ],
     response: [
       {
-        success: ({}, response) => {
-          return response;
-        },
         error: ({}, error) => {
           return Promise.reject(error);
         }

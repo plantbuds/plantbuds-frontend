@@ -26,14 +26,6 @@ interface Props {
   navigation: any;
 }
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: false,
-    shouldSetBadge: false
-  })
-});
-
 const theme = {
   colors: {
     placeholder: "#BEBEBE",
@@ -52,7 +44,7 @@ export default function HomeScreen(props: Props) {
   useEffect(() => {
     (async () => {
       // Get the expo token that identifies this device for notifs
-      registerForPushNotificationsAsync();
+      await registerForPushNotificationsAsync();
 
       // Vibrate when receiving incoming notifications
       notificationListener.current = Notifications.addNotificationReceivedListener(
