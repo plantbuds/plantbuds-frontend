@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { View, Text, StyleSheet, Modal, Dimensions } from "react-native";
 import {
   Button,
@@ -12,13 +12,19 @@ interface Props {
   displayModal: boolean;
   onPress: () => void;
   onExit: () => void;
-  selectedDate: string
-  entries: any
+  selectedDate: string;
+  entries: any;
   updateCalendarMarkings: () => void;
 }
 
 export default function AddEntryModal(props: Props) {
-  const { displayModal, onExit, entries, updateCalendarMarkings, selectedDate } = props;
+  const {
+    displayModal,
+    onExit,
+    entries,
+    updateCalendarMarkings,
+    selectedDate
+  } = props;
   const [waterStatus, setWaterStatus] = useState(false);
   const [repotStatus, setRepotStatus] = useState(false);
   const [fertilizeStatus, setFertilizeStatus] = useState(false);
@@ -34,50 +40,54 @@ export default function AddEntryModal(props: Props) {
         <View style={styles.modalView}>
           <Button onPress={onExit}>Done</Button>
           <Title style={{ color: "black", textAlign: "center" }}>
-        Edit {getDate()}
-      </Title>
-      <View
-        style={{ flexDirection: "row", margin: 20, justifyContent: "center" }}
-      >
-        <Switch
-          value={waterStatus}
-          color="blue"
-          onValueChange={() => setWaterStatus(!waterStatus)}
-        ></Switch>
-        <Switch
-          value={repotStatus}
-          color="brown"
-          onValueChange={() => setRepotStatus(!repotStatus)}
-        ></Switch>
-        <Switch
-          value={fertilizeStatus}
-          color="green"
-          onValueChange={() => setFertilizeStatus(!fertilizeStatus)}
-        ></Switch>
-      </View>
-      <Button
-        mode="contained"
-        onPress={() => {
-          if (
-            !waterStatus.valueOf() &&
-            !repotStatus.valueOf() &&
-            !fertilizeStatus.valueOf()
-          ) {
-            delete entries[selectedDate];
-          } else {
-            entries[selectedDate] = [
-              waterStatus.valueOf(),
-              repotStatus.valueOf(),
-              fertilizeStatus.valueOf()
-            ];
-          }
-          updateCalendarMarkings();
-          onExit();
-        }}
-        style={styles.roundToggle}
-      >
-        Save
-      </Button>
+            Edit {getDate()}
+          </Title>
+          <View
+            style={{
+              flexDirection: "row",
+              margin: 20,
+              justifyContent: "center"
+            }}
+          >
+            <Switch
+              value={waterStatus}
+              color="#1CA7EC"
+              onValueChange={() => setWaterStatus(!waterStatus)}
+            ></Switch>
+            <Switch
+              value={repotStatus}
+              color="#AA6F5D"
+              onValueChange={() => setRepotStatus(!repotStatus)}
+            ></Switch>
+            <Switch
+              value={fertilizeStatus}
+              color="#31e627"
+              onValueChange={() => setFertilizeStatus(!fertilizeStatus)}
+            ></Switch>
+          </View>
+          <Button
+            mode="contained"
+            onPress={() => {
+              if (
+                !waterStatus.valueOf() &&
+                !repotStatus.valueOf() &&
+                !fertilizeStatus.valueOf()
+              ) {
+                delete entries[selectedDate];
+              } else {
+                entries[selectedDate] = [
+                  waterStatus.valueOf(),
+                  repotStatus.valueOf(),
+                  fertilizeStatus.valueOf()
+                ];
+              }
+              updateCalendarMarkings();
+              onExit();
+            }}
+            style={styles.roundToggle}
+          >
+            Save
+          </Button>
         </View>
       </View>
     </Modal>
@@ -88,7 +98,6 @@ const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 const styles = StyleSheet.create({
-
   // Specify the modal to appear from the bottom (dont change)
   bottomView: {
     flex: 1,
@@ -116,5 +125,5 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     padding: 4,
     margin: 30
-  },
+  }
 });

@@ -46,7 +46,7 @@ export default function SettingsScreen(props: Props) {
     (state: RootState) => state.session.notif_time
   );
   const dispatch = useDispatch();
-  const [waterNotif, setWaterNotif] = useState(false);
+  const [waterNotif, setWaterNotif] = useState(receive_water_notif);
   const [repotNotif, setRepotNotif] = useState(receive_repot_notif);
   const [fertilizeNotif, setFertilizeNotif] = useState(receive_fertilizing_notif);
   const [show, setShow] = useState(false);
