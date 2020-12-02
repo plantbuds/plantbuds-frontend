@@ -38,6 +38,107 @@ var entries = {
   "2020-11-03": [true, true, false]
 };
 
+const greenBlueBrown = {
+  container: {
+      backgroundColor: 'white',
+      borderWidth:4,
+      borderBottomColor:'#1CA7EC',
+      borderTopColor:'#31e627',
+      borderLeftColor:'#AA6F5D',
+      borderRightColor:'#1CA7EC'
+  },
+  text: {
+      bottom: 3,
+      color: 'black',
+  }
+}
+const brown = {
+  container: {
+      backgroundColor: 'white',
+      borderWidth:4,
+      borderBottomColor:'#AA6F5D',
+      borderTopColor:'#AA6F5D',
+      borderLeftColor:'#AA6F5D',
+      borderRightColor:'#AA6F5D'
+  },
+  text: {
+      bottom: 3,
+      color: 'black',
+  }
+}
+const green= {
+  container: {
+      backgroundColor: 'white',
+      borderWidth:4,
+      borderBottomColor:'#31e627',
+      borderTopColor:'#31e627',
+      borderLeftColor:'#31e627',
+      borderRightColor:'#31e627'
+  },
+  text: {
+      bottom: 3,
+      color: 'black',
+  }
+}
+const blue= {
+  container: {
+      backgroundColor: 'white',
+      borderWidth:4,
+      borderBottomColor:'#1CA7EC',
+      borderTopColor:'#1CA7EC',
+      borderLeftColor:'#1CA7EC',
+      borderRightColor:'#1CA7EC'
+  },
+  text: {
+      bottom: 3,
+      color: 'black',
+  }
+}
+
+const blueBrown = {
+  container: {
+      backgroundColor: 'white',
+      borderWidth:4,
+      borderBottomColor:'#1CA7EC',
+      borderTopColor:'#AA6F5D',
+      borderLeftColor:'#1CA7EC',
+      borderRightColor:'#AA6F5D'
+  },
+  text: {
+      bottom: 3,
+      color: 'black',
+  }
+}
+const blueGreen = {
+  container: {
+      backgroundColor: 'white',
+      borderWidth:4,
+      borderBottomColor:'#1CA7EC',
+      borderTopColor:'#31e627',
+      borderLeftColor:'#1CA7EC',
+      borderRightColor:'#31e627'
+  },
+  text: {
+      bottom: 3,
+      color: 'black',
+  }
+}
+const greenBrown = {
+  container: {
+      backgroundColor: 'white',
+      borderWidth:4,
+      borderBottomColor:'#31e627',
+      borderTopColor:'#AA6F5D',
+      borderLeftColor:'#31e627',
+      borderRightColor:'#AA6F5D'
+  },
+  text: {
+      bottom: 3,
+      color: 'black',
+  }
+}
+
+
 export default function PlantProfileScreen(props: Props) {
   const { navigation, route } = props;
   const { itemName, itemURI } = route.params;
@@ -53,25 +154,40 @@ export default function PlantProfileScreen(props: Props) {
   const [displayReminderModal, setDisplayReminderModal] = useState(false);
 
   const updateCalendarMarkings = () => {
-    var newMarkings = {};
-    var selected = false;
-    for (const [date, value] of Object.entries(entries)) {
-      var dotData = [];
-      var entry = {};
-      if (value[0]) dotData.push(waterDot);
-      if (value[1]) dotData.push(repotDot);
-      if (value[2]) dotData.push(fertilizeDot);
-      entry["dots"] = dotData;
-      if (date === selectedDate) {
-        entry["selected"] = true;
-        selected = true;
-      }
-      newMarkings[date] = entry;
-    }
-    if (!selected) {
-      newMarkings[selectedDate] = { selected: true };
-    }
-    setMarkings(newMarkings);
+    var markings = {};
+        var selected = false;
+        for (const [date, value] of Object.entries(entries)) {
+            var entry = {};
+            //Deep copy shenanigans
+            if(value[0] == true && value[1] == false && value[2] == false){
+                entry["customStyles"]=JSON.parse(JSON.stringify(blue));
+            }else if(value[0] == false && value[1] == true && value[2] == false){
+                entry["customStyles"] = JSON.parse(JSON.stringify(brown));
+            }else if(value[0] == false && value[1] == false && value[2] == true){
+                entry["customStyles"] = JSON.parse(JSON.stringify(green));
+            }else if(value[0] == true && value[1] == true && value[2] == false){
+                entry["customStyles"] = JSON.parse(JSON.stringify(blueBrown));
+            }else if(value[0] == true && value[1] == false && value[2] == true){
+                entry["customStyles"] = JSON.parse(JSON.stringify(blueGreen));
+            }else if(value[0] == false && value[1] == true && value[2] == true){
+                entry["customStyles"] = JSON.parse(JSON.stringify(greenBrown));
+            }else if(value[0] == true && value[1] == true && value[2] == true){
+                entry["customStyles"] = JSON.parse(JSON.stringify(greenBlueBrown));
+            }else{
+
+            }
+            if (date === selectedDate) {
+                entry["selected"] = true;
+                entry["customStyles"]["container"]["backgroundColor"] = "green";
+                entry["customStyles"]["text"]["color"] = "white";
+                selected = true;
+            }
+            markings[date] = entry;
+        }
+        if (!selected) {
+            markings[selectedDate] = { selected: true, customStyles: { container: { backgroundColor: "green" }}};
+        }
+        setMarkings(markings);
   };
 
   useEffect(() => {
@@ -154,12 +270,12 @@ export default function PlantProfileScreen(props: Props) {
             }}
             markedDates={markings}
             maxDate={new Date()}
-            markingType={"multi-dot"}
+            markingType={"custom"}
             theme={{
               backgroundColor: "#ffffff",
               calendarBackground: "#ffffff",
               textSectionTitleColor: "#b6c1cd",
-              selectedDayTextColor: "black",
+              selectedDayTextColor: "white",
               todayTextColor: "#00adf5",
               dayTextColor: "black",
               textDisabledColor: "#979797"
@@ -170,7 +286,7 @@ export default function PlantProfileScreen(props: Props) {
           </Button>
 
           <Button onPress={() => setDisplayReminderModal(true)}>
-            Add start date for reminder (calendar + # of days modal)
+            Add start date for reminder 
           </Button>
           <AddEntryModal
             selectedDate={selectedDate}
