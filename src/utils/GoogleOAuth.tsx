@@ -10,6 +10,7 @@ export async function signInWithGoogleAsync() {
     });
 
     if (result.type === "success") {
+      console.log('access token: ' + result.accessToken);
       return result.accessToken;
     } else {
       console.log("cancelled");
@@ -30,6 +31,8 @@ export async function signUpWithGoogleAsync() {
     });
 
     if (result.type === "success") {
+      console.log('id token: ' + result.idToken);
+      console.log('access token: ' + result.accessToken);
       tokens.push(result.idToken);
       tokens.push(result.accessToken);
       return tokens;

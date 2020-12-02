@@ -19,8 +19,9 @@ export async function registerForPushNotificationsAsync() {
     }
     
     const value = await getExpoToken();
-    console.log(value);
+    console.log("get expo token returns value = : " + value);
     if (value === null) {
+   
     // Get the token that identifies this device
     let token = await Notifications.getExpoPushTokenAsync();
     console.log(status, token);

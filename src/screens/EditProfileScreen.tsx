@@ -78,12 +78,6 @@ export default function EditProfileScreen(props: Props) {
     }
   };
 
-  function onPress() {
-    console.log("on submission");
-
-    navigation.navigate("Profile");
-  }
-
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : null}
@@ -102,7 +96,7 @@ export default function EditProfileScreen(props: Props) {
             <Button
               labelStyle={styles.buttonStyle}
               onPress={() => {
-                console.log("on submission");
+               
                 if (textName) {
                   dispatch(editUsername(textName, userID));
                 }

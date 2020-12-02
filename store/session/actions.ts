@@ -17,7 +17,7 @@ import {
   EDIT_ZONE_FAIL,
   EDIT_NOTIF_TIME,
   EDIT_NOTIF_TIME_SUCCESS,
-  EDIT_NOTIF_TIME_FAIL,
+  EDIT_NOTIF_TIME_FAIL
 } from "./types";
 
 import { API_ROOT } from "../../src/constants/index";
@@ -43,7 +43,9 @@ export const loginUser = (accessToken: string) => {
               throw error;
             }
           } catch (e) {
-            Alert.alert("Error: " + e.response.data.msg);
+            if (e.response.data.msg != null) {
+              Alert.alert("Error: " + e.response.data.msg);
+            }
           }
         }
       }
@@ -79,11 +81,15 @@ export const createUser = (idToken: string, accessToken: string) => {
               throw error;
             }
           } catch (e) {
-            if (e.response.data.error === 'user already exists in user profile table') {
-              dispatch(loginUser(accessToken));
-            }
-            else {
-              Alert.alert("Error: " + e.response.data.error);
+            if (e.response.data.error != null) {
+              if (
+                e.response.data.error ===
+                "user already exists in user profile table"
+              ) {
+                dispatch(loginUser(accessToken));
+              } else {
+                Alert.alert("Error: " + e.response.data.error);
+              }
             }
           }
         }
@@ -105,7 +111,7 @@ export const editProfilePic = (imageURI: string, userID: number) => {
         }
       },
       options: {
-        onSuccess: ({dispatch}) =>  dispatch(setProfilePic(imageURI))
+        onSuccess: ({ dispatch }) => dispatch(setProfilePic(imageURI))
       }
     }
   };
@@ -124,7 +130,7 @@ export const editUsername = (username: string, userID: number) => {
         }
       },
       options: {
-        onSuccess: ({dispatch}) =>  dispatch(setUsername(username))
+        onSuccess: ({ dispatch }) => dispatch(setUsername(username))
       }
     }
   };
@@ -143,8 +149,7 @@ export const editZone = (zone: string, userID: number) => {
         }
       },
       options: {
-       
-        onSuccess: ({dispatch}) =>  dispatch(setZone(zone))
+        onSuccess: ({ dispatch }) => dispatch(setZone(zone))
       }
     }
   };
@@ -156,43 +161,43 @@ export const editNotifTime = (time: string, userID: number) => {
     payload: {
       client: "default",
       request: {
-        url : `${API_ROOT}/api/users/${userID}/`,
-        method: "PATCH", 
+        url: `${API_ROOT}/api/users/${userID}/`,
+        method: "PATCH",
         data: {
           notif_time: time
         }
       },
       options: {
-        onSuccess: ({dispatch}) => dispatch(setNotifTime(time))
+        onSuccess: ({ dispatch }) => dispatch(setNotifTime(time))
       }
     }
-  }
-}
+  };
+};
 
 export const setProfilePic = (imageURI: string) => {
   return {
     type: EDIT_PFP_SUCCESS,
     imageURI
-  }
-}
+  };
+};
 
 export const setUsername = (username: string) => {
   return {
     type: EDIT_USERNAME_SUCCESS,
     username
-  }
-}
+  };
+};
 
 export const setZone = (zone: string) => {
   return {
     type: EDIT_ZONE_SUCCESS,
     zone
-  }
-}
+  };
+};
 
 export const setNotifTime = (time: string) => {
   return {
     type: EDIT_NOTIF_TIME_SUCCESS,
     time
-  }
-}
+  };
+};

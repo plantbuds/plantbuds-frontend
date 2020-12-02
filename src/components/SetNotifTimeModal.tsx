@@ -8,15 +8,14 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { editNotifTime } from "../../store/session/actions";
 interface Props {
   displayModal: boolean;
-  onExit: () => void;
-
+  setShow: (val: boolean) => void;
 }
 
 export default function SetNotifTimeModal(props: Props) {
-  const { displayModal, onExit } = props;
+  const { displayModal, setShow } = props;
   const notif_time = useSelector((state:RootState) => state.session.notif_time);
   const userID = useSelector((state: RootState) => state.session.userID);
-  const [datetime, setDateTime] = useState(notif_time ? getNotifDateTimeObj(notif_time) : new Date());
+  const [datetime, setDateTime] = useState(notif_time ? new Date(notif_time) : new Date());
   
   const dispatch = useDispatch();
   
@@ -25,32 +24,46 @@ export default function SetNotifTimeModal(props: Props) {
     setDateTime(currentDateTime);
   }  
 
-  function getNotifDateTimeObj(notif_time: string) {
-    const dateobj = new Date(); 
-    const timeArray = notif_time.split(":");
-    let timeVal = []
-    for (var i = 0; i < timeArray.length; i++) {
-       timeVal.push(parseInt(timeArray[i]));
-    }
-    dateobj.setHours(timeVal[0], timeVal[1], timeVal[2]);
-    return dateobj;
-}
+//   Date.prototype.toISOString = function() {
+//     var tzo = -this.getTimezoneOffset(),
+//         dif = tzo >= 0 ? '+' : '-',
+//         pad = function(num) {
+//             var norm = Math.floor(Math.abs(num));
+//             return (norm < 10 ? '0' : '') + norm;
+//         };
+//     return this.getFullYear() +
+//         '-' + pad(this.getMonth() + 1) +
+//         '-' + pad(this.getDate()) +
+//         'T' + pad(this.getHours()) +
+//         ':' + pad(this.getMinutes()) +
+//         ':' + pad(this.getSeconds()) +
+//         dif + pad(tzo / 60) +
+//         ':' + pad(tzo % 60);
+// }
 
-  const getSelectedTime = (dateval: Date) => {
-    return dateval.toTimeString().split(" ")[0];
-  };
+   function getNotifDateTimeObj(notif_time: string) {
+     const dateobj = new Date(); 
+     const timeArray = notif_time.split("T");
+     let timeVal = []
+     for (var i = 0; i < timeArray.length; i++) {
+        timeVal.push(parseInt(timeArray[i]));
+     }
+     dateobj.setHours(timeVal[0], timeVal[1], timeVal[2]);
+     return dateobj;
+ }
 
   return (
     <Modal animationType="slide" transparent={true} visible={displayModal}>
       <View style={styles.bottomView}>
         <View style={styles.modalView}>
           <View style={styles.header}> 
-          <Button onPress={onExit}>Cancel</Button>
+          <Button onPress={() => setShow(false)}>Cancel</Button>
           <Button onPress={() => {
-              const time = getSelectedTime(datetime);
-              console.log(time);
-              //dispatch(editNotifTime(time, userID));
-              onExit
+              
+              const timestring = datetime.toISOString();
+              console.log(timestring);
+              //dispatch(editNotifTime(timestring, userID));
+              setShow(false);
           }}>Done</Button>
           </View>
           <DateTimePicker

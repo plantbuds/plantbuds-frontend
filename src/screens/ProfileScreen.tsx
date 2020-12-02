@@ -49,6 +49,7 @@ export default function ProfileScreen(props: Props) {
   const toggleRepot = () => setRepotNotif(previousState => !previousState);
   const toggleFertilize = () =>
     setFertilizeNotif(previousState => !previousState);
+
   const showTimepicker = () => {
     setShow(true);
   };
@@ -135,11 +136,14 @@ export default function ProfileScreen(props: Props) {
         </View>
       </View>
       <Text style={styles.notificationSettingStyle}>Settings</Text>
-      <Text style={styles.optionsStyle}>Notification Delivery</Text>
-      <Button onPress={showTimepicker}>
-        {notif_time ? notif_time : "Select a notif time"}
-      </Button>
-      <SetNotifTimeModal displayModal={show} onExit={() => setShow(false)} />
+      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        <Text style={styles.optionsStyle}>Notification Delivery</Text>
+        <View style={styles.notifStyle}>
+          <Text>{notif_time ? notif_time.split("T")[1] : "N/A"}</Text>
+        </View>
+      </View>
+      <Button onPress={showTimepicker}>Select a notif time</Button>
+      <SetNotifTimeModal displayModal={show} setShow={setShow} />
     </View>
   );
 }
@@ -198,6 +202,14 @@ const styles = StyleSheet.create({
     fontWeight: "normal",
     marginLeft: 30,
     lineHeight: 30
+  },
+  notifStyle: {
+    fontSize: 16,
+    color: "#666666",
+    fontStyle: "normal",
+    fontWeight: "normal",
+    justifyContent: "center",
+    right: windowWidth * 0.16
   },
   profilePicture: {
     flexDirection: "column",
