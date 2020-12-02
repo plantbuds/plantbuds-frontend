@@ -9,7 +9,9 @@ import {
   signInWithGoogleAsync,
   signUpWithGoogleAsync
 } from "../utils/GoogleOAuth";
-
+import {
+  clearData
+} from "../utils/AsyncStorage";
 interface Props {
   navigation: any;
 }
