@@ -10,10 +10,14 @@ import {
   Switch
 } from "react-native";
 import { Button, TextInput } from "react-native-paper";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store/store";
 import SetNotifTimeModal from "../components/SetNotifTimeModal";
-
+import {
+  editWaterNotif,
+  editRepotNotif,
+  editFertilizingNotif
+} from "../../store/session/actions";
 import { CardStyleInterpolators } from "@react-navigation/stack";
 
 // declare types for your props here
@@ -21,8 +25,9 @@ interface Props {
   navigation: any;
 }
 
-export default function ProfileScreen(props: Props) {
+export default function SettingsScreen(props: Props) {
   const { navigation } = props;
+  const userID = useSelector((state: RootState) => state.session.userID);
   const username = useSelector((state: RootState) => state.session.username);
   const USDAZone = useSelector((state: RootState) => state.session.USDA_zone);
   const profilePic = useSelector(
@@ -40,16 +45,26 @@ export default function ProfileScreen(props: Props) {
   const notif_time = useSelector(
     (state: RootState) => state.session.notif_time
   );
+  const dispatch = useDispatch();
   const [waterNotif, setWaterNotif] = useState(false);
-  const [repotNotif, setRepotNotif] = useState(false);
-  const [fertilizeNotif, setFertilizeNotif] = useState(false);
+  const [repotNotif, setRepotNotif] = useState(receive_repot_notif);
+  const [fertilizeNotif, setFertilizeNotif] = useState(receive_fertilizing_notif);
   const [show, setShow] = useState(false);
 
-  const toggleWater = () => setWaterNotif(previousState => !previousState);
-  const toggleRepot = () => setRepotNotif(previousState => !previousState);
-  const toggleFertilize = () =>
+  const toggleWater = () => {
+    setWaterNotif(previousState => !previousState);
+    
+    // previous state has not gone through yet, so need to manually flip boolean
+    dispatch(editWaterNotif(!waterNotif, userID));
+  };
+  const toggleRepot = () => {
+    setRepotNotif(previousState => !previousState);
+    dispatch(editRepotNotif(!repotNotif, userID));
+  };
+  const toggleFertilize = () => {
     setFertilizeNotif(previousState => !previousState);
-
+    dispatch(editFertilizingNotif(!fertilizeNotif, userID));
+  };
   const showTimepicker = () => {
     setShow(true);
   };
@@ -60,7 +75,7 @@ export default function ProfileScreen(props: Props) {
         <Text style={styles.textTitle}></Text>
         <Button
           labelStyle={styles.buttonStyle}
-          onPress={() => navigation.navigate("EditProfileScreen")}
+          onPress={() => navigation.navigate("EditSettingsScreen")}
         >
           <Text style={styles.editButtonStyle}>Edit</Text>
         </Button>
@@ -139,7 +154,7 @@ export default function ProfileScreen(props: Props) {
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
         <Text style={styles.optionsStyle}>Notification Delivery</Text>
         <View style={styles.notifStyle}>
-          <Text>{notif_time ? notif_time.split("T")[1] : "N/A"}</Text>
+          <Text>{notif_time ? new Date(notif_time).toISOString().split("T")[1] : "N/A"}</Text>
         </View>
       </View>
       <Button onPress={showTimepicker}>Select a notification time</Button>

@@ -1,5 +1,3 @@
-import { ActionSheetIOS } from "react-native";
-import { ActivityIndicator } from "react-native-paper";
 import {
   SessionState,
   SessionActionTypes,
@@ -78,7 +76,7 @@ export function sessionReducer(
     case EDIT_ZONE_SUCCESS: 
     return {
       ...state,
-      USDA_zone: parseInt(action.zone),
+      USDA_zone: action.zone,
     };
     case EDIT_NOTIF_TIME_SUCCESS:
       return {

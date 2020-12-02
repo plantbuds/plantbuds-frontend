@@ -13,6 +13,7 @@ import {
   PixelRatio
 } from "react-native";
 import { Button, TextInput } from "react-native-paper";
+import SetZoneModal from "../components/SetZoneModal";
 import * as ImagePicker from "expo-image-picker";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store/store";
@@ -34,22 +35,23 @@ const theme = {
   }
 };
 
-export default function EditProfileScreen(props: Props) {
+export default function EditSettingsScreen(props: Props) {
   const { navigation } = props;
-  const [image, setImage] = useState(null);
-  const [textZone, setTextZone] = useState("");
-  const [textName, setTextName] = useState("");
-  const [textErr, setTextErr] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const username = useSelector((state: RootState) => state.session.username);
   const USDAZone = useSelector((state: RootState) => state.session.USDA_zone);
+  const username = useSelector((state: RootState) => state.session.username);
   const userID = useSelector((state: RootState) => state.session.userID);
   const profilePic = useSelector(
     (state: RootState) => state.session.profileURI
   );
+
+  const [image, setImage] = useState(null);
+  const [textZone, setTextZone] = useState(USDAZone);
+  const [textName, setTextName] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [textErr, setTextErr] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+
   const dispatch = useDispatch();
-  const windowWidth = Dimensions.get("window").width;
-  const windowHeight = Dimensions.get("window").height;
 
   // check if user has given permission to access image gallery from phone
   useEffect(() => {
@@ -89,7 +91,7 @@ export default function EditProfileScreen(props: Props) {
           <View style={styles.row}>
             <Button
               labelStyle={styles.buttonStyle}
-              onPress={() => navigation.navigate("Profile")}
+              onPress={() => navigation.navigate("Settings")}
             >
               <Text style={styles.textTitleLeft}>Cancel</Text>
             </Button>
@@ -98,7 +100,7 @@ export default function EditProfileScreen(props: Props) {
               labelStyle={styles.buttonStyle}
               onPress={() => {
                 if (textName) {
-                  if (textName.length < 6) {
+                  if (textName.length < 4) {
                     setTextErr(true);
                     return;
                   }
@@ -107,12 +109,12 @@ export default function EditProfileScreen(props: Props) {
                 if (textZone) {
                   dispatch(editZone(textZone, userID));
                 }
-              
+
                 if (image) {
                   dispatch(editProfilePic(image, userID));
                 }
                 if (!textErr) {
-                  navigation.navigate("Profile");
+                  navigation.navigate("Settings");
                 }
               }}
             >
@@ -143,7 +145,8 @@ export default function EditProfileScreen(props: Props) {
               style={{
                 flexDirection: "row",
                 alignItems: "center",
-                backgroundColor: "#fff"
+                backgroundColor: "#fff",
+                paddingTop: 10
               }}
             >
               <View style={{ flex: 1 }}>
@@ -166,32 +169,39 @@ export default function EditProfileScreen(props: Props) {
               style={{
                 flexDirection: "row",
                 alignItems: "center",
-                backgroundColor: "#fff"
+                backgroundColor: "#fff",
+                paddingTop: 10
               }}
             >
               <View style={{ flex: 1 }}>
                 <Text style={styles.inputFontStyleLabelBottom}>USDA Zone</Text>
               </View>
               <View style={{ flex: 2 }}>
-                <TextInput
-                  keyboardType="number-pad"
-                  mode="flat"
-                  theme={theme}
-                  style={styles.inputFontStyle}
-                  underlineColor="#fff"
-                  placeholder={USDAZone ? "Zone " + USDAZone : "Zone #"}
-                  value={textZone}
-                  onChangeText={textZone => setTextZone(textZone)}
-                />
+                <Button
+                  icon={showModal ? "chevron-up" : "chevron-down"}
+                  mode="contained"
+                  contentStyle={styles.contentStyle}
+                  labelStyle={styles.labelStyle}
+                  style={styles.zoneButton}
+                  onPress={() => setShowModal(true)}
+                >
+                  {"USDA Zone: " + textZone}
+                </Button>
               </View>
             </View>
             {textErr && (
-              <Text style={{ color: "red" }}>
-                username must be between 6-30 characters long
+              <Text style={styles.textError}>
+                username must be between 4-30 characters long
               </Text>
             )}
-            <Text> </Text>
           </View>
+          <SetZoneModal
+            displayModal={showModal}
+            textZone={textZone}
+            setTextZone={setTextZone}
+            setShowModal={setShowModal}
+            onExit={() => setShowModal(false)}
+          />
         </View>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
@@ -270,6 +280,14 @@ const styles = StyleSheet.create({
     color: "#666666",
     fontSize: 18
   },
+  inputPickerStyle: {
+    borderColor: "black",
+    backgroundColor: "#ffffff",
+    height: 40,
+    width: windowWidth * 0.15,
+    color: "#666666",
+    fontSize: 18
+  },
   inputFontStyleLabelTop: {
     color: "#666666",
     fontSize: 18,
@@ -282,8 +300,21 @@ const styles = StyleSheet.create({
     marginRight: 20,
     fontWeight: "500"
   },
+  textError: {
+    paddingTop: 30,
+    color: "red"
+  },
   buttonStyle: {
     textTransform: "none",
     fontSize: 18
+  },
+  zoneButton: {
+    width: windowWidth * 0.38
+  },
+  contentStyle: {
+    backgroundColor: "white"
+  },
+  labelStyle: {
+    fontSize: 12
   }
 });

@@ -13,58 +13,63 @@ interface Props {
 
 export default function SetNotifTimeModal(props: Props) {
   const { displayModal, setShow } = props;
-  const notif_time = useSelector((state:RootState) => state.session.notif_time);
+  const notif_time = useSelector(
+    (state: RootState) => state.session.notif_time
+  );
   const userID = useSelector((state: RootState) => state.session.userID);
-  const [datetime, setDateTime] = useState(notif_time ? new Date(notif_time) : new Date());
-  
+  const [datetime, setDateTime] = useState(
+    notif_time ? new Date(notif_time) : new Date()
+  );
+
   const dispatch = useDispatch();
-  
+
   const onChange = (event, selectedDateTime) => {
     const currentDateTime = selectedDateTime || datetime;
     setDateTime(currentDateTime);
-  }  
+  };
 
-//   Date.prototype.toISOString = function() {
-//     var tzo = -this.getTimezoneOffset(),
-//         dif = tzo >= 0 ? '+' : '-',
-//         pad = function(num) {
-//             var norm = Math.floor(Math.abs(num));
-//             return (norm < 10 ? '0' : '') + norm;
-//         };
-//     return this.getFullYear() +
-//         '-' + pad(this.getMonth() + 1) +
-//         '-' + pad(this.getDate()) +
-//         'T' + pad(this.getHours()) +
-//         ':' + pad(this.getMinutes()) +
-//         ':' + pad(this.getSeconds()) +
-//         dif + pad(tzo / 60) +
-//         ':' + pad(tzo % 60);
-// }
-
-   function getNotifDateTimeObj(notif_time: string) {
-     const dateobj = new Date(); 
-     const timeArray = notif_time.split("T");
-     let timeVal = []
-     for (var i = 0; i < timeArray.length; i++) {
-        timeVal.push(parseInt(timeArray[i]));
-     }
-     dateobj.setHours(timeVal[0], timeVal[1], timeVal[2]);
-     return dateobj;
- }
+  Date.prototype.toISOString = function() {
+    var tzo = this.getTimezoneOffset(),
+      dif = tzo >= 0 ? "+" : "-",
+      pad = function(num) {
+        var norm = Math.floor(Math.abs(num));
+        return (norm < 10 ? "0" : "") + norm;
+      };
+    return (
+      this.getFullYear() +
+      "-" +
+      pad(this.getMonth() + 1) +
+      "-" +
+      pad(this.getDate()) +
+      "T" +
+      pad(this.getHours()) +
+      ":" +
+      pad(this.getMinutes()) +
+      ":" +
+      pad(this.getSeconds()) +
+      dif +
+      pad(tzo / 60) +
+      ":" +
+      pad(tzo % 60)
+    );
+  };
 
   return (
     <Modal animationType="slide" transparent={true} visible={displayModal}>
       <View style={styles.bottomView}>
         <View style={styles.modalView}>
-          <View style={styles.header}> 
-          <Button onPress={() => setShow(false)}>Cancel</Button>
-          <Button onPress={() => {
-              
-              const timestring = datetime.toISOString();
-              console.log(timestring);
-              //dispatch(editNotifTime(timestring, userID));
-              setShow(false);
-          }}>Done</Button>
+          <View style={styles.header}>
+            <Button onPress={() => setShow(false)}>Cancel</Button>
+            <Button
+              onPress={() => {
+                const timestring = datetime.toISOString();
+                console.log(timestring);
+                dispatch(editNotifTime(timestring, userID));
+                setShow(false);
+              }}
+            >
+              Done
+            </Button>
           </View>
           <DateTimePicker
             value={datetime}
@@ -107,7 +112,7 @@ const styles = StyleSheet.create({
   },
 
   header: {
-      flexDirection: 'row', 
-      justifyContent: "space-between"
+    flexDirection: "row",
+    justifyContent: "space-between"
   }
 });

@@ -4,7 +4,7 @@ export interface SessionState {
   profileURI: string;
   username: string, 
   email: string, 
-  USDA_zone: number, 
+  USDA_zone: string, 
   receive_water_notif: boolean,
   receive_repot_notif: boolean, 
   receive_fertilizing_notif: boolean,
@@ -39,6 +39,9 @@ export const EDIT_ZONE_FAIL = "EDIT_ZONE_FAIL";
 export const EDIT_NOTIF_TIME = "EDIT_NOTIF_TIME";
 export const EDIT_NOTIF_TIME_SUCCESS = "EDIT_NOTIF_TIME_SUCCESS";
 export const EDIT_NOTIF_TIME_FAIL = "EDIT_NOTIF_TIME_FAIL";
+export const EDIT_WATER_NOTIF = "EDIT_WATER_NOTIF";
+export const EDIT_REPOT_NOTIF = "EDIT_REPOT_NOTIF";
+export const EDIT_FERTILIZING_NOTIF = "EDIT_FERTILIZING_NOTIF";
 
 interface LoginRequestAction {
   type: typeof LOGIN_REQUEST;

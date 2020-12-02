@@ -17,12 +17,14 @@ import {
   EDIT_ZONE_FAIL,
   EDIT_NOTIF_TIME,
   EDIT_NOTIF_TIME_SUCCESS,
-  EDIT_NOTIF_TIME_FAIL
+  EDIT_NOTIF_TIME_FAIL,
+  EDIT_FERTILIZING_NOTIF,
+  EDIT_REPOT_NOTIF,
+  EDIT_WATER_NOTIF
 } from "./types";
 
 import { API_ROOT } from "../../src/constants/index";
 import { Alert } from "react-native";
-import { signInWithGoogleAsync } from "../../src/utils/GoogleOAuth";
 
 export const loginUser = (accessToken: string) => {
   return {
@@ -173,6 +175,54 @@ export const editNotifTime = (time: string, userID: number) => {
     }
   };
 };
+
+export const editWaterNotif = (val: boolean, userID: number) => {
+  return {
+    type: EDIT_WATER_NOTIF,
+    payload: {
+      client: "default",
+      request: {
+        url: `${API_ROOT}/api/users/${userID}/`,
+        method: "PATCH",
+        data: {
+          receive_water_notif: val,
+        }
+      },
+    }
+  };
+}
+
+export const editRepotNotif = (val: boolean, userID: number) => {
+  return {
+    type: EDIT_REPOT_NOTIF,
+    payload: {
+      client: "default",
+      request: {
+        url: `${API_ROOT}/api/users/${userID}/`,
+        method: "PATCH",
+        data: {
+          receive_repot_notif: val,
+        }
+      },
+    }
+  };
+}
+
+export const editFertilizingNotif = (val: boolean, userID: number) => {
+  return {
+    type: EDIT_FERTILIZING_NOTIF,
+    payload: {
+      client: "default",
+      request: {
+        url: `${API_ROOT}/api/users/${userID}/`,
+        method: "PATCH",
+        data: {
+          receive_fertilizing_notif: val,
+        }
+      },
+    }
+  };
+}
 
 export const setProfilePic = (imageURI: string) => {
   return {
