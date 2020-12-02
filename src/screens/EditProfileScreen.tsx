@@ -39,6 +39,7 @@ export default function EditProfileScreen(props: Props) {
   const [image, setImage] = useState(null);
   const [textZone, setTextZone] = useState("");
   const [textName, setTextName] = useState("");
+  const [textErr, setTextErr] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const username = useSelector((state: RootState) => state.session.username);
   const USDAZone = useSelector((state: RootState) => state.session.USDA_zone);
@@ -96,9 +97,16 @@ export default function EditProfileScreen(props: Props) {
             <Button
               labelStyle={styles.buttonStyle}
               onPress={() => {
-               
                 if (textName) {
+                  if (textName.length < 6) {
+                    setTextErr(true);
+                    return;
+                  }
                   dispatch(editUsername(textName, userID));
+                }
+                else {
+                  setTextErr(true);
+                  return;
                 }
                 if (textZone) {
                   dispatch(editZone(textZone, userID));
@@ -106,7 +114,9 @@ export default function EditProfileScreen(props: Props) {
                 if (image) {
                   dispatch(editProfilePic(image, userID));
                 }
-                navigation.navigate("Profile");
+                if (!textErr) {
+                  navigation.navigate("Profile");
+                }
               }}
             >
               <Text style={styles.textTitleRight}>Done</Text>
@@ -145,6 +155,7 @@ export default function EditProfileScreen(props: Props) {
               <View style={{ flex: 2 }}>
                 <TextInput
                   mode="flat"
+                  maxLength={30}
                   theme={theme}
                   style={styles.inputFontStyle}
                   placeholder={username}
@@ -177,6 +188,12 @@ export default function EditProfileScreen(props: Props) {
                 />
               </View>
             </View>
+            {textErr && (
+              <Text style={{ color: "red" }}>
+                username must be between 6-30 characters long
+              </Text>
+            )}
+            <Text> </Text>
           </View>
         </View>
       </TouchableWithoutFeedback>
