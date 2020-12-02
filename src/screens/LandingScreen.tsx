@@ -9,7 +9,9 @@ import {
   signInWithGoogleAsync,
   signUpWithGoogleAsync
 } from "../utils/GoogleOAuth";
-
+import {
+  clearData
+} from "../utils/AsyncStorage";
 interface Props {
   navigation: any;
 }
@@ -21,15 +23,20 @@ export default function LandingScreen(props: Props) {
 
   const signInWithGoogle = async () => {
     const accessToken = await signInWithGoogleAsync();
-    if (typeof accessToken === "string") {
+    if (typeof accessToken === "string" && accessToken != null) {
       dispatch(loginUser(accessToken));
     }
   };
 
   const signUpWithGoogle = async () => {
     const tokens = await signUpWithGoogleAsync();
-    if (typeof tokens[0] === "string" && typeof tokens[1] === "string") {
-        dispatch(createUser(tokens[0], tokens[1]));
+    if (
+      typeof tokens[0] === "string" &&
+      typeof tokens[1] === "string" &&
+      tokens[0] != null &&
+      tokens[1] != null
+    ) {
+      dispatch(createUser(tokens[0], tokens[1]));
     }
   };
 

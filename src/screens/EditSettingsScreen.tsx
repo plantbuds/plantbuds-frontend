@@ -8,13 +8,21 @@ import {
   Dimensions,
   TouchableWithoutFeedback,
   Keyboard,
+  GestureResponderEvent,
   KeyboardAvoidingView,
   PixelRatio
 } from "react-native";
 import { Button, TextInput } from "react-native-paper";
+import SetZoneModal from "../components/SetZoneModal";
 import * as ImagePicker from "expo-image-picker";
-import Constants from "expo-constants";
-import { CardStyleInterpolators } from "@react-navigation/stack";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../../store/store";
+import {
+  editProfilePic,
+  editUsername,
+  editZone
+} from "../../store/session/actions";
+
 // declare types for your props here
 interface Props {
   navigation: any;
@@ -29,11 +37,22 @@ const theme = {
 
 export default function EditSettingsScreen(props: Props) {
   const { navigation } = props;
+  const USDAZone = useSelector((state: RootState) => state.session.USDA_zone);
+  const username = useSelector((state: RootState) => state.session.username);
+  const userID = useSelector((state: RootState) => state.session.userID);
+  const profilePic = useSelector(
+    (state: RootState) => state.session.profileURI
+  );
+
   const [image, setImage] = useState(null);
-  const [textZone, setTextZone] = useState("");
+  const [textZone, setTextZone] = useState(USDAZone);
   const [textName, setTextName] = useState("");
-  const windowWidth = Dimensions.get("window").width;
-  const windowHeight = Dimensions.get("window").height;
+  const [showModal, setShowModal] = useState(false);
+  const [textErr, setTextErr] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+
+  const dispatch = useDispatch();
+
   // check if user has given permission to access image gallery from phone
   useEffect(() => {
     (async () => {
@@ -47,6 +66,7 @@ export default function EditSettingsScreen(props: Props) {
       }
     })();
   }, []);
+
   // method that gets image from the phone
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -78,7 +98,25 @@ export default function EditSettingsScreen(props: Props) {
             <Text style={styles.textTitle}>Edit Profile</Text>
             <Button
               labelStyle={styles.buttonStyle}
-              onPress={() => navigation.navigate("Settings")}
+              onPress={() => {
+                if (textName) {
+                  if (textName.length < 4) {
+                    setTextErr(true);
+                    return;
+                  }
+                  dispatch(editUsername(textName, userID));
+                }
+                if (textZone) {
+                  dispatch(editZone(textZone, userID));
+                }
+
+                if (image) {
+                  dispatch(editProfilePic(image, userID));
+                }
+                if (!textErr) {
+                  navigation.navigate("Settings");
+                }
+              }}
             >
               <Text style={styles.textTitleRight}>Done</Text>
             </Button>
@@ -90,7 +128,7 @@ export default function EditSettingsScreen(props: Props) {
               (!image && (
                 <Image
                   style={styles.profilePicture}
-                  source={{ uri: "https://i.imgur.com/oeojGAr.jpeg" }}
+                  source={{ uri: profilePic }}
                 />
               ))}
             <Button
@@ -107,18 +145,20 @@ export default function EditSettingsScreen(props: Props) {
               style={{
                 flexDirection: "row",
                 alignItems: "center",
-                backgroundColor: "#fff"
+                backgroundColor: "#fff",
+                paddingTop: 10
               }}
             >
-              <View style={{flex:1}}>
+              <View style={{ flex: 1 }}>
                 <Text style={styles.inputFontStyleLabelTop}>Username</Text>
               </View>
-              <View style={{flex:2}}>
+              <View style={{ flex: 2 }}>
                 <TextInput
                   mode="flat"
+                  maxLength={30}
                   theme={theme}
                   style={styles.inputFontStyle}
-                  placeholder="Name"
+                  placeholder={username}
                   underlineColor="#fff"
                   value={textName}
                   onChangeText={textName => setTextName(textName)}
@@ -129,25 +169,39 @@ export default function EditSettingsScreen(props: Props) {
               style={{
                 flexDirection: "row",
                 alignItems: "center",
-                backgroundColor: "#fff"
+                backgroundColor: "#fff",
+                paddingTop: 10
               }}
             >
-              <View style={{flex:1}}>
+              <View style={{ flex: 1 }}>
                 <Text style={styles.inputFontStyleLabelBottom}>USDA Zone</Text>
               </View>
-              <View style={{flex:2}}>
-                <TextInput
-                  mode="flat"
-                  theme={theme}
-                  style={styles.inputFontStyle}
-                  underlineColor="#fff"
-                  placeholder="Zone #"
-                  value={textZone}
-                  onChangeText={textZone => setTextZone(textZone)}
-                />
+              <View style={{ flex: 2 }}>
+                <Button
+                  icon={showModal ? "chevron-up" : "chevron-down"}
+                  mode="contained"
+                  contentStyle={styles.contentStyle}
+                  labelStyle={styles.labelStyle}
+                  style={styles.zoneButton}
+                  onPress={() => setShowModal(true)}
+                >
+                  {"USDA Zone: " + textZone}
+                </Button>
               </View>
             </View>
+            {textErr && (
+              <Text style={styles.textError}>
+                username must be between 4-30 characters long
+              </Text>
+            )}
           </View>
+          <SetZoneModal
+            displayModal={showModal}
+            textZone={textZone}
+            setTextZone={setTextZone}
+            setShowModal={setShowModal}
+            onExit={() => setShowModal(false)}
+          />
         </View>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
@@ -227,6 +281,14 @@ const styles = StyleSheet.create({
     color: "#666666",
     fontSize: 18
   },
+  inputPickerStyle: {
+    borderColor: "black",
+    backgroundColor: "#ffffff",
+    height: 40,
+    width: windowWidth * 0.15,
+    color: "#666666",
+    fontSize: 18
+  },
   inputFontStyleLabelTop: {
     color: "#666666",
     fontSize: 18,
@@ -239,8 +301,21 @@ const styles = StyleSheet.create({
     marginRight: 20,
     fontWeight: "500"
   },
+  textError: {
+    paddingTop: 30,
+    color: "red"
+  },
   buttonStyle: {
     textTransform: "none",
     fontSize: 18
+  },
+  zoneButton: {
+    width: windowWidth * 0.38
+  },
+  contentStyle: {
+    backgroundColor: "white"
+  },
+  labelStyle: {
+    fontSize: 12
   }
 });

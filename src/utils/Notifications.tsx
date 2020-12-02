@@ -4,7 +4,7 @@ import { Platform } from "react-native";
 import { storeExpoToken, getExpoToken } from "../utils/AsyncStorage";
 
 export async function registerForPushNotificationsAsync() {
-  let token;
+  let token; 
   try {
 
     const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
@@ -15,17 +15,19 @@ export async function registerForPushNotificationsAsync() {
 
     // Stop here if the user did not grant permissions
     if (status !== "granted") {
-      alert("Please enable notifications in settings");
+      alert("Please enable notifications in your iPhone's Settings");
       return;
     }
     
+    // Check if user has stored the expo push token already in Async Storage
     const value = await getExpoToken();
-
-    if (value === null) {
+    console.log("Async Storage's expo token value = : " + value);
     
-      // Get the token that identifies this device
+    if (value === null) {
+    // Get the token that identifies this device
     token = (await Notifications.getExpoPushTokenAsync()).data;
-    console.log(status, token);
+    console.log(status)
+    console.log(token);
     
     // POST the token to your backend server from where you can retrieve it to send push notifications.
     storeExpoToken(token);

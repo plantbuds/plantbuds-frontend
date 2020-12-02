@@ -1,10 +1,10 @@
 export interface SessionState {
   loggedIn: boolean;
-  userId: number;
+  userID: number;
   profileURI: string;
   username: string, 
   email: string, 
-  USDA_zone: number, 
+  USDA_zone: string, 
   receive_water_notif: boolean,
   receive_repot_notif: boolean, 
   receive_fertilizing_notif: boolean,
@@ -30,6 +30,18 @@ export const SET_PROFILE_IMAGE = "SET_PROFILE_IMAGE";
 export const EDIT_PFP = "EDIT_PFP";
 export const EDIT_PFP_SUCCESS = "EDIT_PFP_SUCCESS";
 export const EDIT_PFP_FAIL = "EDIT_PFP_FAIL";
+export const EDIT_USERNAME = "EDIT_USERNAME";
+export const EDIT_USERNAME_SUCCESS = "EDIT_USERNAME_SUCCESS";
+export const EDIT_USERNAME_FAIL = "EDIT_USERNAME_FAIL";
+export const EDIT_ZONE = "EDIT_ZONE";
+export const EDIT_ZONE_SUCCESS = "EDIT_ZONE_SUCCESS";
+export const EDIT_ZONE_FAIL = "EDIT_ZONE_FAIL";
+export const EDIT_NOTIF_TIME = "EDIT_NOTIF_TIME";
+export const EDIT_NOTIF_TIME_SUCCESS = "EDIT_NOTIF_TIME_SUCCESS";
+export const EDIT_NOTIF_TIME_FAIL = "EDIT_NOTIF_TIME_FAIL";
+export const EDIT_WATER_NOTIF = "EDIT_WATER_NOTIF";
+export const EDIT_REPOT_NOTIF = "EDIT_REPOT_NOTIF";
+export const EDIT_FERTILIZING_NOTIF = "EDIT_FERTILIZING_NOTIF";
 
 interface LoginRequestAction {
   type: typeof LOGIN_REQUEST;
@@ -49,14 +61,31 @@ interface LoginFailAction {
   payload: any;
 }
 
-interface SetProfileImageAction {
-  type: typeof SET_PROFILE_IMAGE;
+interface EditPFPSuccessAction {
+  type: typeof EDIT_PFP_SUCCESS;
   imageURI: string;
 }
 
+interface EditUsernameSuccessAction {
+  type: typeof EDIT_USERNAME_SUCCESS;
+  username: string
+}
+
+interface EditZoneSuccessAction {
+  type: typeof EDIT_ZONE_SUCCESS;
+  zone: string;
+}
+
+interface EditNotifTimeSuccessAction {
+  type: typeof EDIT_NOTIF_TIME_SUCCESS;
+  time: string;
+}
 export type SessionActionTypes =
   | LoginRequestAction
   | LoginSuccessAction
   | LogoutAction
   | LoginFailAction
-  | SetProfileImageAction;
+  | EditPFPSuccessAction
+  | EditUsernameSuccessAction
+  | EditZoneSuccessAction
+  | EditNotifTimeSuccessAction;

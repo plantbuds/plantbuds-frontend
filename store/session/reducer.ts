@@ -1,20 +1,18 @@
-import { ActionSheetIOS } from "react-native";
 import {
   SessionState,
   SessionActionTypes,
   LOGOUT,
   LOGIN_SUCCESS,
   LOGIN_FAIL,
-  EDIT_PFP,
+  EDIT_NOTIF_TIME_SUCCESS,
   EDIT_PFP_SUCCESS,
-  EDIT_PFP_FAIL,
-  SET_PROFILE_IMAGE,
-  LOGIN_REQUEST
+  EDIT_USERNAME_SUCCESS,
+  EDIT_ZONE_SUCCESS,
 } from "./types";
 
 const initialState: SessionState = {
   loggedIn: false,
-  userId: null,
+  userID: null,
   profileURI: null, 
   username: null, 
   email: null, 
@@ -35,11 +33,15 @@ export function sessionReducer(
       return {
         ...state,
         loggedIn: true,
-        userId: action.payload.data.id,
+        userID: action.payload.data.id,
         profileURI: action.payload.data.photo,
         username: action.payload.data.username,
         email: action.payload.data.email,
-        //TODO
+        USDA_zone: action.payload.data.USDA_zone,
+        receive_water_notif: action.payload.data.receive_water_notif,
+        receive_repot_notif: action.payload.data.receive_water_notif,
+        receive_fertilizing_notif: action.payload.data.receive_fertilizing_notif,
+        notif_time: action.payload.data.notif_time
       };
     case LOGIN_FAIL:
       return {
@@ -51,15 +53,36 @@ export function sessionReducer(
       return {
         ...state,
         loggedIn: false,
-        userId: null,
+        userID: null,
+        username: null,
+        USDA_zone: null,
         profileURI: null,
-        //TODO
+        email: null,
+        notif_time: null,
+        receive_fertilizing_notif: null,
+        receive_water_notif: null,
+        receive_repot_notif: null,
       };
-    case SET_PROFILE_IMAGE:
+    case EDIT_PFP_SUCCESS:
       return {
         ...state,
         profileURI: action.imageURI,
       };
+    case EDIT_USERNAME_SUCCESS:
+      return {
+        ...state,
+        username: action.username,
+      };
+    case EDIT_ZONE_SUCCESS: 
+    return {
+      ...state,
+      USDA_zone: action.zone,
+    };
+    case EDIT_NOTIF_TIME_SUCCESS:
+      return {
+        ...state,
+        notif_time: action.time
+      }
     default:
       return state;
   }
