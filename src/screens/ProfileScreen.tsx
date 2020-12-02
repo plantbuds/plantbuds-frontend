@@ -142,7 +142,7 @@ export default function ProfileScreen(props: Props) {
           <Text>{notif_time ? notif_time.split("T")[1] : "N/A"}</Text>
         </View>
       </View>
-      <Button onPress={showTimepicker}>Select a notif time</Button>
+      <Button onPress={showTimepicker}>Select a notification time</Button>
       <SetNotifTimeModal displayModal={show} setShow={setShow} />
     </View>
   );
