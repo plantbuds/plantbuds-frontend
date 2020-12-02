@@ -6,7 +6,7 @@ import {
   LOGOUT,
   LOGIN_SUCCESS,
   LOGIN_FAIL,
-  EDIT_PFP,
+  EDIT_NOTIF_TIME_SUCCESS,
   EDIT_PFP_SUCCESS,
   EDIT_USERNAME_SUCCESS,
   EDIT_ZONE_SUCCESS,
@@ -80,6 +80,11 @@ export function sessionReducer(
       ...state,
       USDA_zone: parseInt(action.zone),
     };
+    case EDIT_NOTIF_TIME_SUCCESS:
+      return {
+        ...state,
+        notif_time: action.time
+      }
     default:
       return state;
   }

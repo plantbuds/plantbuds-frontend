@@ -36,6 +36,9 @@ export const EDIT_USERNAME_FAIL = "EDIT_USERNAME_FAIL";
 export const EDIT_ZONE = "EDIT_ZONE";
 export const EDIT_ZONE_SUCCESS = "EDIT_ZONE_SUCCESS";
 export const EDIT_ZONE_FAIL = "EDIT_ZONE_FAIL";
+export const EDIT_NOTIF_TIME = "EDIT_NOTIF_TIME";
+export const EDIT_NOTIF_TIME_SUCCESS = "EDIT_NOTIF_TIME_SUCCESS";
+export const EDIT_NOTIF_TIME_FAIL = "EDIT_NOTIF_TIME_FAIL";
 
 interface LoginRequestAction {
   type: typeof LOGIN_REQUEST;
@@ -70,6 +73,10 @@ interface EditZoneSuccessAction {
   zone: string;
 }
 
+interface EditNotifTimeSuccessAction {
+  type: typeof EDIT_NOTIF_TIME_SUCCESS;
+  time: string;
+}
 export type SessionActionTypes =
   | LoginRequestAction
   | LoginSuccessAction
@@ -77,4 +84,5 @@ export type SessionActionTypes =
   | LoginFailAction
   | EditPFPSuccessAction
   | EditUsernameSuccessAction
-  | EditZoneSuccessAction;
+  | EditZoneSuccessAction
+  | EditNotifTimeSuccessAction;

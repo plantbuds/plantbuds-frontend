@@ -12,7 +12,8 @@ import {
 import { Button, TextInput } from "react-native-paper";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import SetNotifTimeModal from "../components/SetNotifTimeModal";
+
 import { CardStyleInterpolators } from "@react-navigation/stack";
 
 // declare types for your props here
@@ -27,23 +28,30 @@ export default function ProfileScreen(props: Props) {
   const profilePic = useSelector(
     (state: RootState) => state.session.profileURI
   );
+  const receive_water_notif = useSelector(
+    (state: RootState) => state.session.receive_water_notif
+  );
+  const receive_fertilizing_notif = useSelector(
+    (state: RootState) => state.session.receive_fertilizing_notif
+  );
+  const receive_repot_notif = useSelector(
+    (state: RootState) => state.session.receive_repot_notif
+  );
+  const notif_time = useSelector(
+    (state: RootState) => state.session.notif_time
+  );
   const [waterNotif, setWaterNotif] = useState(false);
   const [repotNotif, setRepotNotif] = useState(false);
   const [fertilizeNotif, setFertilizeNotif] = useState(false);
-  const [time, setTime] = useState(new Date(1598051730000));
-  const [show, setShow ] = useState(false);
+  const [show, setShow] = useState(false);
+
   const toggleWater = () => setWaterNotif(previousState => !previousState);
   const toggleRepot = () => setRepotNotif(previousState => !previousState);
   const toggleFertilize = () =>
     setFertilizeNotif(previousState => !previousState);
   const showTimepicker = () => {
     setShow(true);
-  }
-  const onChange = (event, selectedTime) => {
-    const currentTime = selectedTime || time;
-    setShow(Platform.OS === 'ios');
-    setTime(currentTime);
-  }
+  };
 
   return (
     <View style={styles.container}>
@@ -56,7 +64,6 @@ export default function ProfileScreen(props: Props) {
           <Text style={styles.editButtonStyle}>Edit</Text>
         </Button>
       </View>
-
       <View style={{ flexDirection: "row" }}>
         <View style={{ flexDirection: "column" }}>
           <View style={styles.containerPicture}>
@@ -75,11 +82,9 @@ export default function ProfileScreen(props: Props) {
           </Text>
         </View>
       </View>
-
       <View>
         <Text style={styles.notificationSettingStyle}> Notifications </Text>
       </View>
-
       <View style={{ flexDirection: "column" }}>
         <View style={{ flexDirection: "row" }}>
           <View style={styles.columnStyle}>
@@ -129,11 +134,12 @@ export default function ProfileScreen(props: Props) {
           </View>
         </View>
       </View>
-
       <Text style={styles.notificationSettingStyle}>Settings</Text>
       <Text style={styles.optionsStyle}>Notification Delivery</Text>
-      <Button onPress={showTimepicker}>{String(time)}</Button>
-      {show && <DateTimePicker value={time} mode="time" display="compact" onChange={onChange}/>}
+      <Button onPress={showTimepicker}>
+        {notif_time ? notif_time : "Select a notif time"}
+      </Button>
+      <SetNotifTimeModal displayModal={show} onExit={() => setShow(false)} />
     </View>
   );
 }

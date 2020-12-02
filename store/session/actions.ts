@@ -15,7 +15,9 @@ import {
   EDIT_ZONE,
   EDIT_ZONE_SUCCESS,
   EDIT_ZONE_FAIL,
-  SET_PROFILE_IMAGE
+  EDIT_NOTIF_TIME,
+  EDIT_NOTIF_TIME_SUCCESS,
+  EDIT_NOTIF_TIME_FAIL,
 } from "./types";
 
 import { API_ROOT } from "../../src/constants/index";
@@ -148,6 +150,25 @@ export const editZone = (zone: string, userID: number) => {
   };
 };
 
+export const editNotifTime = (time: string, userID: number) => {
+  return {
+    type: [EDIT_NOTIF_TIME, EDIT_NOTIF_TIME_SUCCESS, EDIT_NOTIF_TIME_FAIL],
+    payload: {
+      client: "default",
+      request: {
+        url : `${API_ROOT}/api/users/${userID}/`,
+        method: "PATCH", 
+        data: {
+          notif_time: time
+        }
+      },
+      options: {
+        onSuccess: ({dispatch}) => dispatch(setNotifTime(time))
+      }
+    }
+  }
+}
+
 export const setProfilePic = (imageURI: string) => {
   return {
     type: EDIT_PFP_SUCCESS,
@@ -166,5 +187,12 @@ export const setZone = (zone: string) => {
   return {
     type: EDIT_ZONE_SUCCESS,
     zone
+  }
+}
+
+export const setNotifTime = (time: string) => {
+  return {
+    type: EDIT_NOTIF_TIME_SUCCESS,
+    time
   }
 }
