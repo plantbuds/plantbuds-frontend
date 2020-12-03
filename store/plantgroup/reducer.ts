@@ -1,45 +1,55 @@
 import {
-    PlantGroupState,
-    PlantGroupActionTypes,
-    GET_ALL_PLANTS_SUCCESS,
-    GET_INDIVIDUAL_PLANT_SUCCESS,
+  PlantGroupState,
+  PlantGroupActionTypes,
+  GET_ALL_PLANTS_SUCCESS,
+  GET_INDIVIDUAL_PLANT_SUCCESS,
+  EDIT_PLANTNAME_SUCCESS,
+  EDIT_PLANT_PIC_SUCCESS,
+  CREATE_PLANT_SUCCESS,
+  SET_CREATED_PLANT,
+  SET_EDITED_PLANT,
+  EDIT_PLANT,
+  EDIT_NICKNAME_SUCCESS
 } from "./types";
 
 const initialState: PlantGroupState = {
-    plants: [], 
-    plant_name: null,
-    plant_id: null,
-    nickname: null, 
-    photo: null,
-    water_history: [],
-    repot_history: [],
-    fertilize_history: [],
-    water_frequency: null,
-    fertilize_frequency: null,
-    repot_frequency: null,
-    water_next_notif: null,
-    repot_next_notif: null,
-    fertilize_next_notif: null,
-    notes: [],
-    encyclopedia: null,
-    userLink: null,
-  };
+  editedPlant: false,
+  createdPlant: false,
+  plants: [],
+  plant_name: null,
+  plant_id: null,
+  nickname: null,
+  photo: null,
+  water_history: [],
+  repot_history: [],
+  fertilize_history: [],
+  water_frequency: null,
+  fertilize_frequency: null,
+  repot_frequency: null,
+  water_next_notif: null,
+  repot_next_notif: null,
+  fertilize_next_notif: null,
+  notes: [""],
+  encyclopedia: null,
+  user: null
+};
 
-  export function plantgroupReducer(
-    state = initialState,
-    action: PlantGroupActionTypes
-  ):PlantGroupState {
-    switch (action.type) {
-    case GET_ALL_PLANTS_SUCCESS: 
-    return {
+export function plantgroupReducer(
+  state = initialState,
+  action: PlantGroupActionTypes
+): PlantGroupState {
+  switch (action.type) {
+    case GET_ALL_PLANTS_SUCCESS:
+      return {
         ...state,
         plants: action.payload.data
-    };
-    case GET_INDIVIDUAL_PLANT_SUCCESS: 
-    return {
+      };
+    case GET_INDIVIDUAL_PLANT_SUCCESS:
+      return {
         ...state,
         plant_name: action.payload.data.plant_name,
         nickname: action.payload.data.nickname,
+        plant_id: parseInt(action.payload.data.url.split("/")[5]),
         photo: action.payload.data.photo,
         water_history: action.payload.data.water_history,
         repot_history: action.payload.data.repot_history,
@@ -52,9 +62,42 @@ const initialState: PlantGroupState = {
         fertilize_next_notif: action.payload.data.fertilize_next_notif,
         notes: action.payload.data.notes,
         encyclopedia: action.payload.data.encyclopedia,
-        userLink: action.payload.data.user,
-    }
-    default: 
-    return state
+        user: action.payload.data.user
+      };
+    case CREATE_PLANT_SUCCESS: 
+      return {
+        ...state, 
+        createdPlant: true
+      }
+    case EDIT_NICKNAME_SUCCESS:
+      return {
+        ...state,
+        nickname: action.nickname,
+        editedPlant: true
+      };
+    case EDIT_PLANT_PIC_SUCCESS:
+      return {
+        ...state,
+        photo: action.imageURI,
+        editedPlant: true
+      };
+    case EDIT_PLANTNAME_SUCCESS:
+      return {
+        ...state,
+        plant_name: action.plant_name,
+        editedPlant: true
+      };
+    case SET_EDITED_PLANT:
+      return {
+        ...state,
+        editedPlant: action.editedPlant
+      };
+    case SET_CREATED_PLANT:
+      return {
+        ...state,
+        createdPlant: action.createdPlant
+      };
+    default:
+      return state;
   }
 }

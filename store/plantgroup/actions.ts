@@ -13,7 +13,12 @@ import {
   EDIT_PLANTNAME_SUCCESS,
   EDIT_NICKNAME,
   EDIT_NICKNAME_FAIL,
-  EDIT_NICKNAME_SUCCESS
+  EDIT_NICKNAME_SUCCESS,
+  CREATE_PLANT,
+  CREATE_PLANT_FAIL,
+  CREATE_PLANT_SUCCESS,
+  SET_CREATED_PLANT,
+  SET_EDITED_PLANT
 } from "./types";
 
 import { API_ROOT } from "../../src/constants/index";
@@ -52,13 +57,31 @@ export const getIndividualPlant = (plantID: string) => {
   }
 }
 
+export const createPlant = (userID: number, username: string) => {
+  return {
+    types: [
+      CREATE_PLANT, CREATE_PLANT_SUCCESS, CREATE_PLANT_FAIL
+    ],
+    payload: {
+      client: "default",
+      request: {
+        url: `${API_ROOT}/api/plantprofile/`,
+        method: "POST",
+        data: {
+          user: `${API_ROOT}/api/users/${userID}/`
+        }
+      }, 
+    }
+  };
+}
+
 export const editPlantPic = (imageURI: string, userID: number) => {
   return {
     type: [EDIT_PLANT_PIC, EDIT_PLANT_PIC_SUCCESS, EDIT_PLANT_PIC_FAIL],
     payload: {
       client: "default",
       request: {
-        url: `${API_ROOT}/api/users/${userID}/`,
+        url: `${API_ROOT}/api/plantprofile/${userID}/`,
         method: "PATCH",
         data: {
           photo: imageURI
@@ -71,44 +94,43 @@ export const editPlantPic = (imageURI: string, userID: number) => {
   };
 };
 
-export const editPlantName = (username: string, userID: number) => {
+export const editPlantName = (plantname: string, userID: number) => {
   return {
     type: [EDIT_PLANTNAME, EDIT_PLANTNAME_SUCCESS, EDIT_PLANTNAME_FAIL],
     payload: {
       client: "default",
       request: {
-        url: `${API_ROOT}/api/users/${userID}/`,
+        url: `${API_ROOT}/api/plantprofile/${userID}/`,
         method: "PATCH",
         data: {
-          username: username
+          plant_name: plantname
         }
       },
       options: {
-        onSuccess: ({ dispatch }) => dispatch(setPlantName(username))
+        onSuccess: ({ dispatch }) => dispatch(setPlantName(plantname))
       }
     }
   };
 };
 
-export const editPlantNickname = (username: string, userID: number) => {
+export const editPlantNickname = (nickname: string, userID: number) => {
   return {
     type: [EDIT_NICKNAME, EDIT_NICKNAME_SUCCESS, EDIT_NICKNAME_FAIL],
     payload: {
       client: "default",
       request: {
-        url: `${API_ROOT}/api/users/${userID}/`,
+        url: `${API_ROOT}/api/plantprofile/${userID}/`,
         method: "PATCH",
         data: {
-          username: username
+          nickname: nickname
         }
       },
       options: {
-        onSuccess: ({ dispatch }) => dispatch(setPlantNickname(username))
+        onSuccess: ({ dispatch }) => dispatch(setPlantNickname(nickname))
       }
     }
   };
 };
-
 
 export const setPlantPic = (imageURI: string) => {
   return {
@@ -128,5 +150,19 @@ export const setPlantNickname = (nickname: string) => {
   return {
     type: EDIT_NICKNAME_SUCCESS,
     nickname
+  }
+}
+
+export const setEditedPlant = (editedPlant: boolean) => {
+  return {
+    type: SET_EDITED_PLANT,
+    editedPlant
+  }
+}
+
+export const setCreatedPlant = (createdPlant: boolean) => {
+  return {
+    type: SET_CREATED_PLANT,
+    createdPlant
   }
 }
