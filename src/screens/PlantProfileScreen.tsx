@@ -14,9 +14,9 @@ import {
   Switch
 } from "react-native";
 import { Button, TextInput } from "react-native-paper";
-import * as ImagePicker from "expo-image-picker";
-import Constants from "expo-constants";
-import { CardStyleInterpolators } from "@react-navigation/stack";
+import { getIndividualPlant } from "../../store/plantgroup/actions";
+import { RootState } from "../../store/store";
+import { useDispatch, useSelector } from "react-redux";
 import SetReminderModal from "../components/SetReminderModal";
 import AddEntryModal from "../components/AddEntryModal";
 import { Calendar as ReactCalendar } from "react-native-calendars";
@@ -25,9 +25,7 @@ import { Calendar as ReactCalendar } from "react-native-calendars";
 interface Props {
   navigation: any;
   route: any;
-  itemName: string;
-  itemUri: string;
-  //TODO add any other plant information
+  plantID: string;
 }
 
 var entries = {
@@ -40,157 +38,166 @@ var entries = {
 
 const greenBlueBrown = {
   container: {
-      backgroundColor: 'white',
-      borderWidth:4,
-      borderBottomColor:'#1CA7EC',
-      borderTopColor:'#31e627',
-      borderLeftColor:'#AA6F5D',
-      borderRightColor:'#1CA7EC'
+    backgroundColor: "white",
+    borderWidth: 4,
+    borderBottomColor: "#1CA7EC",
+    borderTopColor: "#31e627",
+    borderLeftColor: "#AA6F5D",
+    borderRightColor: "#1CA7EC"
   },
   text: {
-      bottom: 3,
-      color: 'black',
+    bottom: 3,
+    color: "black"
   }
-}
+};
 const brown = {
   container: {
-      backgroundColor: 'white',
-      borderWidth:4,
-      borderBottomColor:'#AA6F5D',
-      borderTopColor:'#AA6F5D',
-      borderLeftColor:'#AA6F5D',
-      borderRightColor:'#AA6F5D'
+    backgroundColor: "white",
+    borderWidth: 4,
+    borderBottomColor: "#AA6F5D",
+    borderTopColor: "#AA6F5D",
+    borderLeftColor: "#AA6F5D",
+    borderRightColor: "#AA6F5D"
   },
   text: {
-      bottom: 3,
-      color: 'black',
+    bottom: 3,
+    color: "black"
   }
-}
-const green= {
+};
+const green = {
   container: {
-      backgroundColor: 'white',
-      borderWidth:4,
-      borderBottomColor:'#31e627',
-      borderTopColor:'#31e627',
-      borderLeftColor:'#31e627',
-      borderRightColor:'#31e627'
+    backgroundColor: "white",
+    borderWidth: 4,
+    borderBottomColor: "#31e627",
+    borderTopColor: "#31e627",
+    borderLeftColor: "#31e627",
+    borderRightColor: "#31e627"
   },
   text: {
-      bottom: 3,
-      color: 'black',
+    bottom: 3,
+    color: "black"
   }
-}
-const blue= {
+};
+const blue = {
   container: {
-      backgroundColor: 'white',
-      borderWidth:4,
-      borderBottomColor:'#1CA7EC',
-      borderTopColor:'#1CA7EC',
-      borderLeftColor:'#1CA7EC',
-      borderRightColor:'#1CA7EC'
+    backgroundColor: "white",
+    borderWidth: 4,
+    borderBottomColor: "#1CA7EC",
+    borderTopColor: "#1CA7EC",
+    borderLeftColor: "#1CA7EC",
+    borderRightColor: "#1CA7EC"
   },
   text: {
-      bottom: 3,
-      color: 'black',
+    bottom: 3,
+    color: "black"
   }
-}
+};
 
 const blueBrown = {
   container: {
-      backgroundColor: 'white',
-      borderWidth:4,
-      borderBottomColor:'#1CA7EC',
-      borderTopColor:'#AA6F5D',
-      borderLeftColor:'#1CA7EC',
-      borderRightColor:'#AA6F5D'
+    backgroundColor: "white",
+    borderWidth: 4,
+    borderBottomColor: "#1CA7EC",
+    borderTopColor: "#AA6F5D",
+    borderLeftColor: "#1CA7EC",
+    borderRightColor: "#AA6F5D"
   },
   text: {
-      bottom: 3,
-      color: 'black',
+    bottom: 3,
+    color: "black"
   }
-}
+};
 const blueGreen = {
   container: {
-      backgroundColor: 'white',
-      borderWidth:4,
-      borderBottomColor:'#1CA7EC',
-      borderTopColor:'#31e627',
-      borderLeftColor:'#1CA7EC',
-      borderRightColor:'#31e627'
+    backgroundColor: "white",
+    borderWidth: 4,
+    borderBottomColor: "#1CA7EC",
+    borderTopColor: "#31e627",
+    borderLeftColor: "#1CA7EC",
+    borderRightColor: "#31e627"
   },
   text: {
-      bottom: 3,
-      color: 'black',
+    bottom: 3,
+    color: "black"
   }
-}
+};
 const greenBrown = {
   container: {
-      backgroundColor: 'white',
-      borderWidth:4,
-      borderBottomColor:'#31e627',
-      borderTopColor:'#AA6F5D',
-      borderLeftColor:'#31e627',
-      borderRightColor:'#AA6F5D'
+    backgroundColor: "white",
+    borderWidth: 4,
+    borderBottomColor: "#31e627",
+    borderTopColor: "#AA6F5D",
+    borderLeftColor: "#31e627",
+    borderRightColor: "#AA6F5D"
   },
   text: {
-      bottom: 3,
-      color: 'black',
+    bottom: 3,
+    color: "black"
   }
-}
-
+};
 
 export default function PlantProfileScreen(props: Props) {
   const { navigation, route } = props;
-  const { itemName, itemURI } = route.params;
+  const { plantID } = route.params;
   const [selectedDate, setSelectedDate] = useState(new Date().toDateString());
   const [markings, setMarkings] = useState({});
   const [waterStatus, setWaterStatus] = useState(false);
   const [repotStatus, setRepotStatus] = useState(false);
   const [fertilizeStatus, setFertilizeStatus] = useState(false);
-  const waterDot = { key: "water", color: "blue" };
-  const repotDot = { key: "repot", color: "brown" };
-  const fertilizeDot = { key: "fertilize", color: "green" };
   const [displayAddEntryModal, setDisplayAddEntryModal] = useState(false);
   const [displayReminderModal, setDisplayReminderModal] = useState(false);
 
+  const plant_name = useSelector((state: RootState)  => state.plantgroup.plant_name);
+  const nickname = useSelector((state: RootState) => state.plantgroup.nickname);
+  const photo = useSelector((state:RootState) => state.plantgroup.photo);
+  const water_history = useSelector((state:RootState) => state.plantgroup.water_history);
+  const fertilize_history = useSelector((state: RootState) => state.plantgroup.fertilize_history);
+  const repot_history = useSelector((state: RootState) => state.plantgroup.repot_history);
+  const notes = useSelector((state: RootState) => state.plantgroup.notes);
+
+  const dispatch = useDispatch();
+
   const updateCalendarMarkings = () => {
     var markings = {};
-        var selected = false;
-        for (const [date, value] of Object.entries(entries)) {
-            var entry = {};
-            //Deep copy shenanigans
-            if(value[0] == true && value[1] == false && value[2] == false){
-                entry["customStyles"]=JSON.parse(JSON.stringify(blue));
-            }else if(value[0] == false && value[1] == true && value[2] == false){
-                entry["customStyles"] = JSON.parse(JSON.stringify(brown));
-            }else if(value[0] == false && value[1] == false && value[2] == true){
-                entry["customStyles"] = JSON.parse(JSON.stringify(green));
-            }else if(value[0] == true && value[1] == true && value[2] == false){
-                entry["customStyles"] = JSON.parse(JSON.stringify(blueBrown));
-            }else if(value[0] == true && value[1] == false && value[2] == true){
-                entry["customStyles"] = JSON.parse(JSON.stringify(blueGreen));
-            }else if(value[0] == false && value[1] == true && value[2] == true){
-                entry["customStyles"] = JSON.parse(JSON.stringify(greenBrown));
-            }else if(value[0] == true && value[1] == true && value[2] == true){
-                entry["customStyles"] = JSON.parse(JSON.stringify(greenBlueBrown));
-            }else{
-
-            }
-            if (date === selectedDate) {
-                entry["selected"] = true;
-                entry["customStyles"]["container"]["backgroundColor"] = "green";
-                entry["customStyles"]["text"]["color"] = "white";
-                selected = true;
-            }
-            markings[date] = entry;
-        }
-        if (!selected) {
-            markings[selectedDate] = { selected: true, customStyles: { container: { backgroundColor: "green" }}};
-        }
-        setMarkings(markings);
+    var selected = false;
+    for (const [date, value] of Object.entries(entries)) {
+      var entry = {};
+      //Deep copy shenanigans
+      if (value[0] == true && value[1] == false && value[2] == false) {
+        entry["customStyles"] = JSON.parse(JSON.stringify(blue));
+      } else if (value[0] == false && value[1] == true && value[2] == false) {
+        entry["customStyles"] = JSON.parse(JSON.stringify(brown));
+      } else if (value[0] == false && value[1] == false && value[2] == true) {
+        entry["customStyles"] = JSON.parse(JSON.stringify(green));
+      } else if (value[0] == true && value[1] == true && value[2] == false) {
+        entry["customStyles"] = JSON.parse(JSON.stringify(blueBrown));
+      } else if (value[0] == true && value[1] == false && value[2] == true) {
+        entry["customStyles"] = JSON.parse(JSON.stringify(blueGreen));
+      } else if (value[0] == false && value[1] == true && value[2] == true) {
+        entry["customStyles"] = JSON.parse(JSON.stringify(greenBrown));
+      } else if (value[0] == true && value[1] == true && value[2] == true) {
+        entry["customStyles"] = JSON.parse(JSON.stringify(greenBlueBrown));
+      } else {
+      }
+      if (date === selectedDate) {
+        entry["selected"] = true;
+        entry["customStyles"]["container"]["backgroundColor"] = "green";
+        entry["customStyles"]["text"]["color"] = "white";
+        selected = true;
+      }
+      markings[date] = entry;
+    }
+    if (!selected) {
+      markings[selectedDate] = {
+        selected: true,
+        customStyles: { container: { backgroundColor: "green" } }
+      };
+    }
+    setMarkings(markings);
   };
 
   useEffect(() => {
+    dispatch(getIndividualPlant(plantID));
     updateCalendarMarkings();
   }, [selectedDate, displayAddEntryModal]);
 
@@ -218,15 +225,15 @@ export default function PlantProfileScreen(props: Props) {
               <Image
                 style={styles.profilePicture}
                 source={{
-                  uri: itemURI
+                  uri: photo
                 }}
               />
             </View>
           </View>
           <View style={{ flexDirection: "column" }}>
-            <Text style={styles.plantNameStyle}>{itemName}</Text>
-            <Text style={styles.scientificZoneStyle}>Scientific Name</Text>
-            <Text style={styles.scientificZoneStyle}>Zone: #</Text>
+            <Text style={styles.plantNameStyle}>{nickname}</Text>
+              <Text style={styles.scientificZoneStyle}>{plant_name}</Text>
+            {/*<Text style={styles.scientificZoneStyle}>Zone: #</Text>*/}
           </View>
         </View>
 
@@ -286,7 +293,7 @@ export default function PlantProfileScreen(props: Props) {
           </Button>
 
           <Button onPress={() => setDisplayReminderModal(true)}>
-            Add start date for reminder 
+            Add start date for reminder
           </Button>
           <AddEntryModal
             selectedDate={selectedDate}

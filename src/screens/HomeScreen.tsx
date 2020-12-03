@@ -117,8 +117,7 @@ export default function HomeScreen(props: Props) {
                 underlayColor="#DDDDDD"
                 onPress={() => {
                   navigation.navigate("PlantProfile", {
-                    itemName: item.nickname,
-                    itemURI: item.photo,
+                    plantID: item.url.split("/")[5]
                     //TODO add any other plant information that needs to be passed to the plant profile screen.
                   });
                 }}

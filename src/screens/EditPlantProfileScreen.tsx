@@ -9,12 +9,13 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   KeyboardAvoidingView,
-  PixelRatio
+  ScrollView,
 } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../../store/store"
 import SetZoneModal from "../components/SetZoneModal";
-import { ScrollView } from "react-native-gesture-handler";
 // declare types for your props here
 interface Props {
   navigation: any;
@@ -30,8 +31,15 @@ export default function EditPlantProfileScreen(props: Props) {
   const [textWatFreq, setTextWatFreq] = useState("");
   const [textRepFreq, setTextRepFreq] = useState("");
   const [textFertFreq, setTextFertFreq] = useState("");
-  const windowWidth = Dimensions.get("window").width;
-  const windowHeight = Dimensions.get("window").height;
+
+  const plant_name = useSelector((state: RootState)  => state.plantgroup.plant_name);
+  const nickname = useSelector((state: RootState) => state.plantgroup.nickname);
+  const photo = useSelector((state:RootState) => state.plantgroup.photo);
+  const water_history = useSelector((state:RootState) => state.plantgroup.water_history);
+  const fertilize_history = useSelector((state: RootState) => state.plantgroup.fertilize_history);
+  const repot_history = useSelector((state: RootState) => state.plantgroup.repot_history);
+  const notes = useSelector((state: RootState) => state.plantgroup.notes);
+
   // check if user has given permission to access image gallery from phone
   useEffect(() => {
     (async () => {
