@@ -154,6 +154,7 @@ export default function EditSettingsScreen(props: Props) {
               </View>
               <View style={{ flex: 2 }}>
                 <TextInput
+                  keyboardType='ascii-capable' 
                   mode="flat"
                   maxLength={13}
                   theme={theme}

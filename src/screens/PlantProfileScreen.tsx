@@ -15,8 +15,8 @@ import {
 } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import {
-  getIndividualPlant,
-  setGetPlant
+  updateTaskHistory,
+  setEditedEntry
 } from "../../store/plantgroup/actions";
 import { RootState } from "../../store/store";
 import { useDispatch, useSelector } from "react-redux";
@@ -35,9 +35,6 @@ interface Props {
 }
 
 var entries = {};
-// entries = {
-// "2020-12-1" : [true, false, false]
-//}
 
 const greenBlueBrown = {
   container: {
@@ -164,9 +161,26 @@ export default function PlantProfileScreen(props: Props) {
   const photo = useSelector((state: RootState) => state.plantgroup.photo);
   const notes = useSelector((state: RootState) => state.plantgroup.notes);
   const history = useSelector((state: RootState) => state.plantgroup.history);
-  const getPlant = useSelector((state: RootState) => state.plantgroup.getPlant);
+  const editedEntry = useSelector(
+    (state: RootState) => state.plantgroup.editedEntry
+  );
 
   const dispatch = useDispatch();
+
+  const parseEntries = () => {
+    let history = []
+    for (const date in entries) {
+      let s = date + ":";
+      for (let i = 0; i < 2; i++) {
+        s += entries[date][i] + ",";
+      }
+      s += entries[date][2];
+      console.log(s);
+      history.push(s);
+    }
+    return history;
+  };
+
   const loadEntries = () => {
     if (history != null && plantID === plant_id) {
       for (let i = 0; i < history.length; i++) {
@@ -181,11 +195,9 @@ export default function PlantProfileScreen(props: Props) {
         }
         entries[history[i].split(":")[0]] = booleanArr;
       }
+    } else {
+      entries = {};
     }
-    else {
-      entries = {}
-    }
-    
   };
   const updateCalendarMarkings = () => {
     var markings = {};
@@ -230,17 +242,22 @@ export default function PlantProfileScreen(props: Props) {
 
   // Load all the date entries in history into entries array upon initial load
   useEffect(() => {
-    dispatch(getIndividualPlant(plantID));
     loadEntries();
     updateCalendarMarkings();
-    setGetPlant(false);
-  }, [plant_id]);
+  }, [plant_id, plantID]);
 
-  // Listener for updating calendar markings
+  // Listener for updating calendar markings *note this hook will run every time since we are creating a new Date object
   useEffect(() => {
-    dispatch(getIndividualPlant(plantID));
     updateCalendarMarkings();
   }, [selectedDate, displayAddEntryModal]);
+
+  useEffect(() => {
+    if (editedEntry) {
+      let history = parseEntries();
+      dispatch(updateTaskHistory(history, plantID))
+      dispatch(setEditedEntry(false));
+    }
+  }, [editedEntry]);
 
   return (
     <View style={styles.container}>

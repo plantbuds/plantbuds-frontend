@@ -17,11 +17,19 @@ import {
   CREATE_PLANT,
   CREATE_PLANT_FAIL,
   CREATE_PLANT_SUCCESS,
+  DELETE_PLANT,
+  DELETE_PLANT_FAIL,
+  DELETE_PLANT_SUCCESS,
+  SET_DELETED_PLANT,
   SET_CREATED_PLANT,
   SET_EDITED_PLANT,
+  SET_EDITED_ENTRY,
   EDIT_NOTES,
   EDIT_NOTES_SUCCESS,
   EDIT_NOTES_FAIL,
+  UPDATE_TASK_HISTORY,
+  UPDATE_TASK_HISTORY_FAIL,
+  UPDATE_TASK_HISTORY_SUCCESS
 } from "./types";
 
 import { API_ROOT } from "../../src/constants/index";
@@ -43,7 +51,7 @@ export const getAllPlants = (username: string) => {
   };
 };
 
-export const getIndividualPlant = (plantID: string) => {
+export const getIndividualPlant = (plantID: number) => {
   return {
     types: [
       GET_INDIVIDUAL_PLANT_REQUEST,
@@ -60,7 +68,7 @@ export const getIndividualPlant = (plantID: string) => {
   }
 }
 
-export const createPlant = (userID: number, username: string) => {
+export const createPlant = (userID: number) => {
   return {
     types: [
       CREATE_PLANT, CREATE_PLANT_SUCCESS, CREATE_PLANT_FAIL
@@ -78,13 +86,28 @@ export const createPlant = (userID: number, username: string) => {
   };
 }
 
-export const editPlantPic = (imageURI: string, userID: number) => {
+export const deletePlant = (plantID: number) => {
+  return {
+    types: [
+      DELETE_PLANT, DELETE_PLANT_SUCCESS, DELETE_PLANT_FAIL
+    ],
+    payload: {
+      client: "default",
+      request: {
+        url: `${API_ROOT}/api/plantprofile/${plantID}/`,
+        method: "DELETE",
+      }, 
+    }
+  };
+}
+
+export const editPlantPic = (imageURI: string, plantID: number) => {
   return {
     type: [EDIT_PLANT_PIC, EDIT_PLANT_PIC_SUCCESS, EDIT_PLANT_PIC_FAIL],
     payload: {
       client: "default",
       request: {
-        url: `${API_ROOT}/api/plantprofile/${userID}/`,
+        url: `${API_ROOT}/api/plantprofile/${plantID}/`,
         method: "PATCH",
         data: {
           photo: imageURI
@@ -97,13 +120,13 @@ export const editPlantPic = (imageURI: string, userID: number) => {
   };
 };
 
-export const editPlantName = (plantname: string, userID: number) => {
+export const editPlantName = (plantname: string, plantID: number) => {
   return {
     type: [EDIT_PLANTNAME, EDIT_PLANTNAME_SUCCESS, EDIT_PLANTNAME_FAIL],
     payload: {
       client: "default",
       request: {
-        url: `${API_ROOT}/api/plantprofile/${userID}/`,
+        url: `${API_ROOT}/api/plantprofile/${plantID}/`,
         method: "PATCH",
         data: {
           plant_name: plantname
@@ -116,13 +139,13 @@ export const editPlantName = (plantname: string, userID: number) => {
   };
 };
 
-export const editPlantNickname = (nickname: string, userID: number) => {
+export const editPlantNickname = (nickname: string, plantID: number) => {
   return {
     type: [EDIT_NICKNAME, EDIT_NICKNAME_SUCCESS, EDIT_NICKNAME_FAIL],
     payload: {
       client: "default",
       request: {
-        url: `${API_ROOT}/api/plantprofile/${userID}/`,
+        url: `${API_ROOT}/api/plantprofile/${plantID}/`,
         method: "PATCH",
         data: {
           nickname: nickname
@@ -135,13 +158,13 @@ export const editPlantNickname = (nickname: string, userID: number) => {
   };
 };
 
-export const editNotes = (notes: string, userID: number) => {
+export const editNotes = (notes: string, plantID: number) => {
   return {
     type: [EDIT_NOTES, EDIT_NOTES_SUCCESS, EDIT_NOTES_FAIL],
     payload: {
       client: "default",
       request: {
-        url: `${API_ROOT}/api/plantprofile/${userID}/`,
+        url: `${API_ROOT}/api/plantprofile/${plantID}/`,
         method: "PATCH",
         data: {
           notes: notes
@@ -153,6 +176,22 @@ export const editNotes = (notes: string, userID: number) => {
     }
   };
 }
+
+export const updateTaskHistory = (history: string[], plantID: number) => {
+  return {
+    type: [UPDATE_TASK_HISTORY, UPDATE_TASK_HISTORY_SUCCESS, UPDATE_TASK_HISTORY_FAIL],
+    payload: {
+      client: "default",
+      request: {
+        url: `${API_ROOT}/api/plantprofile/${plantID}/`,
+        method: "PATCH",
+        data: {
+          history: history
+        }
+      },
+    }
+  };
+};
 
 export const setPlantPic = (imageURI: string) => {
   return {
@@ -197,9 +236,16 @@ export const setCreatedPlant = (createdPlant: boolean) => {
   }
 }
 
-export const setGetPlant = (getPlant: boolean) => {
+export const setDeletedPlant = (deletedPlant: boolean) => {
   return {
-    type: SET_CREATED_PLANT,
-    getPlant
+    type: SET_DELETED_PLANT,
+    deletedPlant
+  }
+}
+
+export const setEditedEntry = (editedEntry: boolean) => {
+  return {
+    type: SET_EDITED_ENTRY,
+    editedEntry,
   }
 }

@@ -16,8 +16,10 @@ import {
 import { Button, TextInput } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
 import { useSelector, useDispatch } from "react-redux";
+import DeletePlantModal from "../components/DeletePlantModal";
 import { RootState } from "../../store/store";
 import {
+  deletePlant,
   editPlantPic,
   editPlantName,
   editNotes,
@@ -40,6 +42,7 @@ export default function EditPlantProfileScreen(props: Props) {
   const [textErr, setTextErr] = useState(false);
   const [textSciErr, setTextSciErr] = useState(false);
   const [textNotes, setTextNotes] = useState(notes);
+  const [displayDeletePlantModal, setDisplayDeletePlantModal] = useState(false);
 
   const plant_name = useSelector(
     (state: RootState) => state.plantgroup.plant_name
@@ -86,7 +89,11 @@ export default function EditPlantProfileScreen(props: Props) {
           <View style={styles.row}>
             <Button
               labelStyle={styles.buttonStyle}
-              onPress={() => navigation.navigate("PlantProfile")}
+              onPress={() =>
+                navigation.navigate("PlantProfile", {
+                  plantID: plantID
+                })
+              }
             >
               <Text style={styles.textTitleLeft}>Cancel</Text>
             </Button>
@@ -94,19 +101,26 @@ export default function EditPlantProfileScreen(props: Props) {
             <Button
               labelStyle={styles.buttonStyle}
               onPress={() => {
-                if (textSciName) {
+                let err = false;
+                if (textSciName && textSciName.length > 0) {
                   if (textSciName.length < 3) {
                     setTextSciErr(true);
-                    return;
+                    setTextSciName("");
+                    err = true;
+                  } else {
+                    dispatch(editPlantName(textSciName, plantID));
+                    setTextSciErr(false);
                   }
-                  dispatch(editPlantName(textSciName, plantID));
                 }
-                if (textNickname) {
-                  if (textNickname.length < 4) {
+                if (textNickname && textNickname.length > 0) {
+                  if (textNickname.length < 2) {
                     setTextErr(true);
-                    return;
+                    setTextNickname("");
+                    err = true;
+                  } else {
+                    dispatch(editPlantNickname(textNickname, plantID));
+                    setTextErr(false);
                   }
-                  dispatch(editPlantNickname(textNickname, plantID));
                 }
                 if (image) {
                   dispatch(editPlantPic(image, plantID));
@@ -114,8 +128,10 @@ export default function EditPlantProfileScreen(props: Props) {
                 if (textNotes) {
                   dispatch(editNotes(textNotes, plantID));
                 }
-                if (!textErr && !textSciErr) {
-                  navigation.navigate("PlantProfile");
+                if (!err) {
+                  navigation.navigate("PlantProfile", {
+                    plantID: plantID
+                  });
                 }
               }}
             >
@@ -144,10 +160,16 @@ export default function EditPlantProfileScreen(props: Props) {
                 <Text style={styles.inputFontStyleLabelBottom}>
                   Scientific Name
                 </Text>
+                {textSciErr && (
+                  <Text style={styles.textSciError}>
+                    scientific name must be between 3-26 characters long
+                  </Text>
+                )}
               </View>
               <View style={styles.halfFlex}>
                 <TextInput
                   mode="flat"
+                  keyboardType="ascii-capable"
                   maxLength={26}
                   style={styles.inputFontStyle}
                   placeholder={plant_name ? plant_name : "Enter name"}
@@ -162,10 +184,16 @@ export default function EditPlantProfileScreen(props: Props) {
             <View style={styles.profileRows}>
               <View style={styles.halfFlex}>
                 <Text style={styles.inputFontStyleLabelBottom}>Nickname</Text>
+                {textErr && (
+                  <Text style={styles.textError}>
+                    nickname must be between 2-22 characters
+                  </Text>
+                )}
               </View>
               <View style={styles.halfFlex}>
                 <TextInput
                   mode="flat"
+                  keyboardType="ascii-capable"
                   maxLength={22}
                   style={styles.inputFontStyle}
                   underlineColor="#fff"
@@ -191,17 +219,23 @@ export default function EditPlantProfileScreen(props: Props) {
                   onChangeText={textNotes => setTextNotes(textNotes)}
                 />
               </View>
-              {textErr && (
-                <Text style={styles.textError}>
-                  nickname must be between 3-22 characters long
-                </Text>
-              )}
-              {textSciErr && (
-                <Text style={styles.textSciError}>
-                  plantname must be between 3-26 characters long
-                </Text>
-              )}
             </View>
+            <Button
+              style={styles.deleteButton}
+              mode="contained"
+              onPress={() => setDisplayDeletePlantModal(true)}
+            >
+              Delete Plant
+            </Button>
+            <DeletePlantModal
+              displayModal={displayDeletePlantModal}
+              onPress={() => {
+                dispatch(deletePlant(plantID));
+                navigation.navigate("Home");
+                setDisplayDeletePlantModal(false);
+              }}
+              onExit={() => setDisplayDeletePlantModal(false)}
+            />
           </View>
         </View>
       </TouchableWithoutFeedback>
@@ -333,5 +367,8 @@ const styles = StyleSheet.create({
   textSciError: {
     paddingTop: 5,
     color: "red"
+  },
+  deleteButton: {
+    bottom: windowHeight * 0.48
   }
 });

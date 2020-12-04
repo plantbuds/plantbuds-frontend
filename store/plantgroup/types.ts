@@ -1,7 +1,8 @@
 export interface PlantGroupState {
   editedPlant: boolean;
   createdPlant: boolean;
-  getPlant: boolean;
+  deletedPlant: boolean;
+  editedEntry: boolean;
   plants: any[];
   plant_name: string;
   plant_id: number;
@@ -46,7 +47,14 @@ export const SET_CREATED_PLANT = "SET_CREATED_PLANT";
 export const EDIT_NOTES = "EDIT_NOTES";
 export const EDIT_NOTES_SUCCESS = "EDIT_NOTES_SUCCESS";
 export const EDIT_NOTES_FAIL = "EDIT_NOTES_FAIL";
-export const SET_GET_PLANT = "SET_GET_PLANT";
+export const SET_DELETED_PLANT = "SET_DELETED_PLANT";
+export const DELETE_PLANT = "DELETE_PLANT";
+export const DELETE_PLANT_SUCCESS = "DELETE_PLANT_SUCCESS";
+export const DELETE_PLANT_FAIL = "DELETE_PLANT_FAIL";
+export const SET_EDITED_ENTRY = "SET_EDITED_ENTRY";
+export const UPDATE_TASK_HISTORY = "UPDATE_TASK_HISTORY";
+export const UPDATE_TASK_HISTORY_SUCCESS = "UPDATE_TASK_HISTORY_SUCCESS";
+export const UPDATE_TASK_HISTORY_FAIL = "UPDATE_TASK_HISTORY_FAIL";
 
 interface GetAllPlantsSuccessAction {
   type: typeof GET_ALL_PLANTS_SUCCESS;
@@ -97,9 +105,18 @@ interface SetCreatedPlantAction {
   createdPlant: boolean;
 }
 
-interface SetGetPlantAction {
-  type: typeof SET_GET_PLANT;
-  createdPlant: boolean;
+interface SetDeletedPlantAction {
+  type: typeof SET_DELETED_PLANT;
+  deletedPlant: boolean;
+}
+
+interface SetEditedEntryAction {
+  type: typeof SET_EDITED_ENTRY;
+  editedEntry: boolean;
+}
+
+interface DeletePlantSuccessAction {
+  type: typeof DELETE_PLANT_SUCCESS;
 }
 
 export type PlantGroupActionTypes =
@@ -112,5 +129,7 @@ export type PlantGroupActionTypes =
   | EditPlantNameSuccessAction
   | EditNotesSuccessAction
   | SetEditedPlantAction
-  | SetGetPlantAction
-  | EditPlantNicknameSucessAction;
+  | SetDeletedPlantAction
+  | SetEditedEntryAction
+  | EditPlantNicknameSucessAction
+  | DeletePlantSuccessAction;

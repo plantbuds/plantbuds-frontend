@@ -2,9 +2,15 @@ import React, { useEffect, useRef, useState } from "react";
 import * as Notifications from "expo-notifications";
 import { registerForPushNotificationsAsync } from "../utils/Notifications";
 import { useSelector, useDispatch } from "react-redux";
-import { getAllPlants, getIndividualPlant, createPlant, setEditedPlant, setCreatedPlant} from "../../store/plantgroup/actions";
-import { getExpoToken } from "../utils/AsyncStorage";
-import { removeAllNotificationListeners } from "expo-notifications";
+import {
+  getAllPlants,
+  getIndividualPlant,
+  createPlant,
+  setEditedPlant,
+  setCreatedPlant,
+  setDeletedPlant
+} from "../../store/plantgroup/actions";
+
 import { Searchbar } from "react-native-paper";
 import {
   Button,
@@ -21,7 +27,7 @@ import {
   Image,
   KeyboardAvoidingView
 } from "react-native";
-
+import CreatePlantModal from "../components/CreatePlantModal";
 import { FAB } from "react-native-paper";
 import { RootState } from "../../store/store";
 
@@ -41,11 +47,20 @@ export default function HomeScreen(props: Props) {
   // local state
 
   const [searchQuery, setSearchQuery] = useState("");
+  const [displayCreatePlantModal, setDisplayCreatePlantModal] = useState(false);
   const username = useSelector((state: RootState) => state.session.username);
   const userID = useSelector((state: RootState) => state.session.userID);
   const plants = useSelector((state: RootState) => state.plantgroup.plants);
-  const editedPlant = useSelector((state: RootState) => state.plantgroup.editedPlant);
-  const createdPlant = useSelector((state: RootState) => state.plantgroup.createdPlant);
+  const plant_id = useSelector((state: RootState) => state.plantgroup.plant_id);
+  const editedPlant = useSelector(
+    (state: RootState) => state.plantgroup.editedPlant
+  );
+  const createdPlant = useSelector(
+    (state: RootState) => state.plantgroup.createdPlant
+  );
+  const deletedPlant = useSelector(
+    (state: RootState) => state.plantgroup.deletedPlant
+  );
 
   const dispatch = useDispatch();
   const onChangeSearch = (query: string) => setSearchQuery(query);
@@ -70,10 +85,15 @@ export default function HomeScreen(props: Props) {
 
   // Listening for updates to plants array
   useEffect(() => {
-    dispatch(getAllPlants(username));
+    console.log("use effect with dp array in homescreen");
+    if (createdPlant || editedPlant || deletedPlant) {
+      dispatch(getAllPlants(username));
+    }
+
     dispatch(setEditedPlant(false));
     dispatch(setCreatedPlant(false));
-  }, [createdPlant, editedPlant]);
+    dispatch(setDeletedPlant(false));
+  }, [createdPlant, editedPlant, deletedPlant]);
 
   const { navigation } = props;
   const notificationListener = useRef(null);
@@ -89,8 +109,17 @@ export default function HomeScreen(props: Props) {
           color="white"
           icon="plus"
           onPress={() => {
-            dispatch(createPlant(userID, username));
+            dispatch(createPlant(userID));
+            if (plant_id) {
+              dispatch(getIndividualPlant(plant_id));
+            }
+            setDisplayCreatePlantModal(true);
           }}
+        />
+        <CreatePlantModal
+          setDisplayCreatePlantModal={setDisplayCreatePlantModal}
+          navigation={navigation}
+          displayModal={displayCreatePlantModal}
         />
       </View>
     );
@@ -122,15 +151,28 @@ export default function HomeScreen(props: Props) {
                   activeOpacity={0.6}
                   underlayColor="#DDDDDD"
                   onPress={() => {
+                    let plantID = parseInt(item.url.split("/")[5]);
+                    console.log(
+                      "calling get individual plant from home screen"
+                    );
+                    dispatch(getIndividualPlant(plantID));
                     navigation.navigate("PlantProfile", {
-                      plantID: parseInt(item.url.split("/")[5])
-                      //TODO add any other plant information that needs to be passed to the plant profile screen.
+                      plantID: plantID
                     });
                   }}
                 >
                   <View>
                     <Image style={styles.item} source={{ uri: item.photo }} />
-                    <Text style={{ alignSelf: "center" }}>{item.nickname}</Text>
+                    <Text style={{ alignSelf: "center" }}>
+                      {item.nickname && item.nickname.length > 19
+                        ? item.nickname.substring(0, 18) + "..."
+                        : item.nickname}
+                    </Text>
+                    <Text style={{ alignSelf: "center" }}>
+                      {item.plantname && item.plant_name.length > 19
+                        ? item.plant_name.substring(0, 18) + "..."
+                        : item.plant_name}
+                    </Text>
                     <Text style={{ alignSelf: "center" }}>
                       {item.url.split("/")[5]}
                     </Text>
@@ -143,8 +185,17 @@ export default function HomeScreen(props: Props) {
               color="white"
               icon="plus"
               onPress={() => {
-                dispatch(createPlant(userID, username));
+                dispatch(createPlant(userID));
+                if (plant_id) {
+                  dispatch(getIndividualPlant(plant_id));
+                }
+                setDisplayCreatePlantModal(true);
               }}
+            />
+            <CreatePlantModal
+              setDisplayCreatePlantModal={setDisplayCreatePlantModal}
+              navigation={navigation}
+              displayModal={displayCreatePlantModal}
             />
           </View>
         </TouchableWithoutFeedback>
@@ -213,7 +264,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#CBE4B1",
     alignSelf: "flex-end",
     right: windowWidth * 0.1,
-    top: windowHeight * 0.2
+    top: windowHeight * 0.3
   },
   noPlantsText: {
     width: windowWidth * 0.9,
