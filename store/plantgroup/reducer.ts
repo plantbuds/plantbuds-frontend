@@ -8,13 +8,15 @@ import {
   CREATE_PLANT_SUCCESS,
   SET_CREATED_PLANT,
   SET_EDITED_PLANT,
-  EDIT_PLANT,
-  EDIT_NICKNAME_SUCCESS
+  EDIT_NOTES_SUCCESS,
+  EDIT_NICKNAME_SUCCESS,
+  SET_GET_PLANT,
 } from "./types";
 
 const initialState: PlantGroupState = {
   editedPlant: false,
   createdPlant: false,
+  getPlant: false,
   plants: [],
   plant_name: null,
   plant_id: null,
@@ -23,13 +25,14 @@ const initialState: PlantGroupState = {
   water_history: [],
   repot_history: [],
   fertilize_history: [],
+  history: [],
   water_frequency: null,
   fertilize_frequency: null,
   repot_frequency: null,
   water_next_notif: null,
   repot_next_notif: null,
   fertilize_next_notif: null,
-  notes: [""],
+  notes: "",
   encyclopedia: null,
   user: null
 };
@@ -51,6 +54,7 @@ export function plantgroupReducer(
         nickname: action.payload.data.nickname,
         plant_id: parseInt(action.payload.data.url.split("/")[5]),
         photo: action.payload.data.photo,
+        history: action.payload.data.history,
         water_history: action.payload.data.water_history,
         repot_history: action.payload.data.repot_history,
         fertilize_history: action.payload.data.fertilize_history,
@@ -62,7 +66,8 @@ export function plantgroupReducer(
         fertilize_next_notif: action.payload.data.fertilize_next_notif,
         notes: action.payload.data.notes,
         encyclopedia: action.payload.data.encyclopedia,
-        user: action.payload.data.user
+        user: action.payload.data.user,
+        getPlant: true
       };
     case CREATE_PLANT_SUCCESS: 
       return {
@@ -92,11 +97,20 @@ export function plantgroupReducer(
         ...state,
         editedPlant: action.editedPlant
       };
+    case EDIT_NOTES_SUCCESS:
+      return {
+        ...state,
+        notes: action.notes,
+      }
     case SET_CREATED_PLANT:
       return {
         ...state,
         createdPlant: action.createdPlant
       };
+    case SET_GET_PLANT: 
+      return {
+        getPlant: action.getPlant
+      }
     default:
       return state;
   }

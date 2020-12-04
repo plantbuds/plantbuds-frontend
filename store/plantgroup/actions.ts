@@ -18,7 +18,10 @@ import {
   CREATE_PLANT_FAIL,
   CREATE_PLANT_SUCCESS,
   SET_CREATED_PLANT,
-  SET_EDITED_PLANT
+  SET_EDITED_PLANT,
+  EDIT_NOTES,
+  EDIT_NOTES_SUCCESS,
+  EDIT_NOTES_FAIL,
 } from "./types";
 
 import { API_ROOT } from "../../src/constants/index";
@@ -132,6 +135,25 @@ export const editPlantNickname = (nickname: string, userID: number) => {
   };
 };
 
+export const editNotes = (notes: string, userID: number) => {
+  return {
+    type: [EDIT_NOTES, EDIT_NOTES_SUCCESS, EDIT_NOTES_FAIL],
+    payload: {
+      client: "default",
+      request: {
+        url: `${API_ROOT}/api/plantprofile/${userID}/`,
+        method: "PATCH",
+        data: {
+          notes: notes
+        }
+      },
+      options: {
+        onSuccess: ({ dispatch }) => dispatch(setNotes(notes))
+      }
+    }
+  };
+}
+
 export const setPlantPic = (imageURI: string) => {
   return {
     type: EDIT_PLANT_PIC_SUCCESS,
@@ -146,10 +168,18 @@ export const setPlantName = (plant_name: string) => {
   };
 };
 
+
 export const setPlantNickname = (nickname: string) => {
   return {
     type: EDIT_NICKNAME_SUCCESS,
     nickname
+  }
+}
+
+export const setNotes = (notes: string) => {
+  return {
+    type: EDIT_NOTES_SUCCESS,
+    notes
   }
 }
 
@@ -164,5 +194,12 @@ export const setCreatedPlant = (createdPlant: boolean) => {
   return {
     type: SET_CREATED_PLANT,
     createdPlant
+  }
+}
+
+export const setGetPlant = (getPlant: boolean) => {
+  return {
+    type: SET_CREATED_PLANT,
+    getPlant
   }
 }

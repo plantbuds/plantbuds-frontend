@@ -20,7 +20,8 @@ import { RootState } from "../../store/store";
 import {
   editPlantPic,
   editPlantName,
-  editPlantNickname,
+  editNotes,
+  editPlantNickname
 } from "../../store/plantgroup/actions";
 
 // declare types for your props here
@@ -38,8 +39,7 @@ export default function EditPlantProfileScreen(props: Props) {
   const [textNickname, setTextNickname] = useState("");
   const [textErr, setTextErr] = useState(false);
   const [textSciErr, setTextSciErr] = useState(false);
-  const [textZone, setTextZone] = useState("5");
-  const [textNotes, setTextNotes] = useState(notes ? notes[0] : "");
+  const [textNotes, setTextNotes] = useState(notes);
 
   const plant_name = useSelector(
     (state: RootState) => state.plantgroup.plant_name
@@ -47,16 +47,6 @@ export default function EditPlantProfileScreen(props: Props) {
   const plantID = useSelector((state: RootState) => state.plantgroup.plant_id);
   const nickname = useSelector((state: RootState) => state.plantgroup.nickname);
   const photo = useSelector((state: RootState) => state.plantgroup.photo);
-  const water_history = useSelector(
-    (state: RootState) => state.plantgroup.water_history
-  );
-  const fertilize_history = useSelector(
-    (state: RootState) => state.plantgroup.fertilize_history
-  );
-  const repot_history = useSelector(
-    (state: RootState) => state.plantgroup.repot_history
-  );
-  
   const dispatch = useDispatch();
 
   // check if user has given permission to access image gallery from phone
@@ -122,7 +112,7 @@ export default function EditPlantProfileScreen(props: Props) {
                   dispatch(editPlantPic(image, plantID));
                 }
                 if (textNotes) {
-                  //dispatch(editNotes(textNotes, plantID));
+                  dispatch(editNotes(textNotes, plantID));
                 }
                 if (!textErr && !textSciErr) {
                   navigation.navigate("PlantProfile");
@@ -325,6 +315,5 @@ const styles = StyleSheet.create({
   buttonStyle: {
     textTransform: "none",
     fontSize: 18
-  },
-  
+  }
 });

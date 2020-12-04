@@ -1,11 +1,13 @@
 export interface PlantGroupState {
   editedPlant: boolean;
   createdPlant: boolean;
+  getPlant: boolean;
   plants: any[];
   plant_name: string;
   plant_id: number;
   nickname: string;
   photo: string;
+  history: string[];
   water_history: string[];
   repot_history: string[];
   fertilize_history: string[];
@@ -15,7 +17,7 @@ export interface PlantGroupState {
   water_next_notif: string;
   fertilize_next_notif: string;
   repot_next_notif: string;
-  notes: string[];
+  notes: string;
   encyclopedia: string;
   user: string;
 }
@@ -41,9 +43,18 @@ export const EDIT_NICKNAME_SUCCESS = "EDIT_NICKNAME_SUCCESS";
 export const EDIT_NICKNAME_FAIL = "EDIT_NICKNAME_FAIL";
 export const SET_EDITED_PLANT = "SET_EDIT_PLANT";
 export const SET_CREATED_PLANT = "SET_CREATED_PLANT";
+export const EDIT_NOTES = "EDIT_NOTES";
+export const EDIT_NOTES_SUCCESS = "EDIT_NOTES_SUCCESS";
+export const EDIT_NOTES_FAIL = "EDIT_NOTES_FAIL";
+export const SET_GET_PLANT = "SET_GET_PLANT";
 
 interface GetAllPlantsSuccessAction {
   type: typeof GET_ALL_PLANTS_SUCCESS;
+  payload: any;
+}
+
+interface CreatePlantSuccessAction {
+  type: typeof CREATE_PLANT_SUCCESS;
   payload: any;
 }
 
@@ -72,22 +83,34 @@ interface EditPlantNicknameSucessAction {
   nickname: string;
 }
 
+interface EditNotesSuccessAction {
+  type: typeof EDIT_NOTES_SUCCESS;
+  notes: string;
+}
 interface SetEditedPlantAction {
-    type: typeof SET_EDITED_PLANT;
-    editedPlant: boolean;
+  type: typeof SET_EDITED_PLANT;
+  editedPlant: boolean;
 }
 
 interface SetCreatedPlantAction {
-    type: typeof SET_CREATED_PLANT;
-    createdPlant: boolean;
+  type: typeof SET_CREATED_PLANT;
+  createdPlant: boolean;
+}
+
+interface SetGetPlantAction {
+  type: typeof SET_GET_PLANT;
+  createdPlant: boolean;
 }
 
 export type PlantGroupActionTypes =
-| SetCreatedPlantAction
+  | CreatePlantSuccessAction
+  | SetCreatedPlantAction
   | GetAllPlantsRequestAction
   | GetAllPlantsSuccessAction
   | GetIndividualPlantSuccessAction
   | EditPlantPicSuccessAction
   | EditPlantNameSuccessAction
+  | EditNotesSuccessAction
   | SetEditedPlantAction
+  | SetGetPlantAction
   | EditPlantNicknameSucessAction;

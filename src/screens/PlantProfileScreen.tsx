@@ -14,7 +14,10 @@ import {
   Switch
 } from "react-native";
 import { Button, TextInput } from "react-native-paper";
-import { getIndividualPlant } from "../../store/plantgroup/actions";
+import {
+  getIndividualPlant,
+  setGetPlant
+} from "../../store/plantgroup/actions";
 import { RootState } from "../../store/store";
 import { useDispatch, useSelector } from "react-redux";
 import SetReminderModal from "../components/SetReminderModal";
@@ -31,15 +34,7 @@ interface Props {
   plantID: number;
 }
 
-// var entries = {
-//   "2020-11-21": [false, false, true],
-//   "2020-11-23": [true, false, false],
-//   "2020-11-10": [true, false, false],
-//   "2020-11-02": [true, false, true],
-//   "2020-11-03": [true, true, false]
-// };
-
-var entries = {}
+var entries = {};
 
 const greenBlueBrown = {
   container: {
@@ -161,21 +156,34 @@ export default function PlantProfileScreen(props: Props) {
   const plant_name = useSelector(
     (state: RootState) => state.plantgroup.plant_name
   );
+  const plant_id = useSelector((state: RootState) => state.plantgroup.plant_id);
   const nickname = useSelector((state: RootState) => state.plantgroup.nickname);
   const photo = useSelector((state: RootState) => state.plantgroup.photo);
-  const water_history = useSelector(
-    (state: RootState) => state.plantgroup.water_history
-  );
-  const fertilize_history = useSelector(
-    (state: RootState) => state.plantgroup.fertilize_history
-  );
-  const repot_history = useSelector(
-    (state: RootState) => state.plantgroup.repot_history
-  );
   const notes = useSelector((state: RootState) => state.plantgroup.notes);
+  const history = useSelector((state: RootState) => state.plantgroup.history);
+  const getPlant = useSelector((state: RootState) => state.plantgroup.getPlant);
 
   const dispatch = useDispatch();
+  const loadEntries = () => {
+    if (history != null && plantID === plant_id) {
+      for (let i = 0; i < history.length; i++) {
+        let booleanArr = [];
 
+        // extract the date from the string
+        let booleanString = history[i].split(":")[1];
+
+        // extract the boolean values and store them in an array
+        for (let j = 0; j < 3; j++) {
+          booleanArr.push(JSON.parse(booleanString.split(",")[j]));
+        }
+        entries[history[i].split(":")[0]] = booleanArr;
+      }
+    }
+    else {
+      entries = {}
+    }
+    
+  };
   const updateCalendarMarkings = () => {
     var markings = {};
     var selected = false;
@@ -205,6 +213,8 @@ export default function PlantProfileScreen(props: Props) {
         selected = true;
       }
       markings[date] = entry;
+      console.log("entry: ");
+      console.log(entry);
     }
     if (!selected) {
       markings[selectedDate] = {
@@ -215,10 +225,15 @@ export default function PlantProfileScreen(props: Props) {
     setMarkings(markings);
   };
 
-  useEffect(() => { 
-    
-  }, [])
+  // Load all the date entries in history into entries array upon initial load
+  useEffect(() => {
+    dispatch(getIndividualPlant(plantID));
+    loadEntries();
+    updateCalendarMarkings();
+    setGetPlant(false);
+  }, [plant_id]);
 
+  // Listener for updating calendar markings
   useEffect(() => {
     dispatch(getIndividualPlant(plantID));
     updateCalendarMarkings();
@@ -255,7 +270,7 @@ export default function PlantProfileScreen(props: Props) {
           </View>
           <View style={{ flexDirection: "column" }}>
             <Text style={styles.plantNameStyle}>
-              {nickname 
+              {nickname
                 ? nickname.length > 13
                   ? nickname.substring(0, 12) + "..."
                   : nickname
@@ -274,7 +289,9 @@ export default function PlantProfileScreen(props: Props) {
 
         <View style={{ paddingTop: 10 }}>
           <Text style={styles.NRTParentStyle}> Notes </Text>
-          <Text style={styles.randomStyling}>{(notes) ? notes[0] : "No notes currently"}</Text>
+          <Text style={styles.randomStyling}>
+            {notes ? notes : "No notes currently"}
+          </Text>
         </View>
 
         <View>
@@ -288,32 +305,32 @@ export default function PlantProfileScreen(props: Props) {
         <View style={styles.frequencyContainer}>
           <Text>Frequency:</Text>
           <Button
-                  icon={showWaterModal ? "chevron-up" : "chevron-down"}
-                  mode="contained"
-                  contentStyle={styles.contentStyle}
-                  labelStyle={styles.labelStyle}
-                  style={styles.freqButton}
-                  onPress={() => setShowWaterModal(true)}
-                >
-                  {"Every " + (textWatFreq ? textWatFreq : "0") + " Days"}
-                </Button>
+            icon={showWaterModal ? "chevron-up" : "chevron-down"}
+            mode="contained"
+            contentStyle={styles.contentStyle}
+            labelStyle={styles.labelStyle}
+            style={styles.freqButton}
+            onPress={() => setShowWaterModal(true)}
+          >
+            {"Every " + (textWatFreq ? textWatFreq : "0") + " Days"}
+          </Button>
         </View>
         <View style={styles.smallerPhoneStyling}>
           <Text style={styles.NRTChildStyle}>Next Repotting Reminder</Text>
           <Text style={styles.NRTChildStyle}>N/A</Text>
         </View>
         <View style={styles.frequencyContainer}>
-          <Text >Frequency:</Text>
+          <Text>Frequency:</Text>
           <Button
-                  icon={showRepotModal ? "chevron-up" : "chevron-down"}
-                  mode="contained"
-                  contentStyle={styles.contentStyle}
-                  labelStyle={styles.labelStyle}
-                  style={styles.freqButton}
-                  onPress={() => setShowRepotModal(true)}
-                >
-                  {"Every " + (textRepFreq ? textRepFreq : "0") + " Days"}
-                </Button>
+            icon={showRepotModal ? "chevron-up" : "chevron-down"}
+            mode="contained"
+            contentStyle={styles.contentStyle}
+            labelStyle={styles.labelStyle}
+            style={styles.freqButton}
+            onPress={() => setShowRepotModal(true)}
+          >
+            {"Every " + (textRepFreq ? textRepFreq : "0") + " Days"}
+          </Button>
         </View>
         <View style={styles.smallerPhoneStyling}>
           <Text style={styles.NRTChildStyle}>Next Fertilizing Reminder</Text>
@@ -322,15 +339,15 @@ export default function PlantProfileScreen(props: Props) {
         <View style={styles.frequencyContainer}>
           <Text>Frequency:</Text>
           <Button
-                  icon={showFertilizeModal ? "chevron-up" : "chevron-down"}
-                  mode="contained"
-                  contentStyle={styles.contentStyle}
-                  labelStyle={styles.labelStyle}
-                  style={styles.freqButton}
-                  onPress={() => setShowFertilizeModal(true)}
-                >
-                  {"Every " + (textFertFreq ? textFertFreq : "0") + " Days"}
-                </Button>
+            icon={showFertilizeModal ? "chevron-up" : "chevron-down"}
+            mode="contained"
+            contentStyle={styles.contentStyle}
+            labelStyle={styles.labelStyle}
+            style={styles.freqButton}
+            onPress={() => setShowFertilizeModal(true)}
+          >
+            {"Every " + (textFertFreq ? textFertFreq : "0") + " Days"}
+          </Button>
         </View>
 
         <View>
@@ -387,26 +404,26 @@ export default function PlantProfileScreen(props: Props) {
             onExit={() => setDisplayReminderModal(false)}
           />
           <SetWaterFreqModal
-              displayModal={showWaterModal}
-              textWatFreq={textWatFreq}
-              setTextWatFreq={setTextWatFreq}
-              setShowModal={setShowWaterModal}
-              onExit={() => setShowWaterModal(false)}
-            />
-            <SetRepotFreqModal
-              displayModal={showRepotModal}
-              textRepFreq={textRepFreq}
-              setTextRepFreq={setTextRepFreq}
-              setShowModal={setShowRepotModal}
-              onExit={() => setShowRepotModal(false)}
-            />
-            <SetFertilizeFreqModal
-              displayModal={showFertilizeModal}
-              textFertFreq={textFertFreq}
-              setTextFertFreq={setTextFertFreq}
-              setShowModal={setShowFertilizeModal}
-              onExit={() => setShowFertilizeModal(false)}
-            />
+            displayModal={showWaterModal}
+            textWatFreq={textWatFreq}
+            setTextWatFreq={setTextWatFreq}
+            setShowModal={setShowWaterModal}
+            onExit={() => setShowWaterModal(false)}
+          />
+          <SetRepotFreqModal
+            displayModal={showRepotModal}
+            textRepFreq={textRepFreq}
+            setTextRepFreq={setTextRepFreq}
+            setShowModal={setShowRepotModal}
+            onExit={() => setShowRepotModal(false)}
+          />
+          <SetFertilizeFreqModal
+            displayModal={showFertilizeModal}
+            textFertFreq={textFertFreq}
+            setTextFertFreq={setTextFertFreq}
+            setShowModal={setShowFertilizeModal}
+            onExit={() => setShowFertilizeModal(false)}
+          />
         </View>
       </ScrollView>
     </View>
@@ -517,14 +534,14 @@ const styles = StyleSheet.create({
     width: windowWidth * 0.78
   },
   frequencyContainer: {
-    marginTop: 5, 
-    marginBottom: 5, 
+    marginTop: 5,
+    marginBottom: 5,
     flexDirection: "row",
     justifyContent: "space-between",
     alignSelf: "flex-start",
     alignItems: "center",
     left: windowWidth * 0.11,
-    width: windowWidth * 0.56,
+    width: windowWidth * 0.56
   },
   textTitle: {
     fontSize: 24,

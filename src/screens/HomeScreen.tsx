@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import * as Notifications from "expo-notifications";
 import { registerForPushNotificationsAsync } from "../utils/Notifications";
 import { useSelector, useDispatch } from "react-redux";
-import { getAllPlants, createPlant, setEditedPlant, setCreatedPlant} from "../../store/plantgroup/actions";
+import { getAllPlants, getIndividualPlant, createPlant, setEditedPlant, setCreatedPlant} from "../../store/plantgroup/actions";
 import { getExpoToken } from "../utils/AsyncStorage";
 import { removeAllNotificationListeners } from "expo-notifications";
 import { Searchbar } from "react-native-paper";
