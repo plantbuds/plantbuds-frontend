@@ -45,6 +45,7 @@ export default function SetNotifTimeModal(props: Props) {
   //     pad(this.getHours()) +
   //     ":" +
   //     pad(this.getDays()) +
+  //     pad(this.getMinutes()) +
   //     ":" +
   //     pad(this.getSeconds()) +
   //     dif +

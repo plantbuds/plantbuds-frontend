@@ -35,6 +35,9 @@ interface Props {
 }
 
 var entries = {};
+// entries = {
+// "2020-12-1" : [true, false, false]
+//}
 
 const greenBlueBrown = {
   container: {

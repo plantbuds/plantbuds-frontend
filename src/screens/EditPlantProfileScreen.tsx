@@ -191,6 +191,16 @@ export default function EditPlantProfileScreen(props: Props) {
                   onChangeText={textNotes => setTextNotes(textNotes)}
                 />
               </View>
+              {textErr && (
+                <Text style={styles.textError}>
+                  nickname must be between 3-22 characters long
+                </Text>
+              )}
+              {textSciErr && (
+                <Text style={styles.textSciError}>
+                  plantname must be between 3-26 characters long
+                </Text>
+              )}
             </View>
           </View>
         </View>
@@ -315,5 +325,13 @@ const styles = StyleSheet.create({
   buttonStyle: {
     textTransform: "none",
     fontSize: 18
+  },
+  textError: {
+    paddingTop: 0,
+    color: "red"
+  },
+  textSciError: {
+    paddingTop: 5,
+    color: "red"
   }
 });
