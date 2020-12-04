@@ -5,7 +5,9 @@ import {
   ToggleButton,
   Title,
   Checkbox,
-  Switch
+  Switch,
+  IconButton,
+  Colors
 } from "react-native-paper";
 
 interface Props {
@@ -34,14 +36,19 @@ export default function AddEntryModal(props: Props) {
     return arr[0] + " " + arr[1] + " " + arr[2] + " " + arr[3];
   };
 
+  // TODO: need to reset button status after saving
+
   return (
     <Modal animationType="slide" transparent={true} visible={displayModal}>
       <View style={styles.bottomView}>
         <View style={styles.modalView}>
-          <Button onPress={onExit}>Done</Button>
-          <Title style={{ color: "black", textAlign: "center" }}>
-            Edit {getDate()}
+          <Button color={Colors.grey400} onPress={onExit}>Cancel</Button>
+          <Title style={{ color: Colors.grey500, textAlign: "center" }}>
+            Did you water, repot, or fertilize {'\n'} on {getDate()}?
           </Title>
+          <Text style={{ color: Colors.grey500, textAlign: "center" }}>
+            Tap to edit.
+          </Text>
           <View
             style={{
               flexDirection: "row",
@@ -49,24 +56,40 @@ export default function AddEntryModal(props: Props) {
               justifyContent: "center"
             }}
           >
-            <Switch
-              value={waterStatus}
-              color="#1CA7EC"
-              onValueChange={() => setWaterStatus(!waterStatus)}
-            ></Switch>
-            <Switch
-              value={repotStatus}
-              color="#AA6F5D"
-              onValueChange={() => setRepotStatus(!repotStatus)}
-            ></Switch>
-            <Switch
-              value={fertilizeStatus}
-              color="#31e627"
-              onValueChange={() => setFertilizeStatus(!fertilizeStatus)}
-            ></Switch>
+            <IconButton
+              icon={require('../../assets/water.png')}
+              color={Colors.blue300}
+              size={75}
+              onPress={() => setWaterStatus(!waterStatus)}
+              style={waterStatus ? {
+                borderColor: Colors.blue300,
+                borderWidth: 2
+              } : {}}
+            />
+            <IconButton
+              icon={require('../../assets/repot.png')}
+              color={Colors.brown300}
+              size={75}
+              onPress={() => setRepotStatus(!repotStatus)}
+              style={repotStatus ? {
+                borderColor: Colors.brown300,
+                borderWidth: 2
+              } : {}}
+            />
+            <IconButton
+              icon={require('../../assets/fertilize.png')}
+              color={Colors.lightGreen300}
+              size={75}
+              onPress={() => setFertilizeStatus(!fertilizeStatus)}
+              style={fertilizeStatus ? {
+                borderColor: Colors.lightGreen300,
+                borderWidth: 2
+              } : {}}
+            />
           </View>
           <Button
             mode="contained"
+            color={Colors.green400}
             onPress={() => {
               if (
                 !waterStatus.valueOf() &&
@@ -86,7 +109,7 @@ export default function AddEntryModal(props: Props) {
             }}
             style={styles.roundToggle}
           >
-            Save
+            <Text style={{color: Colors.white}}>Save</Text>
           </Button>
         </View>
       </View>
@@ -108,7 +131,7 @@ const styles = StyleSheet.create({
 
   // Specify the height, width, etc of the modal
   modalView: {
-    height: windowHeight * 0.65,
+    height: windowHeight * 0.55,
     width: windowWidth,
     paddingTop: 20,
     paddingBottom: 20,
@@ -124,6 +147,7 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     borderWidth: 2,
     padding: 4,
-    margin: 30
-  }
+    margin: 30,
+    color: Colors.white
+  },
 });
