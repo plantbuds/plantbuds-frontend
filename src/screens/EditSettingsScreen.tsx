@@ -100,7 +100,7 @@ export default function EditSettingsScreen(props: Props) {
               labelStyle={styles.buttonStyle}
               onPress={() => {
                 if (textName) {
-                  if (textName.length < 4) {
+                  if (textName.length < 3) {
                     setTextErr(true);
                     return;
                   }
@@ -154,8 +154,9 @@ export default function EditSettingsScreen(props: Props) {
               </View>
               <View style={{ flex: 2 }}>
                 <TextInput
+                  keyboardType='ascii-capable' 
                   mode="flat"
-                  maxLength={30}
+                  maxLength={13}
                   theme={theme}
                   style={styles.inputFontStyle}
                   placeholder={username}
@@ -191,7 +192,7 @@ export default function EditSettingsScreen(props: Props) {
             </View>
             {textErr && (
               <Text style={styles.textError}>
-                username must be between 4-30 characters long
+                username must be between 3-13 characters long
               </Text>
             )}
           </View>

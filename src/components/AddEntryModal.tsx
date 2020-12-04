@@ -9,6 +9,8 @@ import {
   IconButton,
   Colors
 } from "react-native-paper";
+import { useDispatch } from "react-redux";
+import { setEditedEntry } from "../../store/plantgroup/actions";
 
 interface Props {
   displayModal: boolean;
@@ -30,6 +32,7 @@ export default function AddEntryModal(props: Props) {
   const [waterStatus, setWaterStatus] = useState(false);
   const [repotStatus, setRepotStatus] = useState(false);
   const [fertilizeStatus, setFertilizeStatus] = useState(false);
+  const dispatch = useDispatch();
 
   const getDate = () => {
     const arr = new Date(selectedDate).toUTCString().split(" ");
@@ -105,6 +108,10 @@ export default function AddEntryModal(props: Props) {
                 ];
               }
               updateCalendarMarkings();
+              setWaterStatus(false);
+              setFertilizeStatus(false);
+              setRepotStatus(false);
+              dispatch(setEditedEntry(true));
               onExit();
             }}
             style={styles.roundToggle}

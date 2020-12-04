@@ -1,7 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as Notifications from "expo-notifications";
 import { registerForPushNotificationsAsync } from "../utils/Notifications";
-import { removeAllNotificationListeners } from "expo-notifications";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  getAllPlants,
+  getIndividualPlant,
+  createPlant,
+  setEditedPlant,
+  setCreatedPlant,
+  setDeletedPlant
+} from "../../store/plantgroup/actions";
+
 import { Searchbar } from "react-native-paper";
 import {
   Button,
@@ -18,8 +27,9 @@ import {
   Image,
   KeyboardAvoidingView
 } from "react-native";
-
+import CreatePlantModal from "../components/CreatePlantModal";
 import { FAB } from "react-native-paper";
+import { RootState } from "../../store/store";
 
 // declare types for your props here
 interface Props {
@@ -35,12 +45,27 @@ const theme = {
 
 export default function HomeScreen(props: Props) {
   // local state
-  const [loading, setLoading] = useState(true);
-  const [plants, setPlant] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
 
+  const [searchQuery, setSearchQuery] = useState("");
+  const [displayCreatePlantModal, setDisplayCreatePlantModal] = useState(false);
+  const username = useSelector((state: RootState) => state.session.username);
+  const userID = useSelector((state: RootState) => state.session.userID);
+  const plants = useSelector((state: RootState) => state.plantgroup.plants);
+  const plant_id = useSelector((state: RootState) => state.plantgroup.plant_id);
+  const editedPlant = useSelector(
+    (state: RootState) => state.plantgroup.editedPlant
+  );
+  const createdPlant = useSelector(
+    (state: RootState) => state.plantgroup.createdPlant
+  );
+  const deletedPlant = useSelector(
+    (state: RootState) => state.plantgroup.deletedPlant
+  );
+
+  const dispatch = useDispatch();
   const onChangeSearch = (query: string) => setSearchQuery(query);
 
+  // Use Effect for initial mounting of application
   useEffect(() => {
     (async () => {
       // Get the expo token that identifies this device for notifs
@@ -54,88 +79,124 @@ export default function HomeScreen(props: Props) {
         }
       );
 
-      // Will remove this for mvp. Temporarily gives an array of people to display
-      const url = "https://api.randomuser.me/?results=40";
-      const response = await fetch(url);
-      const data = await response.json();
-      setPlant(data.results);
-      setLoading(false);
+      dispatch(getAllPlants(username));
     })();
   }, []);
+
+  // Listening for updates to plants array
+  useEffect(() => {
+    console.log("use effect with dp array in homescreen");
+    if (createdPlant || editedPlant || deletedPlant) {
+      dispatch(getAllPlants(username));
+    }
+
+    dispatch(setEditedPlant(false));
+    dispatch(setCreatedPlant(false));
+    dispatch(setDeletedPlant(false));
+  }, [createdPlant, editedPlant, deletedPlant]);
+
 
   const { navigation } = props;
   const notificationListener = useRef(null);
 
-  if (loading) {
-    return (
-      <View style={styles.container}>
-        <Text>Loading...</Text>
-      </View>
-    );
-  }
-
   if (plants.length === 0) {
     return (
-      <View>
-        <Text>didn't get plants from backend</Text>
+      <View style={styles.container}>
+        <Text style={styles.noPlantsText}>
+          Looks like you do not have any plants. Add a plant to get started!
+        </Text>
+        <FAB
+          style={styles.fabInitial}
+          color="white"
+          icon="plus"
+          onPress={() => {
+            dispatch(createPlant(userID));
+            setDisplayCreatePlantModal(true);
+          }}
+        />
+        <CreatePlantModal
+          setDisplayCreatePlantModal={setDisplayCreatePlantModal}
+          navigation={navigation}
+          displayModal={displayCreatePlantModal}
+        />
       </View>
     );
+  } else {
+    return (
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : null}
+        style={{ flex: 1 }}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={styles.container}>
+            <Searchbar
+              theme={theme}
+              inputStyle={styles.searchBarInput}
+              style={styles.searchBar}
+              placeholder="Search my plants"
+              onChangeText={onChangeSearch}
+              value={searchQuery}
+            />
+
+            <FlatList
+              numColumns={2}
+              columnWrapperStyle={styles.displayWrapper}
+              keyExtractor={item => item.url.split("/")[5]}
+              data={plants}
+              renderItem={({ item }) => (
+                <TouchableHighlight
+                  key={item.key}
+                  activeOpacity={0.6}
+                  underlayColor="#DDDDDD"
+                  onPress={() => {
+                    let plantID = parseInt(item.url.split("/")[5]);
+                    console.log(
+                      "calling get individual plant from home screen"
+                    );
+                    dispatch(getIndividualPlant(plantID));
+                    navigation.navigate("PlantProfile", {
+                      plantID: plantID
+                    });
+                  }}
+                >
+                  <View>
+                    <Image style={styles.item} source={{ uri: item.photo }} />
+                    <Text style={{ alignSelf: "center" }}>
+                      {item.nickname && item.nickname.length > 19
+                        ? item.nickname.substring(0, 18) + "..."
+                        : item.nickname}
+                    </Text>
+                    <Text style={{ alignSelf: "center" }}>
+                      {item.plantname && item.plant_name.length > 19
+                        ? item.plant_name.substring(0, 18) + "..."
+                        : item.plant_name}
+                    </Text>
+                    <Text style={{ alignSelf: "center" }}>
+                      {item.url.split("/")[5]}
+                    </Text>
+                  </View>
+                </TouchableHighlight>
+              )}
+            />
+            <FAB
+              style={styles.fab}
+              color="white"
+              icon="plus"
+              onPress={() => {
+                dispatch(createPlant(userID));
+                setDisplayCreatePlantModal(true);
+              }}
+            />
+            <CreatePlantModal
+              setDisplayCreatePlantModal={setDisplayCreatePlantModal}
+              navigation={navigation}
+              displayModal={displayCreatePlantModal}
+            />
+          </View>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+    );
   }
-
-  return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : null}
-      style={{ flex: 1 }}
-    >
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={styles.container}>
-          <Searchbar
-            theme={theme}
-            inputStyle={styles.searchBarInput}
-            style={styles.searchBar}
-            placeholder="Search my plants"
-            onChangeText={onChangeSearch}
-            value={searchQuery}
-          />
-
-          <FlatList
-            numColumns={2}
-            columnWrapperStyle={styles.displayWrapper}
-            keyExtractor={item => item.login.uuid}
-            data={plants}
-            renderItem={({ item }) => (
-              <TouchableHighlight
-                key={item.key}
-                activeOpacity={0.6}
-                underlayColor="#DDDDDD"
-                onPress={() => {
-                  navigation.navigate("PlantProfile", {
-                    itemName: item.name.first,
-                    itemURI: item.picture.large,
-                    //TODO add any other plant information that needs to be passed to the plant profile screen.
-                  });
-                }}
-              >
-                <View>
-                  <Image
-                    style={styles.item}
-                    source={{ uri: item.picture.large }}
-                  />
-                  <Text style={{ alignSelf: "center" }}>{item.name.first}</Text>
-                </View>
-              </TouchableHighlight>
-            )}
-          />
-          <FAB
-            style={styles.fab}
-            color="white"
-            icon="plus"
-            onPress={() => alert("Add Plant")}
-          />
-        </View>
-      </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
-  );
 }
 
 // use these values when doing width and height of components or containers to maintain consistent sizing across different iphone screens
@@ -193,5 +254,16 @@ const styles = StyleSheet.create({
     alignSelf: "flex-end",
     bottom: 30,
     right: windowWidth * 0.1
+  },
+  fabInitial: {
+    backgroundColor: "#CBE4B1",
+    alignSelf: "flex-end",
+    right: windowWidth * 0.1,
+    top: windowHeight * 0.3
+  },
+  noPlantsText: {
+    width: windowWidth * 0.9,
+    textAlign: "center",
+    fontSize: 18
   }
 });
