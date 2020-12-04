@@ -74,6 +74,7 @@ const SidebarAppNavigator = () => {
 const RootNavigator = () => {
   const loggedIn = useSelector((state: RootState) => state.session.loggedIn);
     return (loggedIn) ? SidebarAppNavigator() : OnboardingNavigator();
+    //return SidebarAppNavigator();
 };
 
 export default RootNavigator;
