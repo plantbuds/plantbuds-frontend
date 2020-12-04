@@ -182,7 +182,7 @@ export default function PlantProfileScreen(props: Props) {
   };
 
   const loadEntries = () => {
-    if (history != null && plantID === plant_id) {
+    if (history != null) {
       for (let i = 0; i < history.length; i++) {
         let booleanArr = [];
 
@@ -244,7 +244,7 @@ export default function PlantProfileScreen(props: Props) {
   useEffect(() => {
     loadEntries();
     updateCalendarMarkings();
-  }, [plant_id, plantID]);
+  }, [plant_id]);
 
   // Listener for updating calendar markings *note this hook will run every time since we are creating a new Date object
   useEffect(() => {
@@ -254,7 +254,7 @@ export default function PlantProfileScreen(props: Props) {
   useEffect(() => {
     if (editedEntry) {
       let history = parseEntries();
-      dispatch(updateTaskHistory(history, plantID))
+      dispatch(updateTaskHistory(history, plant_id))
       dispatch(setEditedEntry(false));
     }
   }, [editedEntry]);

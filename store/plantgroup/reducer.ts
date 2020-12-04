@@ -91,7 +91,6 @@ export function plantgroupReducer(
         notes: action.payload.data.notes,
         encyclopedia: action.payload.data.encyclopedia,
         user: action.payload.data.user,
-        createdPlant: true
       };
     case EDIT_NICKNAME_SUCCESS:
       return {

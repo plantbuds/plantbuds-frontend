@@ -95,6 +95,7 @@ export default function HomeScreen(props: Props) {
     dispatch(setDeletedPlant(false));
   }, [createdPlant, editedPlant, deletedPlant]);
 
+
   const { navigation } = props;
   const notificationListener = useRef(null);
 
@@ -110,9 +111,6 @@ export default function HomeScreen(props: Props) {
           icon="plus"
           onPress={() => {
             dispatch(createPlant(userID));
-            if (plant_id) {
-              dispatch(getIndividualPlant(plant_id));
-            }
             setDisplayCreatePlantModal(true);
           }}
         />
@@ -186,9 +184,6 @@ export default function HomeScreen(props: Props) {
               icon="plus"
               onPress={() => {
                 dispatch(createPlant(userID));
-                if (plant_id) {
-                  dispatch(getIndividualPlant(plant_id));
-                }
                 setDisplayCreatePlantModal(true);
               }}
             />

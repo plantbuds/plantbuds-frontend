@@ -18,7 +18,8 @@ import { RootState } from "../../store/store";
 import {
   editPlantPic,
   editPlantName,
-  editPlantNickname
+  editPlantNickname,
+  setCreatedPlant
 } from "../../store/plantgroup/actions";
 
 // declare types for your props here
@@ -111,6 +112,7 @@ export default function CreatePlantProfileModal(props: Props) {
                     navigation.navigate("PlantProfile", {
                       plantID: plantID
                     });
+                    dispatch(setCreatedPlant(true));
                     setDisplayCreatePlantModal(false);
                     setTextSciName("");
                     setTextNickname("");
