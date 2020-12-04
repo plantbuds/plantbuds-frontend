@@ -14,185 +14,250 @@ import {
   Switch
 } from "react-native";
 import { Button, TextInput } from "react-native-paper";
-import * as ImagePicker from "expo-image-picker";
-import Constants from "expo-constants";
-import { CardStyleInterpolators } from "@react-navigation/stack";
+import {
+  updateTaskHistory,
+  setEditedEntry
+} from "../../store/plantgroup/actions";
+import { RootState } from "../../store/store";
+import { useDispatch, useSelector } from "react-redux";
 import SetReminderModal from "../components/SetReminderModal";
 import AddEntryModal from "../components/AddEntryModal";
 import { Calendar as ReactCalendar } from "react-native-calendars";
+import SetWaterFreqModal from "../components/SetWaterFreqModal";
+import SetRepotFreqModal from "../components/SetRepotFreqModal";
+import SetFertilizeFreqModal from "../components/SetFertilizeFreqModal";
 
 // declare types for your props here
 interface Props {
   navigation: any;
   route: any;
-  itemName: string;
-  itemUri: string;
-  //TODO add any other plant information
+  plantID: number;
 }
 
-var entries = {
-  "2020-11-21": [false, false, true],
-  "2020-11-23": [true, false, false],
-  "2020-11-10": [true, false, false],
-  "2020-11-02": [true, false, true],
-  "2020-11-03": [true, true, false]
-};
+var entries = {};
 
 const greenBlueBrown = {
   container: {
-      backgroundColor: 'white',
-      borderWidth:4,
-      borderBottomColor:'#1CA7EC',
-      borderTopColor:'#31e627',
-      borderLeftColor:'#AA6F5D',
-      borderRightColor:'#1CA7EC'
+    backgroundColor: "white",
+    borderWidth: 4,
+    borderBottomColor: "#1CA7EC",
+    borderTopColor: "#31e627",
+    borderLeftColor: "#AA6F5D",
+    borderRightColor: "#1CA7EC"
   },
   text: {
-      bottom: 3,
-      color: 'black',
+    bottom: 3,
+    color: "black"
   }
-}
+};
 const brown = {
   container: {
-      backgroundColor: 'white',
-      borderWidth:4,
-      borderBottomColor:'#AA6F5D',
-      borderTopColor:'#AA6F5D',
-      borderLeftColor:'#AA6F5D',
-      borderRightColor:'#AA6F5D'
+    backgroundColor: "white",
+    borderWidth: 4,
+    borderBottomColor: "#AA6F5D",
+    borderTopColor: "#AA6F5D",
+    borderLeftColor: "#AA6F5D",
+    borderRightColor: "#AA6F5D"
   },
   text: {
-      bottom: 3,
-      color: 'black',
+    bottom: 3,
+    color: "black"
   }
-}
-const green= {
+};
+const green = {
   container: {
-      backgroundColor: 'white',
-      borderWidth:4,
-      borderBottomColor:'#31e627',
-      borderTopColor:'#31e627',
-      borderLeftColor:'#31e627',
-      borderRightColor:'#31e627'
+    backgroundColor: "white",
+    borderWidth: 4,
+    borderBottomColor: "#31e627",
+    borderTopColor: "#31e627",
+    borderLeftColor: "#31e627",
+    borderRightColor: "#31e627"
   },
   text: {
-      bottom: 3,
-      color: 'black',
+    bottom: 3,
+    color: "black"
   }
-}
-const blue= {
+};
+const blue = {
   container: {
-      backgroundColor: 'white',
-      borderWidth:4,
-      borderBottomColor:'#1CA7EC',
-      borderTopColor:'#1CA7EC',
-      borderLeftColor:'#1CA7EC',
-      borderRightColor:'#1CA7EC'
+    backgroundColor: "white",
+    borderWidth: 4,
+    borderBottomColor: "#1CA7EC",
+    borderTopColor: "#1CA7EC",
+    borderLeftColor: "#1CA7EC",
+    borderRightColor: "#1CA7EC"
   },
   text: {
-      bottom: 3,
-      color: 'black',
+    bottom: 3,
+    color: "black"
   }
-}
+};
 
 const blueBrown = {
   container: {
-      backgroundColor: 'white',
-      borderWidth:4,
-      borderBottomColor:'#1CA7EC',
-      borderTopColor:'#AA6F5D',
-      borderLeftColor:'#1CA7EC',
-      borderRightColor:'#AA6F5D'
+    backgroundColor: "white",
+    borderWidth: 4,
+    borderBottomColor: "#1CA7EC",
+    borderTopColor: "#AA6F5D",
+    borderLeftColor: "#1CA7EC",
+    borderRightColor: "#AA6F5D"
   },
   text: {
-      bottom: 3,
-      color: 'black',
+    bottom: 3,
+    color: "black"
   }
-}
+};
 const blueGreen = {
   container: {
-      backgroundColor: 'white',
-      borderWidth:4,
-      borderBottomColor:'#1CA7EC',
-      borderTopColor:'#31e627',
-      borderLeftColor:'#1CA7EC',
-      borderRightColor:'#31e627'
+    backgroundColor: "white",
+    borderWidth: 4,
+    borderBottomColor: "#1CA7EC",
+    borderTopColor: "#31e627",
+    borderLeftColor: "#1CA7EC",
+    borderRightColor: "#31e627"
   },
   text: {
-      bottom: 3,
-      color: 'black',
+    bottom: 3,
+    color: "black"
   }
-}
+};
 const greenBrown = {
   container: {
-      backgroundColor: 'white',
-      borderWidth:4,
-      borderBottomColor:'#31e627',
-      borderTopColor:'#AA6F5D',
-      borderLeftColor:'#31e627',
-      borderRightColor:'#AA6F5D'
+    backgroundColor: "white",
+    borderWidth: 4,
+    borderBottomColor: "#31e627",
+    borderTopColor: "#AA6F5D",
+    borderLeftColor: "#31e627",
+    borderRightColor: "#AA6F5D"
   },
   text: {
-      bottom: 3,
-      color: 'black',
+    bottom: 3,
+    color: "black"
   }
-}
-
+};
 
 export default function PlantProfileScreen(props: Props) {
   const { navigation, route } = props;
-  const { itemName, itemURI } = route.params;
+  const { plantID } = route.params;
   const [selectedDate, setSelectedDate] = useState(new Date().toDateString());
   const [markings, setMarkings] = useState({});
   const [waterStatus, setWaterStatus] = useState(false);
   const [repotStatus, setRepotStatus] = useState(false);
   const [fertilizeStatus, setFertilizeStatus] = useState(false);
-  const waterDot = { key: "water", color: "blue" };
-  const repotDot = { key: "repot", color: "brown" };
-  const fertilizeDot = { key: "fertilize", color: "green" };
+  const [textWatFreq, setTextWatFreq] = useState("");
+  const [textRepFreq, setTextRepFreq] = useState("");
+  const [textFertFreq, setTextFertFreq] = useState("");
+  const [showWaterModal, setShowWaterModal] = useState(false);
+  const [showRepotModal, setShowRepotModal] = useState(false);
+  const [showFertilizeModal, setShowFertilizeModal] = useState(false);
   const [displayAddEntryModal, setDisplayAddEntryModal] = useState(false);
   const [displayReminderModal, setDisplayReminderModal] = useState(false);
 
-  const updateCalendarMarkings = () => {
-    var markings = {};
-        var selected = false;
-        for (const [date, value] of Object.entries(entries)) {
-            var entry = {};
-            //Deep copy shenanigans
-            if(value[0] == true && value[1] == false && value[2] == false){
-                entry["customStyles"]=JSON.parse(JSON.stringify(blue));
-            }else if(value[0] == false && value[1] == true && value[2] == false){
-                entry["customStyles"] = JSON.parse(JSON.stringify(brown));
-            }else if(value[0] == false && value[1] == false && value[2] == true){
-                entry["customStyles"] = JSON.parse(JSON.stringify(green));
-            }else if(value[0] == true && value[1] == true && value[2] == false){
-                entry["customStyles"] = JSON.parse(JSON.stringify(blueBrown));
-            }else if(value[0] == true && value[1] == false && value[2] == true){
-                entry["customStyles"] = JSON.parse(JSON.stringify(blueGreen));
-            }else if(value[0] == false && value[1] == true && value[2] == true){
-                entry["customStyles"] = JSON.parse(JSON.stringify(greenBrown));
-            }else if(value[0] == true && value[1] == true && value[2] == true){
-                entry["customStyles"] = JSON.parse(JSON.stringify(greenBlueBrown));
-            }else{
+  const plant_name = useSelector(
+    (state: RootState) => state.plantgroup.plant_name
+  );
+  const plant_id = useSelector((state: RootState) => state.plantgroup.plant_id);
+  const nickname = useSelector((state: RootState) => state.plantgroup.nickname);
+  const photo = useSelector((state: RootState) => state.plantgroup.photo);
+  const notes = useSelector((state: RootState) => state.plantgroup.notes);
+  const history = useSelector((state: RootState) => state.plantgroup.history);
+  const editedEntry = useSelector(
+    (state: RootState) => state.plantgroup.editedEntry
+  );
 
-            }
-            if (date === selectedDate) {
-                entry["selected"] = true;
-                entry["customStyles"]["container"]["backgroundColor"] = "green";
-                entry["customStyles"]["text"]["color"] = "white";
-                selected = true;
-            }
-            markings[date] = entry;
-        }
-        if (!selected) {
-            markings[selectedDate] = { selected: true, customStyles: { container: { backgroundColor: "green" }}};
-        }
-        setMarkings(markings);
+  const dispatch = useDispatch();
+
+  const parseEntries = () => {
+    let history = []
+    for (const date in entries) {
+      let s = date + ":";
+      for (let i = 0; i < 2; i++) {
+        s += entries[date][i] + ",";
+      }
+      s += entries[date][2];
+      console.log(s);
+      history.push(s);
+    }
+    return history;
   };
 
+  const loadEntries = () => {
+    if (history != null) {
+      for (let i = 0; i < history.length; i++) {
+        let booleanArr = [];
+
+        // extract the date from the string
+        let booleanString = history[i].split(":")[1];
+
+        // extract the boolean values and store them in an array
+        for (let j = 0; j < 3; j++) {
+          booleanArr.push(JSON.parse(booleanString.split(",")[j]));
+        }
+        entries[history[i].split(":")[0]] = booleanArr;
+      }
+    } else {
+      entries = {};
+    }
+  };
+  const updateCalendarMarkings = () => {
+    var markings = {};
+    var selected = false;
+    for (const [date, value] of Object.entries(entries)) {
+      var entry = {};
+      //Deep copy shenanigans
+      if (value[0] == true && value[1] == false && value[2] == false) {
+        entry["customStyles"] = JSON.parse(JSON.stringify(blue));
+      } else if (value[0] == false && value[1] == true && value[2] == false) {
+        entry["customStyles"] = JSON.parse(JSON.stringify(brown));
+      } else if (value[0] == false && value[1] == false && value[2] == true) {
+        entry["customStyles"] = JSON.parse(JSON.stringify(green));
+      } else if (value[0] == true && value[1] == true && value[2] == false) {
+        entry["customStyles"] = JSON.parse(JSON.stringify(blueBrown));
+      } else if (value[0] == true && value[1] == false && value[2] == true) {
+        entry["customStyles"] = JSON.parse(JSON.stringify(blueGreen));
+      } else if (value[0] == false && value[1] == true && value[2] == true) {
+        entry["customStyles"] = JSON.parse(JSON.stringify(greenBrown));
+      } else if (value[0] == true && value[1] == true && value[2] == true) {
+        entry["customStyles"] = JSON.parse(JSON.stringify(greenBlueBrown));
+      } else {
+      }
+      if (date === selectedDate) {
+        entry["selected"] = true;
+        entry["customStyles"]["container"]["backgroundColor"] = "green";
+        entry["customStyles"]["text"]["color"] = "white";
+        selected = true;
+      }
+      markings[date] = entry;
+      console.log("entry: ");
+      console.log(entry);
+    }
+    if (!selected) {
+      markings[selectedDate] = {
+        selected: true,
+        customStyles: { container: { backgroundColor: "green" } }
+      };
+    }
+    setMarkings(markings);
+  };
+
+  // Load all the date entries in history into entries array upon initial load
+  useEffect(() => {
+    loadEntries();
+    updateCalendarMarkings();
+  }, [plant_id]);
+
+  // Listener for updating calendar markings *note this hook will run every time since we are creating a new Date object
   useEffect(() => {
     updateCalendarMarkings();
   }, [selectedDate, displayAddEntryModal]);
+
+  useEffect(() => {
+    if (editedEntry) {
+      let history = parseEntries();
+      dispatch(updateTaskHistory(history, plant_id))
+      dispatch(setEditedEntry(false));
+    }
+  }, [editedEntry]);
 
   return (
     <View style={styles.container}>
@@ -218,21 +283,35 @@ export default function PlantProfileScreen(props: Props) {
               <Image
                 style={styles.profilePicture}
                 source={{
-                  uri: itemURI
+                  uri: photo
                 }}
               />
             </View>
           </View>
           <View style={{ flexDirection: "column" }}>
-            <Text style={styles.plantNameStyle}>{itemName}</Text>
-            <Text style={styles.scientificZoneStyle}>Scientific Name</Text>
-            <Text style={styles.scientificZoneStyle}>Zone: #</Text>
+            <Text style={styles.plantNameStyle}>
+              {nickname
+                ? nickname.length > 13
+                  ? nickname.substring(0, 12) + "..."
+                  : nickname
+                : "Nickname"}
+            </Text>
+            <Text style={styles.scientificZoneStyle}>
+              {plant_name
+                ? plant_name.length > 13
+                  ? plant_name.substring(0, 12) + "..."
+                  : plant_name
+                : "Scientific Plant Name"}
+            </Text>
+            {/*<Text style={styles.scientificZoneStyle}>Zone: #</Text>*/}
           </View>
         </View>
 
         <View style={{ paddingTop: 10 }}>
           <Text style={styles.NRTParentStyle}> Notes </Text>
-          <Text style={styles.randomStyling}> Placeholder for notes! </Text>
+          <Text style={styles.randomStyling}>
+            {notes ? notes : "No notes currently"}
+          </Text>
         </View>
 
         <View>
@@ -240,16 +319,55 @@ export default function PlantProfileScreen(props: Props) {
         </View>
 
         <View style={styles.smallerPhoneStyling}>
-          <Text style={styles.NRTChildStyle}>Watering Reminder</Text>
-          <Text style={styles.NRTChildStyle}>Last Watered Date</Text>
+          <Text style={styles.NRTChildStyle}>Next Watering Reminder</Text>
+          <Text style={styles.NRTChildStyle}>N/A</Text>
+        </View>
+        <View style={styles.frequencyContainer}>
+          <Text>Frequency:</Text>
+          <Button
+            icon={showWaterModal ? "chevron-up" : "chevron-down"}
+            mode="contained"
+            contentStyle={styles.contentStyle}
+            labelStyle={styles.labelStyle}
+            style={styles.freqButton}
+            onPress={() => setShowWaterModal(true)}
+          >
+            {"Every " + (textWatFreq ? textWatFreq : "0") + " Days"}
+          </Button>
         </View>
         <View style={styles.smallerPhoneStyling}>
-          <Text style={styles.NRTChildStyle}>Repotting Reminder</Text>
-          <Text style={styles.NRTChildStyle}>Last Repotted Date</Text>
+          <Text style={styles.NRTChildStyle}>Next Repotting Reminder</Text>
+          <Text style={styles.NRTChildStyle}>N/A</Text>
+        </View>
+        <View style={styles.frequencyContainer}>
+          <Text>Frequency:</Text>
+          <Button
+            icon={showRepotModal ? "chevron-up" : "chevron-down"}
+            mode="contained"
+            contentStyle={styles.contentStyle}
+            labelStyle={styles.labelStyle}
+            style={styles.freqButton}
+            onPress={() => setShowRepotModal(true)}
+          >
+            {"Every " + (textRepFreq ? textRepFreq : "0") + " Days"}
+          </Button>
         </View>
         <View style={styles.smallerPhoneStyling}>
-          <Text style={styles.NRTChildStyle}>Fertilizing Reminder</Text>
-          <Text style={styles.NRTChildStyle}>Last Fertilized Date</Text>
+          <Text style={styles.NRTChildStyle}>Next Fertilizing Reminder</Text>
+          <Text style={styles.NRTChildStyle}>N/A</Text>
+        </View>
+        <View style={styles.frequencyContainer}>
+          <Text>Frequency:</Text>
+          <Button
+            icon={showFertilizeModal ? "chevron-up" : "chevron-down"}
+            mode="contained"
+            contentStyle={styles.contentStyle}
+            labelStyle={styles.labelStyle}
+            style={styles.freqButton}
+            onPress={() => setShowFertilizeModal(true)}
+          >
+            {"Every " + (textFertFreq ? textFertFreq : "0") + " Days"}
+          </Button>
         </View>
 
         <View>
@@ -286,7 +404,7 @@ export default function PlantProfileScreen(props: Props) {
           </Button>
 
           <Button onPress={() => setDisplayReminderModal(true)}>
-            Add start date for reminder 
+            Add start date for reminder
           </Button>
           <AddEntryModal
             selectedDate={selectedDate}
@@ -304,6 +422,27 @@ export default function PlantProfileScreen(props: Props) {
               setDisplayReminderModal(false);
             }}
             onExit={() => setDisplayReminderModal(false)}
+          />
+          <SetWaterFreqModal
+            displayModal={showWaterModal}
+            textWatFreq={textWatFreq}
+            setTextWatFreq={setTextWatFreq}
+            setShowModal={setShowWaterModal}
+            onExit={() => setShowWaterModal(false)}
+          />
+          <SetRepotFreqModal
+            displayModal={showRepotModal}
+            textRepFreq={textRepFreq}
+            setTextRepFreq={setTextRepFreq}
+            setShowModal={setShowRepotModal}
+            onExit={() => setShowRepotModal(false)}
+          />
+          <SetFertilizeFreqModal
+            displayModal={showFertilizeModal}
+            textFertFreq={textFertFreq}
+            setTextFertFreq={setTextFertFreq}
+            setShowModal={setShowFertilizeModal}
+            onExit={() => setShowFertilizeModal(false)}
           />
         </View>
       </ScrollView>
@@ -414,12 +553,31 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     width: windowWidth * 0.78
   },
-
+  frequencyContainer: {
+    marginTop: 5,
+    marginBottom: 5,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignSelf: "flex-start",
+    alignItems: "center",
+    left: windowWidth * 0.11,
+    width: windowWidth * 0.56
+  },
   textTitle: {
     fontSize: 24,
     color: "#000000",
     fontStyle: "normal",
     fontWeight: "normal",
     width: "50%"
+  },
+  freqButton: {
+    width: windowWidth * 0.32
+  },
+  contentStyle: {
+    backgroundColor: "white",
+    height: windowHeight * 0.04
+  },
+  labelStyle: {
+    fontSize: 9
   }
 });
