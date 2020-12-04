@@ -9,7 +9,8 @@ import {
   Modal,
   TouchableWithoutFeedback,
   Keyboard,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  GestureResponderEvent
 } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
@@ -54,6 +55,7 @@ export default function CreatePlantProfileModal(props: Props) {
       }
     })();
   }, []);
+
   // method that gets image from the phone
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -67,6 +69,22 @@ export default function CreatePlantProfileModal(props: Props) {
     }
   };
 
+  async function onSubmit(e: GestureResponderEvent) {
+    e.preventDefault();
+    try {
+      //image ? await dispatch(editPlantPic(image, plantID)) : null ;
+      //textSciName ? await dispatch(editPlantName(textSciName, plantID)) : null 
+      //textNickname ? await dispatch(editPlantNickname(textNickname, plantID)) : null
+      navigation.navigate("PlantProfile", {
+        plantID: plantID
+      });
+      dispatch(setCreatedPlant(true));
+      setDisplayCreatePlantModal(false);
+    } catch (err) {
+
+    }
+  }
+
   return (
     <Modal animationType="slide" transparent={true} visible={displayModal}>
       <KeyboardAvoidingView
@@ -79,45 +97,7 @@ export default function CreatePlantProfileModal(props: Props) {
               <Text style={styles.textTitle}>Create Plant Profile</Text>
               <Button
                 labelStyle={styles.buttonStyle}
-                onPress={() => {
-                  let err = false;
-                  if (textSciName) {
-                    if (textSciName.length < 3) {
-                      setTextSciErr(true);
-                      setTextSciName("");
-                      err = true;
-                    } else {
-                      dispatch(editPlantName(textSciName, plantID));
-                      setTextSciErr(false);
-                    }
-                  } else {
-                    setTextSciErr(true);
-                    setTextSciName("");
-                    err = true;
-                  }
-                  if (textNickname && textNickname.length > 0) {
-                    if (textNickname.length < 2) {
-                      setTextErr(true);
-                      setTextNickname("");
-                      err = true;
-                    } else {
-                      dispatch(editPlantNickname(textNickname, plantID));
-                      setTextErr(false);
-                    }
-                  }
-                  if (image) {
-                    dispatch(editPlantPic(image, plantID));
-                  }
-                  if (!err) {
-                    navigation.navigate("PlantProfile", {
-                      plantID: plantID
-                    });
-                    dispatch(setCreatedPlant(true));
-                    setDisplayCreatePlantModal(false);
-                    setTextSciName("");
-                    setTextNickname("");
-                  }
-                }}
+                onPress={() => onSubmit}
               >
                 <Text style={styles.textTitleRight}>Done</Text>
               </Button>
