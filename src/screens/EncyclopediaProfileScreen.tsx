@@ -41,12 +41,12 @@ export default function TestScreen(props: Props) {
         </View>
         
         <View style={{paddingTop: 20}}>
-          <Text style={styles.parentTitleStyle}> Description </Text>
-          <Text style={styles.descriptionStyle}> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </Text>
+          <Text style={styles.parentTitleStyle}>Description</Text>
+          <Text style={styles.descriptionStyle}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</Text>
         </View>  
 
         <View style={{paddingTop: 10}}>
-          <Text style={styles.parentTitleStyle}> Scientific Classification </Text>
+          <Text style={styles.parentTitleStyle}>Scientific Classification</Text>
         </View> 
 
         <View style={styles.rowStyling}>
@@ -63,7 +63,7 @@ export default function TestScreen(props: Props) {
         </View>
 
         <View style={{paddingTop: 10}}>
-          <Text style={styles.parentTitleStyle}> Plant Care </Text>
+          <Text style={styles.parentTitleStyle}>Plant Care</Text>
         </View> 
 
         <View style={styles.rowStyling}>
@@ -92,35 +92,35 @@ export default function TestScreen(props: Props) {
         </View>
           
         <View style={{paddingTop: 10}}>
-          <Text style={styles.parentTitleStyle}> FAQs </Text>
+          <Text style={styles.parentTitleStyle}>FAQs</Text>
         </View> 
 
         <View style={styles.rowStyling}>
           <Text style={styles.infoTitleStyle}>Seed Collection</Text>
         </View>
         <View>
-        <Text style={styles.textStyle}> Lorem ipsum dolor sit amet, consectetur adipiscing elit</Text>
+        <Text style={styles.textStyle}>Lorem ipsum dolor sit amet, consectetur adipiscing elit</Text>
         </View>
 
         <View style={styles.rowStyling}>
           <Text style={styles.infoTitleStyle}>Where to Grow</Text>
         </View>
         <View>
-          <Text style={styles.textStyle}> Lorem ipsum dolor sit amet, consectetur adipiscing elit</Text>
+          <Text style={styles.textStyle}>Lorem ipsum dolor sit amet, consectetur adipiscing elit</Text>
         </View>
 
         <View style={styles.rowStyling}>
           <Text style={styles.infoTitleStyle}>Regions</Text>
         </View>
         <View>
-          <Text style={styles.textStyle}> Lorem ipsum dolor sit amet, consectetur adipiscing elit</Text>
+          <Text style={styles.textStyle}>Lorem ipsum dolor sit amet, consectetur adipiscing elit</Text>
         </View>
 
         <View style={styles.rowStyling}>
           <Text style={styles.infoTitleStyle}>Dangers</Text>
         </View >
         <View style={{paddingBottom: 20}}>
-          <Text style={styles.textStyle}> Lorem ipsum dolor sit amet, consectetur adipiscing elit</Text>
+          <Text style={styles.textStyle}>Lorem ipsum dolor sit amet, consectetur adipiscing elit</Text>
         </View>
 
       </ScrollView>
