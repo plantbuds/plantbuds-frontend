@@ -10,7 +10,8 @@ import {
   Keyboard,
   GestureResponderEvent,
   KeyboardAvoidingView,
-  PixelRatio
+  PixelRatio,
+  PushNotificationIOS
 } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import SetZoneModal from "../components/SetZoneModal";
@@ -18,9 +19,7 @@ import * as ImagePicker from "expo-image-picker";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store/store";
 import {
-  editProfilePic,
-  editUsername,
-  editZone
+ editUserProfile
 } from "../../store/session/actions";
 
 // declare types for your props here
@@ -49,7 +48,6 @@ export default function EditSettingsScreen(props: Props) {
   const [textName, setTextName] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [textErr, setTextErr] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -81,6 +79,16 @@ export default function EditSettingsScreen(props: Props) {
     }
   };
 
+  function onSubmit() {
+    if (!textName || textName.length < 3) {
+      setTextErr(true);
+      return; 
+    }
+    dispatch(editUserProfile(textName, textZone, image ? image : profilePic, userID));
+    setTextErr(false);
+    navigation.navigate("Settings");
+  }
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : null}
@@ -98,25 +106,7 @@ export default function EditSettingsScreen(props: Props) {
             <Text style={styles.textTitle}>Edit Profile</Text>
             <Button
               labelStyle={styles.buttonStyle}
-              onPress={() => {
-                if (textName) {
-                  if (textName.length < 3) {
-                    setTextErr(true);
-                    return;
-                  }
-                  dispatch(editUsername(textName, userID));
-                }
-                if (textZone) {
-                  dispatch(editZone(textZone, userID));
-                }
-
-                if (image) {
-                  dispatch(editProfilePic(image, userID));
-                }
-                if (!textErr) {
-                  navigation.navigate("Settings");
-                }
-              }}
+              onPress={onSubmit}
             >
               <Text style={styles.textTitleRight}>Done</Text>
             </Button>

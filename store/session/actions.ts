@@ -3,18 +3,12 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
-  EDIT_PFP,
-  EDIT_PFP_SUCCESS,
-  EDIT_PFP_FAIL,
   CREATE_USER,
   CREATE_USER_SUCCESS,
   CREATE_USER_FAIL,
-  EDIT_USERNAME,
-  EDIT_USERNAME_SUCCESS,
-  EDIT_USERNAME_FAIL,
-  EDIT_ZONE,
-  EDIT_ZONE_SUCCESS,
-  EDIT_ZONE_FAIL,
+  EDIT_USER,
+  EDIT_USER_SUCCESS,
+  EDIT_USER_FAIL,
   EDIT_NOTIF_TIME,
   EDIT_NOTIF_TIME_SUCCESS,
   EDIT_NOTIF_TIME_FAIL,
@@ -74,7 +68,7 @@ export const createUser = (idToken: string, accessToken: string) => {
         }
       },
       options: {
-        onSuccess: async ({ dispatch }) => {
+        onSuccess: ({ dispatch }) => {
           dispatch(loginUser(accessToken));
         },
         onError({ getState, dispatch, error }) {
@@ -83,15 +77,14 @@ export const createUser = (idToken: string, accessToken: string) => {
               throw error;
             }
           } catch (e) {
-            if (e.response.data.error != null) {
-              if (
-                e.response.data.error ===
+            if (
+              e.response.data.error != null &&
+              e.response.data.error ===
                 "user already exists in user profile table"
-              ) {
-                dispatch(loginUser(accessToken));
-              } else {
-                Alert.alert("Error: " + e.response.data.error);
-              }
+            ) {
+              Alert.alert("Error: " + e.response.data.error);
+            } else {
+              dispatch(loginUser(accessToken));
             }
           }
         }
@@ -100,62 +93,28 @@ export const createUser = (idToken: string, accessToken: string) => {
   };
 };
 
-export const editProfilePic = (imageURI: string, userID: number) => {
+export const editUserProfile =(username: string, zone: string, imageURI: string, userID: number) => {
   return {
-    type: [EDIT_PFP, EDIT_PFP_SUCCESS, EDIT_PFP_FAIL],
+    type: [EDIT_USER, EDIT_USER_SUCCESS, EDIT_USER_FAIL],
     payload: {
       client: "default",
       request: {
         url: `${API_ROOT}/api/users/${userID}/`,
         method: "PATCH",
         data: {
-          photo: imageURI
+          username: username,
+          photo: imageURI, 
+          USDA_zone: zone,
         }
       },
       options: {
-        onSuccess: ({ dispatch }) => dispatch(setProfilePic(imageURI))
-      }
-    }
-  };
-};
-
-export const editUsername = (username: string, userID: number) => {
-  return {
-    type: [EDIT_USERNAME, EDIT_USERNAME_SUCCESS, EDIT_USERNAME_FAIL],
-    payload: {
-      client: "default",
-      request: {
-        url: `${API_ROOT}/api/users/${userID}/`,
-        method: "PATCH",
-        data: {
-          username: username
+        onSuccess: ({ dispatch }) => {
+          dispatch(setUserProfile(username, zone, imageURI));
         }
-      },
-      options: {
-        onSuccess: ({ dispatch }) => dispatch(setUsername(username))
       }
     }
   };
-};
-
-export const editZone = (zone: string, userID: number) => {
-  return {
-    type: [EDIT_ZONE, EDIT_ZONE_SUCCESS, EDIT_ZONE_FAIL],
-    payload: {
-      client: "default",
-      request: {
-        url: `${API_ROOT}/api/users/${userID}/`,
-        method: "PATCH",
-        data: {
-          USDA_zone: zone
-        }
-      },
-      options: {
-        onSuccess: ({ dispatch }) => dispatch(setZone(zone))
-      }
-    }
-  };
-};
+}
 
 export const editNotifTime = (time: string, userID: number) => {
   return {
@@ -185,12 +144,12 @@ export const editWaterNotif = (val: boolean, userID: number) => {
         url: `${API_ROOT}/api/users/${userID}/`,
         method: "PATCH",
         data: {
-          receive_water_notif: val,
+          receive_water_notif: val
         }
-      },
+      }
     }
   };
-}
+};
 
 export const editRepotNotif = (val: boolean, userID: number) => {
   return {
@@ -201,12 +160,12 @@ export const editRepotNotif = (val: boolean, userID: number) => {
         url: `${API_ROOT}/api/users/${userID}/`,
         method: "PATCH",
         data: {
-          receive_repot_notif: val,
+          receive_repot_notif: val
         }
-      },
+      }
     }
   };
-}
+};
 
 export const editFertilizingNotif = (val: boolean, userID: number) => {
   return {
@@ -217,33 +176,23 @@ export const editFertilizingNotif = (val: boolean, userID: number) => {
         url: `${API_ROOT}/api/users/${userID}/`,
         method: "PATCH",
         data: {
-          receive_fertilizing_notif: val,
+          receive_fertilizing_notif: val
         }
-      },
+      }
     }
   };
+};
+
+export const setUserProfile = (username: string, zone: string, imageURI: string) => {
+  return {
+    type: EDIT_USER_SUCCESS,
+    payload: {
+      username, 
+      zone,
+      imageURI
+    }
+  }
 }
-
-export const setProfilePic = (imageURI: string) => {
-  return {
-    type: EDIT_PFP_SUCCESS,
-    imageURI
-  };
-};
-
-export const setUsername = (username: string) => {
-  return {
-    type: EDIT_USERNAME_SUCCESS,
-    username
-  };
-};
-
-export const setZone = (zone: string) => {
-  return {
-    type: EDIT_ZONE_SUCCESS,
-    zone
-  };
-};
 
 export const setNotifTime = (time: string) => {
   return {

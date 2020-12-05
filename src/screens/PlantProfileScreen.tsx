@@ -168,16 +168,26 @@ export default function PlantProfileScreen(props: Props) {
   const dispatch = useDispatch();
 
   const parseEntries = () => {
-    let history = []
+    let history = [];
     for (const date in entries) {
+      // if all entries in boolean array for a date are false delete it 
+      if (!entries[date][0] && !entries[date][1] && !entries[date][2]) {
+        delete entries[date];
+      }
+
+      // extract date 
       let s = date + ":";
+
+      // extract boolean values 
       for (let i = 0; i < 2; i++) {
         s += entries[date][i] + ",";
       }
       s += entries[date][2];
-      console.log(s);
+      
+      // push string that contains date and boolean values encoded in it to history array  
       history.push(s);
     }
+
     return history;
   };
 
@@ -193,12 +203,15 @@ export default function PlantProfileScreen(props: Props) {
         for (let j = 0; j < 3; j++) {
           booleanArr.push(JSON.parse(booleanString.split(",")[j]));
         }
+
+        // pair the boolean array with the extracted date 
         entries[history[i].split(":")[0]] = booleanArr;
       }
     } else {
       entries = {};
     }
   };
+
   const updateCalendarMarkings = () => {
     var markings = {};
     var selected = false;
@@ -254,7 +267,7 @@ export default function PlantProfileScreen(props: Props) {
   useEffect(() => {
     if (editedEntry) {
       let history = parseEntries();
-      dispatch(updateTaskHistory(history, plant_id))
+      dispatch(updateTaskHistory(history, plant_id));
       dispatch(setEditedEntry(false));
     }
   }, [editedEntry]);
@@ -303,7 +316,6 @@ export default function PlantProfileScreen(props: Props) {
                   : plant_name
                 : "Scientific Plant Name"}
             </Text>
-            {/*<Text style={styles.scientificZoneStyle}>Zone: #</Text>*/}
           </View>
         </View>
 

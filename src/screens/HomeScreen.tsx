@@ -93,7 +93,7 @@ export default function HomeScreen(props: Props) {
     dispatch(setEditedPlant(false));
     dispatch(setCreatedPlant(false));
     dispatch(setDeletedPlant(false));
-  }, [createdPlant, editedPlant, deletedPlant]);
+  }, [createdPlant, editedPlant, deletedPlant, displayCreatePlantModal]);
 
 
   const { navigation } = props;

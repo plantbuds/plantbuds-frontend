@@ -17,9 +17,7 @@ import * as ImagePicker from "expo-image-picker";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store/store";
 import {
-  editPlantPic,
-  editPlantName,
-  editPlantNickname,
+  editPlantProfile,
   setCreatedPlant
 } from "../../store/plantgroup/actions";
 
@@ -37,9 +35,8 @@ export default function CreatePlantProfileModal(props: Props) {
   const [textNickname, setTextNickname] = useState("");
   const [textErr, setTextErr] = useState(false);
   const [textSciErr, setTextSciErr] = useState(false);
-
+  const defaultPhoto = "http://i.imgur.com/4os1ZjY.png";
   const plantID = useSelector((state: RootState) => state.plantgroup.plant_id);
-  const photo = useSelector((state: RootState) => state.plantgroup.photo);
   const dispatch = useDispatch();
 
   // check if user has given permission to access image gallery from phone
@@ -69,20 +66,29 @@ export default function CreatePlantProfileModal(props: Props) {
     }
   };
 
-  async function onSubmit(e: GestureResponderEvent) {
-    e.preventDefault();
-    try {
-      //image ? await dispatch(editPlantPic(image, plantID)) : null ;
-      //textSciName ? await dispatch(editPlantName(textSciName, plantID)) : null 
-      //textNickname ? await dispatch(editPlantNickname(textNickname, plantID)) : null
-      navigation.navigate("PlantProfile", {
-        plantID: plantID
-      });
-      dispatch(setCreatedPlant(true));
-      setDisplayCreatePlantModal(false);
-    } catch (err) {
-
+  function onSubmit() {
+    let notes = "";
+    if (!textSciName || textSciName.length < 3) {
+      setTextSciErr(true);
+      return;
     }
+    dispatch(
+      editPlantProfile(
+        plantID,
+        image ? image : defaultPhoto,
+        textSciName,
+        textNickname ? textNickname : "My Plant",
+        notes
+      )
+    );
+    setTextSciErr(false);
+    setTextSciName("");
+    setTextNickname("");
+    dispatch(setCreatedPlant(true));
+    navigation.navigate("PlantProfile", {
+      plantID: plantID
+    });
+    setDisplayCreatePlantModal(false);
   }
 
   return (
@@ -95,10 +101,7 @@ export default function CreatePlantProfileModal(props: Props) {
           <View style={styles.bottomView}>
             <View style={styles.row}>
               <Text style={styles.textTitle}>Create Plant Profile</Text>
-              <Button
-                labelStyle={styles.buttonStyle}
-                onPress={() => onSubmit}
-              >
+              <Button labelStyle={styles.buttonStyle} onPress={onSubmit}>
                 <Text style={styles.textTitleRight}>Done</Text>
               </Button>
             </View>
@@ -109,7 +112,7 @@ export default function CreatePlantProfileModal(props: Props) {
                 (!image && (
                   <Image
                     style={styles.profilePicture}
-                    source={{ uri: photo }}
+                    source={{ uri: defaultPhoto }}
                   />
                 ))}
               <Button
