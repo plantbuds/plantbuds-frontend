@@ -28,8 +28,6 @@ const middlewareConfig = {
     response: [
       {
         success: function ({getState, dispatch, getSourceAction}, res) {
-          console.log("inside success interceptor" + res); //contains information about request object
-          //...
           return Promise.resolve(res);
         },
         error: ({}, error) => {

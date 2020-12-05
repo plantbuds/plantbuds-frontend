@@ -9,7 +9,8 @@ import {
   SET_CREATED_PLANT,
   SET_EDITED_PLANT,
   SET_DELETED_PLANT,
-  SET_EDITED_ENTRY
+  SET_EDITED_ENTRY,
+  RESET_PLANT_STATE,
 } from "./types";
 
 const initialState: PlantGroupState = {
@@ -87,17 +88,17 @@ export function plantgroupReducer(
         fertilize_next_notif: action.payload.data.fertilize_next_notif,
         notes: action.payload.data.notes,
         encyclopedia: action.payload.data.encyclopedia,
-        user: action.payload.data.user,
+        user: action.payload.data.user
       };
-    case EDIT_PLANT_SUCCESS: 
-    return {
-      ...state,
-      plant_name: action.payload.plant_name,
-      nickname: action.payload.nickname,
-      photo: action.payload.imageURI,
-      notes: action.payload.notes,
-      editedPlant: true,
-    }
+    case EDIT_PLANT_SUCCESS:
+      return {
+        ...state,
+        plant_name: action.payload.plant_name,
+        nickname: action.payload.nickname,
+        photo: action.payload.imageURI,
+        notes: action.payload.notes,
+        editedPlant: true
+      };
     case SET_EDITED_PLANT:
       return {
         ...state,
@@ -140,6 +141,29 @@ export function plantgroupReducer(
         notes: "",
         encyclopedia: null,
         deletedPlant: true
+      };
+    case RESET_PLANT_STATE:
+      return {
+        ...state,
+        deletedPlant: false, 
+        editedPlant: false,
+        createdPlant: false,
+        plant_name: null,
+        plant_id: null,
+        nickname: null,
+        photo: null,
+        water_history: [],
+        repot_history: [],
+        fertilize_history: [],
+        history: [],
+        water_frequency: null,
+        fertilize_frequency: null,
+        repot_frequency: null,
+        water_next_notif: null,
+        repot_next_notif: null,
+        fertilize_next_notif: null,
+        notes: "",
+        encyclopedia: null
       };
     default:
       return state;

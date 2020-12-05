@@ -20,12 +20,11 @@ import {
   UPDATE_TASK_HISTORY_SUCCESS,
   EDIT_PLANT,
   EDIT_PLANT_FAIL,
-  EDIT_PLANT_SUCCESS
+  EDIT_PLANT_SUCCESS,
+  RESET_PLANT_STATE
 } from "./types";
 
-import { API_ROOT } from "../../src/constants/index";
-import { useSelector } from "react-redux";
-import { RootState } from "../store";
+import { API_ROOT } from "../../src/constants/index";``
 
 export const getAllPlants = (username: string) => {
   return {
@@ -63,9 +62,9 @@ export const getIndividualPlant = (plantID: number) => {
 
 export const createPlant = (
   userID: number,
-  plant_name= "Scientific Name",
   imageURI = "http://i.imgur.com/4os1ZjY.png",
-  nickname = "My Plant",
+  plant_name = "Scientific Name",
+  nickname = "My Plant"
 ) => {
   return {
     types: [CREATE_PLANT, CREATE_PLANT_SUCCESS, CREATE_PLANT_FAIL],
@@ -82,7 +81,7 @@ export const createPlant = (
           notes: "",
           user: `${API_ROOT}/api/users/${userID}/`
         }
-      },
+      }
     }
   };
 };
@@ -182,14 +181,21 @@ export const setPlantProfile = (
   imageURI: string,
   plant_name: string,
   nickname: string,
-  notes: string) => {
-    return {
-      type: EDIT_PLANT_SUCCESS,
-      payload: {
-        imageURI, 
-        plant_name,
-        nickname,
-        notes
-      }
+  notes: string
+) => {
+  return {
+    type: EDIT_PLANT_SUCCESS,
+    payload: {
+      imageURI,
+      plant_name,
+      nickname,
+      notes
     }
+  };
+};
+
+export const resetPlantState = () => {
+  return {
+    type: RESET_PLANT_STATE
   }
+}

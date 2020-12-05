@@ -75,7 +75,6 @@ export default function HomeScreen(props: Props) {
       notificationListener.current = Notifications.addNotificationReceivedListener(
         notif => {
           Vibration.vibrate();
-          console.log(notif);
         }
       );
 
@@ -85,7 +84,7 @@ export default function HomeScreen(props: Props) {
 
   // Listening for updates to plants array
   useEffect(() => {
-    console.log("use effect with dp array in homescreen");
+    
     if (createdPlant || editedPlant || deletedPlant) {
       dispatch(getAllPlants(username));
     }
@@ -94,7 +93,6 @@ export default function HomeScreen(props: Props) {
     dispatch(setCreatedPlant(false));
     dispatch(setDeletedPlant(false));
   }, [createdPlant, editedPlant, deletedPlant, displayCreatePlantModal]);
-
 
   const { navigation } = props;
   const notificationListener = useRef(null);
@@ -110,7 +108,6 @@ export default function HomeScreen(props: Props) {
           color="white"
           icon="plus"
           onPress={() => {
-            dispatch(createPlant(userID));
             setDisplayCreatePlantModal(true);
           }}
         />
@@ -150,9 +147,6 @@ export default function HomeScreen(props: Props) {
                   underlayColor="#DDDDDD"
                   onPress={() => {
                     let plantID = parseInt(item.url.split("/")[5]);
-                    console.log(
-                      "calling get individual plant from home screen"
-                    );
                     dispatch(getIndividualPlant(plantID));
                     navigation.navigate("PlantProfile", {
                       plantID: plantID
@@ -183,7 +177,6 @@ export default function HomeScreen(props: Props) {
               color="white"
               icon="plus"
               onPress={() => {
-                dispatch(createPlant(userID));
                 setDisplayCreatePlantModal(true);
               }}
             />
@@ -259,7 +252,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#CBE4B1",
     alignSelf: "flex-end",
     right: windowWidth * 0.1,
-    top: windowHeight * 0.3
+    top: windowHeight * 0.32
   },
   noPlantsText: {
     width: windowWidth * 0.9,

@@ -61,7 +61,6 @@ export function sessionReducer(
         receive_repot_notif: null
       };
     case EDIT_USER_SUCCESS:
-      console.log("EDIT_USER Reducer case: " + action.payload.username);
       return {
         ...state,
         username: action.payload.username,

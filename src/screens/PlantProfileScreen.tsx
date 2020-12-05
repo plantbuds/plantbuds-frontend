@@ -16,7 +16,8 @@ import {
 import { Button, TextInput } from "react-native-paper";
 import {
   updateTaskHistory,
-  setEditedEntry
+  setEditedEntry,
+  resetPlantState
 } from "../../store/plantgroup/actions";
 import { RootState } from "../../store/store";
 import { useDispatch, useSelector } from "react-redux";
@@ -138,7 +139,6 @@ const greenBrown = {
 
 export default function PlantProfileScreen(props: Props) {
   const { navigation, route } = props;
-  const { plantID } = route.params;
   const [selectedDate, setSelectedDate] = useState(new Date().toDateString());
   const [markings, setMarkings] = useState({});
   const [waterStatus, setWaterStatus] = useState(false);
@@ -168,30 +168,26 @@ export default function PlantProfileScreen(props: Props) {
   const dispatch = useDispatch();
 
   const parseEntries = () => {
-    let history = [];
+    let localHistory = [];
     for (const date in entries) {
-      // if all entries in boolean array for a date are false delete it 
-      if (!entries[date][0] && !entries[date][1] && !entries[date][2]) {
-        delete entries[date];
-      }
-
-      // extract date 
+      // extract date
       let s = date + ":";
 
-      // extract boolean values 
+      // extract boolean values
       for (let i = 0; i < 2; i++) {
         s += entries[date][i] + ",";
       }
       s += entries[date][2];
-      
-      // push string that contains date and boolean values encoded in it to history array  
-      history.push(s);
+
+      // push string that contains date and boolean values encoded in it to history array
+      localHistory.push(s);
     }
 
-    return history;
+    return localHistory;
   };
 
   const loadEntries = () => {
+    entries = {};
     if (history != null) {
       for (let i = 0; i < history.length; i++) {
         let booleanArr = [];
@@ -204,7 +200,7 @@ export default function PlantProfileScreen(props: Props) {
           booleanArr.push(JSON.parse(booleanString.split(",")[j]));
         }
 
-        // pair the boolean array with the extracted date 
+        // pair the boolean array with the extracted date
         entries[history[i].split(":")[0]] = booleanArr;
       }
     } else {
@@ -241,8 +237,6 @@ export default function PlantProfileScreen(props: Props) {
         selected = true;
       }
       markings[date] = entry;
-      console.log("entry: ");
-      console.log(entry);
     }
     if (!selected) {
       markings[selectedDate] = {
@@ -257,7 +251,7 @@ export default function PlantProfileScreen(props: Props) {
   useEffect(() => {
     loadEntries();
     updateCalendarMarkings();
-  }, [plant_id]);
+  }, [plant_id, JSON.stringify(history)]);
 
   // Listener for updating calendar markings *note this hook will run every time since we are creating a new Date object
   useEffect(() => {
@@ -277,7 +271,10 @@ export default function PlantProfileScreen(props: Props) {
       <View style={{ flexDirection: "row", alignSelf: "center" }}>
         <Button
           labelStyle={styles.buttonStyle}
-          onPress={() => navigation.navigate("Home")}
+          onPress={() => {
+            navigation.navigate("Home");
+            dispatch(resetPlantState());
+          }}
         >
           <Text style={styles.homeButtonStyle}>Plant Home</Text>
         </Button>
@@ -307,12 +304,12 @@ export default function PlantProfileScreen(props: Props) {
                 ? nickname.length > 13
                   ? nickname.substring(0, 12) + "..."
                   : nickname
-                : "Nickname"}
+                : "My Plant"}
             </Text>
             <Text style={styles.scientificZoneStyle}>
               {plant_name
-                ? plant_name.length > 13
-                  ? plant_name.substring(0, 12) + "..."
+                ? plant_name.length > 20
+                  ? plant_name.substring(0, 19) + "..."
                   : plant_name
                 : "Scientific Plant Name"}
             </Text>
