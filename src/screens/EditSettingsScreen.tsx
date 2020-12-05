@@ -18,9 +18,7 @@ import SetZoneModal from "../components/SetZoneModal";
 import * as ImagePicker from "expo-image-picker";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store/store";
-import {
- editUserProfile
-} from "../../store/session/actions";
+import { editUserProfile } from "../../store/session/actions";
 
 // declare types for your props here
 interface Props {
@@ -79,11 +77,18 @@ export default function EditSettingsScreen(props: Props) {
   };
 
   function onSubmit() {
-    if (!textName || textName.length < 3) {
+    if (textName && textName.length < 3) {
       setTextErr(true);
-      return; 
+      return;
     }
-    dispatch(editUserProfile(textName, textZone, image ? image : profilePic, userID));
+    dispatch(
+      editUserProfile(
+        textName ? textName : username,
+        textZone,
+        image ? image : profilePic,
+        userID
+      )
+    );
     setTextErr(false);
     navigation.navigate("Settings");
   }
@@ -103,10 +108,7 @@ export default function EditSettingsScreen(props: Props) {
               <Text style={styles.textTitleLeft}>Cancel</Text>
             </Button>
             <Text style={styles.textTitle}>Edit Profile</Text>
-            <Button
-              labelStyle={styles.buttonStyle}
-              onPress={onSubmit}
-            >
+            <Button labelStyle={styles.buttonStyle} onPress={onSubmit}>
               <Text style={styles.textTitleRight}>Done</Text>
             </Button>
           </View>
@@ -143,7 +145,7 @@ export default function EditSettingsScreen(props: Props) {
               </View>
               <View style={{ flex: 2 }}>
                 <TextInput
-                  keyboardType='ascii-capable' 
+                  keyboardType="ascii-capable"
                   mode="flat"
                   maxLength={13}
                   theme={theme}

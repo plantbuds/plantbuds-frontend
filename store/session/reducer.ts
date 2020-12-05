@@ -61,6 +61,7 @@ export function sessionReducer(
         receive_repot_notif: null
       };
     case EDIT_USER_SUCCESS:
+
       return {
         ...state,
         username: action.payload.username,

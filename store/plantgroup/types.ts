@@ -97,9 +97,11 @@ interface DeletePlantSuccessAction {
 }
 
 interface ResetPlantStateAction {
-  type: typeof RESET_PLANT_STATE
+  type: typeof RESET_PLANT_STATE;
 }
+
 export type PlantGroupActionTypes =
+  | ResetPlantStateAction
   | CreatePlantSuccessAction
   | SetCreatedPlantAction
   | GetAllPlantsRequestAction

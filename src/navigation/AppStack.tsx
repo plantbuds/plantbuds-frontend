@@ -73,8 +73,7 @@ const SidebarAppNavigator = () => {
 // RootNavigator to navigate between different stacks
 const RootNavigator = () => {
   const loggedIn = useSelector((state: RootState) => state.session.loggedIn);
-    //return (loggedIn) ? SidebarAppNavigator() : OnboardingNavigator();
-    return SidebarAppNavigator();
+    return (loggedIn) ? SidebarAppNavigator() : OnboardingNavigator();
 };
 
 export default RootNavigator;

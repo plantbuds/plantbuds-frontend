@@ -148,9 +148,7 @@ export default function HomeScreen(props: Props) {
                   onPress={() => {
                     let plantID = parseInt(item.url.split("/")[5]);
                     dispatch(getIndividualPlant(plantID));
-                    navigation.navigate("PlantProfile", {
-                      plantID: plantID
-                    });
+                    navigation.navigate("PlantProfile");
                   }}
                 >
                   <View>
