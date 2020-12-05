@@ -51,7 +51,6 @@ export default function AddEntryModal(props: Props) {
       setRepotStatus(false);
     }
   }, [displayModal]);
-  // TODO: need to reset button status after saving
 
   return (
     <Modal animationType="slide" transparent={true} visible={displayModal}>
