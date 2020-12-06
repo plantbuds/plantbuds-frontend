@@ -5,9 +5,7 @@ import {createStackNavigator} from "@react-navigation/stack";
 import {createDrawerNavigator} from "@react-navigation/drawer";
 import HomeScreen from "../screens/HomeScreen";
 import SettingsScreen from "../screens/SettingsScreen";
-import CalendarScreen from "../screens/CalendarScreen";
 import LandingScreen from "../screens/LandingScreen";
-import TestScreen from "../screens/TestScreen";
 import EditSettingsScreen from "../screens/EditSettingsScreen";
 import EditPlantProfileScreen from "../screens/EditPlantProfileScreen";
 import PlantProfileScreen from "../screens/PlantProfileScreen";
@@ -74,7 +72,6 @@ const SidebarAppNavigator = () => {
 const RootNavigator = () => {
   const loggedIn = useSelector((state: RootState) => state.session.loggedIn);
     return (loggedIn) ? SidebarAppNavigator() : OnboardingNavigator();
-    //return SidebarAppNavigator();
 };
 
 export default RootNavigator;

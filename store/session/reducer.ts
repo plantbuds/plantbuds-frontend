@@ -5,23 +5,20 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   EDIT_NOTIF_TIME_SUCCESS,
-  EDIT_PFP_SUCCESS,
-  EDIT_USERNAME_SUCCESS,
-  EDIT_ZONE_SUCCESS,
+  EDIT_USER_SUCCESS
 } from "./types";
 
 const initialState: SessionState = {
   loggedIn: false,
   userID: null,
-  profileURI: null, 
-  username: null, 
-  email: null, 
-  USDA_zone: null, 
+  profileURI: null,
+  username: null,
+  email: null,
+  USDA_zone: null,
   receive_water_notif: null,
-  receive_repot_notif: null, 
+  receive_repot_notif: null,
   receive_fertilizing_notif: null,
   notif_time: null
-  //TODO
 };
 
 export function sessionReducer(
@@ -40,14 +37,14 @@ export function sessionReducer(
         USDA_zone: action.payload.data.USDA_zone,
         receive_water_notif: action.payload.data.receive_water_notif,
         receive_repot_notif: action.payload.data.receive_water_notif,
-        receive_fertilizing_notif: action.payload.data.receive_fertilizing_notif,
+        receive_fertilizing_notif:
+          action.payload.data.receive_fertilizing_notif,
         notif_time: action.payload.data.notif_time
       };
     case LOGIN_FAIL:
       return {
         ...state,
         loggedIn: false
-        //TODO
       };
     case LOGOUT:
       return {
@@ -61,28 +58,21 @@ export function sessionReducer(
         notif_time: null,
         receive_fertilizing_notif: null,
         receive_water_notif: null,
-        receive_repot_notif: null,
+        receive_repot_notif: null
       };
-    case EDIT_PFP_SUCCESS:
+    case EDIT_USER_SUCCESS:
+
       return {
         ...state,
-        profileURI: action.imageURI,
+        username: action.payload.username,
+        USDA_zone: action.payload.zone,
+        profileURI: action.payload.imageURI
       };
-    case EDIT_USERNAME_SUCCESS:
-      return {
-        ...state,
-        username: action.username,
-      };
-    case EDIT_ZONE_SUCCESS: 
-    return {
-      ...state,
-      USDA_zone: action.zone,
-    };
     case EDIT_NOTIF_TIME_SUCCESS:
       return {
         ...state,
         notif_time: action.time
-      }
+      };
     default:
       return state;
   }

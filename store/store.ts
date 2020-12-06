@@ -29,6 +29,9 @@ const middlewareConfig = {
     ],
     response: [
       {
+        success: function ({getState, dispatch, getSourceAction}, res) {
+          return Promise.resolve(res);
+        },
         error: ({}, error) => {
           return Promise.reject(error);
         }

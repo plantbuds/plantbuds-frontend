@@ -3,16 +3,15 @@ import {
   PlantGroupActionTypes,
   GET_ALL_PLANTS_SUCCESS,
   GET_INDIVIDUAL_PLANT_SUCCESS,
-  EDIT_PLANTNAME_SUCCESS,
-  EDIT_PLANT_PIC_SUCCESS,
   CREATE_PLANT_SUCCESS,
+  EDIT_PLANT_SUCCESS,
+  DELETE_PLANT_SUCCESS,
   SET_CREATED_PLANT,
   SET_EDITED_PLANT,
   SET_DELETED_PLANT,
-  EDIT_NOTES_SUCCESS,
-  EDIT_NICKNAME_SUCCESS,
-  DELETE_PLANT_SUCCESS,
-  SET_EDITED_ENTRY
+  SET_EDITED_ENTRY,
+  RESET_PLANT_STATE,
+  GET_MATCHING_PLANTS_SUCCESS,
 } from "./types";
 
 const initialState: PlantGroupState = {
@@ -50,6 +49,11 @@ export function plantgroupReducer(
         ...state,
         plants: action.payload.data
       };
+    case  GET_MATCHING_PLANTS_SUCCESS:
+      return {
+        ...state,
+        plants: action.payload.data
+      }
     case GET_INDIVIDUAL_PLANT_SUCCESS:
       return {
         ...state,
@@ -90,35 +94,21 @@ export function plantgroupReducer(
         fertilize_next_notif: action.payload.data.fertilize_next_notif,
         notes: action.payload.data.notes,
         encyclopedia: action.payload.data.encyclopedia,
-        user: action.payload.data.user,
+        user: action.payload.data.user
       };
-    case EDIT_NICKNAME_SUCCESS:
+    case EDIT_PLANT_SUCCESS:
       return {
         ...state,
-        nickname: action.nickname,
-        editedPlant: true
-      };
-    case EDIT_PLANT_PIC_SUCCESS:
-      return {
-        ...state,
-        photo: action.imageURI,
-        editedPlant: true
-      };
-    case EDIT_PLANTNAME_SUCCESS:
-      return {
-        ...state,
-        plant_name: action.plant_name,
+        plant_name: action.payload.plant_name,
+        nickname: action.payload.nickname,
+        photo: action.payload.imageURI,
+        notes: action.payload.notes,
         editedPlant: true
       };
     case SET_EDITED_PLANT:
       return {
         ...state,
         editedPlant: action.editedPlant
-      };
-    case EDIT_NOTES_SUCCESS:
-      return {
-        ...state,
-        notes: action.notes
       };
     case SET_CREATED_PLANT:
       return {
@@ -157,6 +147,29 @@ export function plantgroupReducer(
         notes: "",
         encyclopedia: null,
         deletedPlant: true
+      };
+    case RESET_PLANT_STATE:
+      return {
+        ...state,
+        deletedPlant: false, 
+        editedPlant: false,
+        createdPlant: false,
+        plant_name: null,
+        plant_id: null,
+        nickname: null,
+        photo: null,
+        water_history: [],
+        repot_history: [],
+        fertilize_history: [],
+        history: [],
+        water_frequency: null,
+        fertilize_frequency: null,
+        repot_frequency: null,
+        water_next_notif: null,
+        repot_next_notif: null,
+        fertilize_next_notif: null,
+        notes: "",
+        encyclopedia: null
       };
     default:
       return state;
