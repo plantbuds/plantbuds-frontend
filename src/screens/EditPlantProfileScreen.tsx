@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from "react";
 import {
   Platform,
   StyleSheet,
-  Text,
   View,
   Image,
   Dimensions,
@@ -13,7 +12,7 @@ import {
   SafeAreaView,
   TextInput as TextArea
 } from "react-native";
-import { Button, TextInput } from "react-native-paper";
+import { Text, Colors, IconButton, Button, TextInput } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
 import { useSelector, useDispatch } from "react-redux";
 import DeletePlantModal from "../components/DeletePlantModal";
@@ -81,32 +80,46 @@ export default function EditPlantProfileScreen(props: Props) {
   };
 
   function onSubmit() {
-     if (textSciName && textSciName.length < 3) {
-       setTextSciErr(true);
-       return;
-     }
-     if (textNickname && textNickname.length < 2) {
-       setTextErr(true);
-       return;
-     }
-      dispatch(
-        editPlantProfile(
-          plantID,
-          image ? image : photo,
-          textSciName ? textSciName : plant_name,        
-          textNickname ? textNickname : nickname,
-          textNotes
-        )
-      );
-      setTextSciErr(false);
-      setTextErr(false);
-      setTextSciName("");
-      setTextNickname("");
-      dispatch(getAllPlants(username));
-      navigation.navigate("PlantProfile", {
-        plantID: plantID
-      });
-  }
+    if (textSciName && textSciName.length < 3) {
+      setTextSciErr(true);
+      return;
+    }
+    if (textNickname && textNickname.length < 2) {
+      setTextErr(true);
+      return;
+    }
+     dispatch(
+       editPlantProfile(
+         plantID,
+         image ? image : photo,
+         textSciName ? textSciName : plant_name,        
+         textNickname ? textNickname : nickname,
+         textNotes
+       )
+     );
+     setTextSciErr(false);
+     setTextErr(false);
+     setTextSciName("");
+     setTextNickname("");
+     dispatch(getAllPlants(username));
+     navigation.navigate("PlantProfile", {
+       plantID: plantID
+     });
+ }
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerBackTitle: "Cancel",
+      headerRight: () => (
+        <IconButton
+          icon="check-bold"
+          color={Colors.lightGreen900}
+          onPress={onSubmit}
+        />
+      )
+    });
+  }, [navigation, textSciName, textNickname, image, textNotes]);
+
 
   return (
     <KeyboardAvoidingView
@@ -115,25 +128,6 @@ export default function EditPlantProfileScreen(props: Props) {
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
-          <View style={styles.row}>
-            <Button
-              labelStyle={styles.buttonStyle}
-              onPress={() =>
-                navigation.navigate("PlantProfile", {
-                  plantID: plantID
-                })
-              }
-            >
-              <Text style={styles.textTitleLeft}>Cancel</Text>
-            </Button>
-            <Text style={styles.textTitle}>Edit Plant Profile</Text>
-            <Button
-              labelStyle={styles.buttonStyle}
-              onPress={onSubmit}
-            >
-              <Text style={styles.textTitleRight}>Done</Text>
-            </Button>
-          </View>
           <View style={styles.containerPicture}>
             {(image && (
               <Image style={styles.profilePicture} source={{ uri: image }} />
@@ -253,7 +247,7 @@ const styles = StyleSheet.create({
   containerPicture: {
     backgroundColor: "#fff",
     alignItems: "center",
-    paddingTop: 10,
+    //paddingTop: 10,
     //height: windowHeight * 0.29
     bottom: windowHeight * 0.45
   },

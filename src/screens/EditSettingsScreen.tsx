@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import {
   Platform,
   StyleSheet,
-  Text,
   View,
   Image,
   Dimensions,
@@ -13,7 +12,7 @@ import {
   PixelRatio,
   PushNotificationIOS
 } from "react-native";
-import { Button, TextInput } from "react-native-paper";
+import { Text, IconButton, Colors, Button, TextInput } from "react-native-paper";
 import SetZoneModal from "../components/SetZoneModal";
 import * as ImagePicker from "expo-image-picker";
 import { useSelector, useDispatch } from "react-redux";
@@ -90,8 +89,21 @@ export default function EditSettingsScreen(props: Props) {
       )
     );
     setTextErr(false);
-    navigation.navigate("Settings");
+    navigation.goBack();
   }
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerBackTitle: "Cancel",
+      headerRight: () => (
+        <IconButton
+          icon="check-bold"
+          color={Colors.lightGreen900}
+          onPress={onSubmit}
+        />
+      )
+    });
+  }, [navigation, textName, textZone, image]);
 
   return (
     <KeyboardAvoidingView
@@ -100,18 +112,6 @@ export default function EditSettingsScreen(props: Props) {
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
-          <View style={styles.row}>
-            <Button
-              labelStyle={styles.buttonStyle}
-              onPress={() => navigation.navigate("Settings")}
-            >
-              <Text style={styles.textTitleLeft}>Cancel</Text>
-            </Button>
-            <Text style={styles.textTitle}>Edit Profile</Text>
-            <Button labelStyle={styles.buttonStyle} onPress={onSubmit}>
-              <Text style={styles.textTitleRight}>Done</Text>
-            </Button>
-          </View>
           <View style={styles.containerPicture}>
             {(image && (
               <Image style={styles.profilePicture} source={{ uri: image }} />
@@ -305,7 +305,7 @@ const styles = StyleSheet.create({
     width: windowWidth * 0.38
   },
   contentStyle: {
-    backgroundColor: "white"
+    backgroundColor: Colors.grey300
   },
   labelStyle: {
     color: "black",
