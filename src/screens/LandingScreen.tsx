@@ -1,29 +1,24 @@
-import React, { useEffect, useState } from "react";
-import { Alert, Image, StyleSheet, Text, View } from "react-native";
-import logo from "../../assets/logo.png";
-import { RootState } from "../../store/store";
-import { useSelector, useDispatch } from "react-redux";
-import { loginUser, createUser } from "../../store/session/actions";
-import { Button } from "react-native-paper";
-import {
-  signInWithGoogleAsync,
-  signUpWithGoogleAsync
-} from "../utils/GoogleOAuth";
-import {
-  clearData
-} from "../utils/AsyncStorage";
+import React, {useEffect, useState} from 'react';
+import {Alert, Image, StyleSheet, Text, View} from 'react-native';
+import logo from '../../assets/logo.png';
+import {RootState} from '../../store/store';
+import {useSelector, useDispatch} from 'react-redux';
+import {loginUser, createUser} from '../../store/session/actions';
+import {Button} from 'react-native-paper';
+import {signInWithGoogleAsync, signUpWithGoogleAsync} from '../utils/GoogleOAuth';
+import {clearData} from '../utils/AsyncStorage';
 interface Props {
   navigation: any;
 }
 
 export default function LandingScreen(props: Props) {
-  const { navigation } = props;
+  const {navigation} = props;
   const loggedIn = useSelector((state: RootState) => state.session.loggedIn);
   const dispatch = useDispatch();
 
   const signInWithGoogle = async () => {
     const accessToken = await signInWithGoogleAsync();
-    if (typeof accessToken === "string" && accessToken != null) {
+    if (typeof accessToken === 'string' && accessToken != null) {
       dispatch(loginUser(accessToken));
     }
   };
@@ -31,8 +26,8 @@ export default function LandingScreen(props: Props) {
   const signUpWithGoogle = async () => {
     const tokens = await signUpWithGoogleAsync();
     if (
-      typeof tokens[0] === "string" &&
-      typeof tokens[1] === "string" &&
+      typeof tokens[0] === 'string' &&
+      typeof tokens[1] === 'string' &&
       tokens[0] != null &&
       tokens[1] != null
     ) {
@@ -42,26 +37,20 @@ export default function LandingScreen(props: Props) {
 
   useEffect(() => {
     if (loggedIn) {
-      navigation.navigate("Home");
+      navigation.navigate('Home');
     }
   }, [loggedIn]);
 
   return (
     <View style={styles.container}>
       <View style={styles.titleBox}>
-        <Image
-          style={{ width: "90%", height: undefined, aspectRatio: 700 / 161 }}
-          source={logo}
-        />
+        <Image style={{width: '90%', height: undefined, aspectRatio: 700 / 161}} source={logo} />
       </View>
       <View style={styles.signUp}>
         <Button
           mode="contained"
           color="#ECF1E6"
-          style={[
-            styles.wideRounded,
-            { borderWidth: 2, borderColor: "#758764" }
-          ]}
+          style={[styles.wideRounded, {borderWidth: 2, borderColor: '#758764'}]}
           onPress={() => signUpWithGoogle()}
         >
           <Text style={styles.loginButtonText}>Sign Up</Text>
@@ -83,41 +72,41 @@ export default function LandingScreen(props: Props) {
 
 const styles = StyleSheet.create({
   wideRounded: {
-    width: "85%",
-    borderRadius: 20
+    width: '85%',
+    borderRadius: 20,
   },
   loginButtonText: {
-    color: "#758764",
-    fontWeight: "bold",
+    color: '#758764',
+    fontWeight: 'bold',
     fontSize: 17,
-    letterSpacing: 1.28
+    letterSpacing: 1.28,
   },
   container: {
     flex: 1,
-    backgroundColor: "#ECF1E6"
+    backgroundColor: '#ECF1E6',
   },
   titleBox: {
-    position: "absolute",
-    width: "100%",
+    position: 'absolute',
+    width: '100%',
     left: 5,
     top: 274,
-    alignItems: "center"
+    alignItems: 'center',
   },
   signUp: {
-    position: "absolute",
+    position: 'absolute',
     left: 18,
     right: 17,
-    top: "74%",
-    display: "flex",
-    alignItems: "center"
+    top: '74%',
+    display: 'flex',
+    alignItems: 'center',
   },
   login: {
-    position: "absolute",
+    position: 'absolute',
     left: 18,
     right: 17,
-    top: "82%",
-    display: "flex",
-    alignItems: "center",
-    textAlign: "center"
-  }
+    top: '82%',
+    display: 'flex',
+    alignItems: 'center',
+    textAlign: 'center',
+  },
 });

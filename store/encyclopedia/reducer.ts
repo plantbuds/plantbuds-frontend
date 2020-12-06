@@ -3,8 +3,8 @@ import {
   EncyclopediaActionTypes,
   GET_MATCHING_ENTRIES,
   GET_MATCHING_ENTRIES_SUCCESS,
-  SET_UPDATE_SUCCESS
-} from "./types";
+  SET_UPDATE_SUCCESS,
+} from './types';
 
 const initialState: EncyclopediaState = {
   encyclopedia: [],
@@ -19,7 +19,7 @@ const initialState: EncyclopediaState = {
   species: null,
   where_to_grow: [],
   img: null,
-  updatedList: false
+  updatedList: false,
 };
 
 export function encyclopediaReducer(
@@ -31,12 +31,12 @@ export function encyclopediaReducer(
       return {
         ...state,
         encyclopedia: action.payload.data.results.slice(0, 500),
-        updatedList: true
+        updatedList: true,
       };
     case SET_UPDATE_SUCCESS:
       return {
         ...state,
-        updatedList: action.updatedList
+        updatedList: action.updatedList,
       };
       break;
     default:

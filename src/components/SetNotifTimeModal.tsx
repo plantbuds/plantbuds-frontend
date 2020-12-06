@@ -1,25 +1,21 @@
-import React from "react";
-import { View, StyleSheet, Text, Modal, Dimensions } from "react-native";
-import { Button } from "react-native-paper";
-import { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../../store/store";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import { editNotifTime } from "../../store/session/actions";
+import React from 'react';
+import {View, StyleSheet, Text, Modal, Dimensions} from 'react-native';
+import {Button} from 'react-native-paper';
+import {useState} from 'react';
+import {useSelector, useDispatch} from 'react-redux';
+import {RootState} from '../../store/store';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import {editNotifTime} from '../../store/session/actions';
 interface Props {
   displayModal: boolean;
   setShow: (val: boolean) => void;
 }
 
 export default function SetNotifTimeModal(props: Props) {
-  const { displayModal, setShow } = props;
-  const notif_time = useSelector(
-    (state: RootState) => state.session.notif_time
-  );
+  const {displayModal, setShow} = props;
+  const notif_time = useSelector((state: RootState) => state.session.notif_time);
   const userID = useSelector((state: RootState) => state.session.userID);
-  const [datetime, setDateTime] = useState(
-    notif_time ? new Date(notif_time) : new Date()
-  );
+  const [datetime, setDateTime] = useState(notif_time ? new Date(notif_time) : new Date());
 
   const dispatch = useDispatch();
 
@@ -66,7 +62,7 @@ export default function SetNotifTimeModal(props: Props) {
                 //get timezone offset
                 let offset = datetime.getTimezoneOffset();
                 // Adds the offset in milliseconds
-                let date = new Date(datetime.getTime() + (offset * 60 * 1000));
+                let date = new Date(datetime.getTime() + offset * 60 * 1000);
                 const timestring = date.toLocaleTimeString();
                 console.log(timestring);
                 //dispatch(editNotifTime(timestring, userID));
@@ -76,28 +72,23 @@ export default function SetNotifTimeModal(props: Props) {
               Done
             </Button>
           </View>
-          <DateTimePicker
-            value={datetime}
-            mode="time"
-            display="default"
-            onChange={onChange}
-          />
+          <DateTimePicker value={datetime} mode="time" display="default" onChange={onChange} />
         </View>
       </View>
     </Modal>
   );
 }
 
-const windowWidth = Dimensions.get("window").width;
-const windowHeight = Dimensions.get("window").height;
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
   // Specify the modal to appear from the bottom (dont change)
   bottomView: {
     flex: 1,
-    justifyContent: "flex-end",
-    alignItems: "center",
-    alignSelf: "center"
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    alignSelf: 'center',
   },
 
   // Specify the height, width, etc of the modal
@@ -108,16 +99,16 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
-    backgroundColor: "white",
-    shadowColor: "#000",
+    backgroundColor: 'white',
+    shadowColor: '#000',
 
     //temporary
     borderWidth: 1,
-    borderStyle: "solid"
+    borderStyle: 'solid',
   },
 
   header: {
-    flexDirection: "row",
-    justifyContent: "space-between"
-  }
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
 });

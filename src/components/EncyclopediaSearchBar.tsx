@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, {useEffect, useMemo, useState} from 'react';
 import {
   Animated,
   ScrollView,
@@ -9,45 +9,38 @@ import {
   Text,
   TouchableHighlight,
   FlatList,
-  Dimensions
-} from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import {
-  getMatchingEntries,
-  setUpdate
-} from "../../store/encyclopedia/actions";
-import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../../store/session/actions";
-import { RootState } from "../../store/store";
-import { EncyclopediaState } from "../../store/encyclopedia/types";
-import { Button } from "react-native-paper";
-import { getIndividualPlant } from "../../store/plantgroup/actions";
+  Dimensions,
+} from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {getMatchingEntries, setUpdate} from '../../store/encyclopedia/actions';
+import {useDispatch, useSelector} from 'react-redux';
+import {RootState} from '../../store/store';
+import {EncyclopediaState} from '../../store/encyclopedia/types';
+import {Button} from 'react-native-paper';
 
-const deviceWidth = Dimensions.get("window").width;
-const deviceHeight = Dimensions.get("window").height;
-const mockList = ["Hello", "apple", "grapedd", "lao"];
+const deviceWidth = Dimensions.get('window').width;
+const deviceHeight = Dimensions.get('window').height;
+const mockList = ['Hello', 'apple', 'grapedd', 'lao'];
 
 const EncyclopediaSearchComponent = props => {
   const dispatch = useDispatch();
   const encyclopediaSearchResults = useSelector(
     (state: RootState) => state.encyclopedia.encyclopedia
   );
-  const updateList = useSelector(
-    (state: RootState) => state.encyclopedia.updatedList
-  );
-  const { clampedScroll } = props;
+  const updateList = useSelector((state: RootState) => state.encyclopedia.updatedList);
+  const {clampedScroll} = props;
   const [textInputFocussed, setTextInputFocussed] = useState(false);
   const searchBarTranslate = clampedScroll.interpolate({
     inputRange: [0, 50],
     outputRange: [0, -250],
-    extrapolate: "clamp"
+    extrapolate: 'clamp',
   });
   const searchBarOpacity = clampedScroll.interpolate({
     inputRange: [0, 10],
     outputRange: [1, 0],
-    extrapolate: "clamp"
+    extrapolate: 'clamp',
   });
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   //const [temporarySearchResults, setTempSearchResults] = useState([]);
 
   function queryTemporarySearch() {
@@ -70,16 +63,16 @@ const EncyclopediaSearchComponent = props => {
   const renderSearchList = () => {
     return (
       <FlatList
-        style={{ height: Math.floor(deviceHeight * 0.7) }}
+        style={{height: Math.floor(deviceHeight * 0.7)}}
         data={encyclopediaSearchResults}
-        keyExtractor={item => item.url.split("/")[6]}
-        renderItem={({ item }) => (
+        keyExtractor={item => item.url.split('/')[6]}
+        renderItem={({item}) => (
           <TouchableHighlight
             activeOpacity={0.6}
             underlayColor="#DDDDDD"
             onPress={() => {
-              console.log(item.url.split("/")[6]);
-              props.navigation.navigate("EncyclopediaProfile", item);
+              console.log(item.url.split('/')[6]);
+              props.navigation.navigate('EncyclopediaProfile', item);
             }}
           >
             <Text
@@ -87,7 +80,7 @@ const EncyclopediaSearchComponent = props => {
                 padding: 10,
                 fontSize: 20,
                 borderBottomWidth: 2,
-                borderColor: "black"
+                borderColor: 'black',
               }}
             >
               {item.name}
@@ -105,18 +98,18 @@ const EncyclopediaSearchComponent = props => {
         {
           transform: [
             {
-              translateY: searchBarTranslate
-            }
+              translateY: searchBarTranslate,
+            },
           ],
-          opacity: searchBarOpacity
-        }
+          opacity: searchBarOpacity,
+        },
       ]}
     >
       <TextInput
         defaultValue={props.searchedTerm}
         placeholder="Search"
         style={styles.formField}
-        placeholderTextColor={"#888888"}
+        placeholderTextColor={'#888888'}
         onFocus={() => setTextInputFocussed(true)}
         onBlur={handleBlur}
         onChange={event => setSearchTerm(event.nativeEvent.text)}
@@ -130,39 +123,39 @@ const EncyclopediaSearchComponent = props => {
 
 const styles = StyleSheet.create({
   container: {
-    position: "absolute",
+    position: 'absolute',
     top: 40,
     width: deviceWidth - 40,
     left: 20,
     zIndex: 99,
-    backgroundColor: "white"
+    backgroundColor: 'white',
   },
   formField: {
-    backgroundColor: "#F4F4F4",
+    backgroundColor: '#F4F4F4',
     padding: 12,
     paddingLeft: 20,
     paddingRight: 20,
     borderRadius: 20,
     fontSize: 18,
-    height: 50
+    height: 50,
   },
   searchList: {
-    paddingLeft: 16
+    paddingLeft: 16,
   },
   searchListItem: {
     paddingTop: 16,
     paddingBottom: 16,
     borderBottomWidth: 1,
     paddingRight: 16,
-    borderColor: "#DBDBDB",
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between"
+    borderColor: '#DBDBDB',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   searchListItemText: {
     fontSize: 20,
-    maxWidth: "85%"
-  }
+    maxWidth: '85%',
+  },
 });
 
 export default EncyclopediaSearchComponent;

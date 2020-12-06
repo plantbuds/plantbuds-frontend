@@ -1,18 +1,17 @@
-import React, { useEffect, useRef, useState } from "react";
-import * as Notifications from "expo-notifications";
-import { registerForPushNotificationsAsync } from "../utils/Notifications";
-import { useSelector, useDispatch } from "react-redux";
+import React, {useEffect, useRef, useState} from 'react';
+import * as Notifications from 'expo-notifications';
+import {registerForPushNotificationsAsync} from '../utils/Notifications';
+import {useSelector, useDispatch} from 'react-redux';
 import {
   getAllPlants,
   getIndividualPlant,
-  createPlant,
   getMatchingPlants,
   setEditedPlant,
   setCreatedPlant,
-  setDeletedPlant
-} from "../../store/plantgroup/actions";
+  setDeletedPlant,
+} from '../../store/plantgroup/actions';
 
-import { Colors, FAB, Headline, Text, Searchbar } from "react-native-paper";
+import {Colors, FAB, Headline, Text, Searchbar} from 'react-native-paper';
 import {
   Button,
   StyleSheet,
@@ -25,10 +24,10 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Image,
-  KeyboardAvoidingView
-} from "react-native";
-import CreatePlantModal from "../components/CreatePlantModal";
-import { RootState } from "../../store/store";
+  KeyboardAvoidingView,
+} from 'react-native';
+import CreatePlantModal from '../components/CreatePlantModal';
+import {RootState} from '../../store/store';
 
 // declare types for your props here
 interface Props {
@@ -36,21 +35,33 @@ interface Props {
 }
 
 export default function HomeScreen(props: Props) {
-  // local state
+  const {navigation} = props;
+  const notificationListener = useRef(null);
 
-  const [searchQuery, setSearchQuery] = useState("");
+  // local state
+  const [searchQuery, setSearchQuery] = useState('');
+  const [submit, setSubmit] = useState(false);
   const [displayCreatePlantModal, setDisplayCreatePlantModal] = useState(false);
   const username = useSelector((state: RootState) => state.session.username);
   const userID = useSelector((state: RootState) => state.session.userID);
   const plants = useSelector((state: RootState) => state.plantgroup.plants);
   const plant_id = useSelector((state: RootState) => state.plantgroup.plant_id);
+  const editedPlant = useSelector((state: RootState) => state.plantgroup.editedPlant);
+  const createdPlant = useSelector((state: RootState) => state.plantgroup.createdPlant);
+  const deletedPlant = useSelector((state: RootState) => state.plantgroup.deletedPlant);
 
   const dispatch = useDispatch();
-  const onChangeSearch = (query: string) => setSearchQuery(query);
-  const { navigation } = props;
-  const notificationListener = useRef(null);
+  const onChangeSearch = (query: string) => {
+    if (query.length == 0) {
+      setSubmit(false);
+      dispatch(getAllPlants(username));
+    }
+    setSearchQuery(query);
+  };
 
   function queryTemporarySearch() {
+    setSubmit(true);
+    console.log("searching plants");
     dispatch(getMatchingPlants(searchQuery, username));
   }
 
@@ -61,33 +72,30 @@ export default function HomeScreen(props: Props) {
       await registerForPushNotificationsAsync();
 
       // Vibrate when receiving incoming notifications
-      notificationListener.current = Notifications.addNotificationReceivedListener(
-        notif => {
-          Vibration.vibrate();
-        }
-      );
+      notificationListener.current = Notifications.addNotificationReceivedListener(notif => {
+        Vibration.vibrate();
+      });
 
       dispatch(getAllPlants(username));
     })();
   }, []);
 
-  React.useEffect(() => {
-    dispatch(getAllPlants(username));
-  }, [plants.join(",")]);
+  useEffect(() => {
+    if (!submit) {
+      console.log("use effect that listens to changes to plants array")
+      dispatch(getAllPlants(username));
+    }
+  }, [JSON.stringify(plants)]);
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : null}
-      style={{ flex: 1 }}
-    >
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : null} style={{flex: 1}}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
-          {plants.length === 0 ?
+          {plants && plants.length === 0 ? (
             <Headline style={styles.noPlantsText}>
-              Oh no, you don't have any plants yet!
-              Tap the plus button below to get started.
+              Oh no, you don't have any plants yet! Tap the plus button below to get started.
             </Headline>
-            :
+          ) : (
             <Searchbar
               keyboardType="ascii-capable"
               style={styles.searchBar}
@@ -96,35 +104,35 @@ export default function HomeScreen(props: Props) {
               onSubmitEditing={() => queryTemporarySearch()}
               value={searchQuery}
             />
-          }
+          )}
           <FlatList
             numColumns={2}
             columnWrapperStyle={styles.displayWrapper}
-            keyExtractor={item => item.url.split("/")[5]}
+            keyExtractor={item => item.url.split('/')[5]}
             data={plants}
-            renderItem={({ item }) => (
+            renderItem={({item}) => (
               <TouchableHighlight
                 key={item.key}
                 activeOpacity={0.6}
                 underlayColor="#DDDDDD"
                 onPress={() => {
-                  let plantID = parseInt(item.url.split("/")[5]);
+                  let plantID = parseInt(item.url.split('/')[5]);
                   dispatch(getIndividualPlant(plantID));
-                  navigation.navigate("PlantProfile", {
-                    plantID: plantID
+                  navigation.navigate('PlantProfile', {
+                    plantID: plantID,
                   });
                 }}
               >
                 <View>
-                  <Image style={styles.item} source={{ uri: item.photo }} />
-                  <Text style={{ alignSelf: "center" }}>
+                  <Image style={styles.item} source={{uri: item.photo}} />
+                  <Text style={{alignSelf: 'center'}}>
                     {item.nickname && item.nickname.length > 19
-                      ? item.nickname.substring(0, 18) + "..."
+                      ? item.nickname.substring(0, 18) + '...'
                       : item.nickname}
                   </Text>
-                  <Text style={{ alignSelf: "center" }}>
-                    {item.plantname && item.plant_name.length > 19
-                      ? item.plant_name.substring(0, 18) + "..."
+                  <Text style={{alignSelf: 'center'}}>
+                    {item.plant_name && item.plant_name.length > 19
+                      ? item.plant_name.substring(0, 18) + '...'
                       : item.plant_name}
                   </Text>
                 </View>
@@ -151,20 +159,20 @@ export default function HomeScreen(props: Props) {
 }
 
 // use these values when doing width and height of components or containers to maintain consistent sizing across different iphone screens
-const windowWidth = Dimensions.get("window").width;
-const windowHeight = Dimensions.get("window").height;
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center"
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 
   fixToText: {
-    flexDirection: "row",
-    justifyContent: "space-between"
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 
   searchBar: {
@@ -175,32 +183,31 @@ const styles = StyleSheet.create({
     shadowOpacity: 0,
     marginTop: 20,
     width: windowWidth * 0.85,
-    height: windowHeight * 0.06
+    height: windowHeight * 0.06,
   },
-
   item: {
     width: 143,
     height: 142.93,
-    borderRadius: 30
+    borderRadius: 30,
   },
 
   displayWrapper: {
     width: windowWidth * 0.95,
     height: windowHeight * 0.31,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-around"
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-around',
   },
 
   fab: {
     backgroundColor: Colors.lightGreen900,
-    alignSelf: "flex-end",
+    alignSelf: 'flex-end',
     bottom: 30,
-    right: windowWidth * 0.1
+    right: windowWidth * 0.1,
   },
   noPlantsText: {
     width: windowWidth * 0.9,
-    textAlign: "center",
+    textAlign: 'center',
     paddingTop: 50,
-  }
+  },
 });
