@@ -16,7 +16,7 @@ import { Button, TextInput } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store/store";
-import { createPlant, setCreatedPlant } from "../../store/plantgroup/actions";
+import { createPlant, getAllPlants, setCreatedPlant } from "../../store/plantgroup/actions";
 import { State } from "react-native-gesture-handler";
 
 // declare types for your props here
@@ -34,6 +34,7 @@ export default function CreatePlantProfileModal(props: Props) {
   const [textNickname, setTextNickname] = useState("");
   const [textErr, setTextErr] = useState(false);
   const [textSciErr, setTextSciErr] = useState(false);
+  const username = useSelector((state: RootState) => state.session.username);
   const userID = useSelector((state: RootState) => state.session.userID);
   let plant_id = useSelector((state: RootState) => state.plantgroup.plant_id);
   const dispatch = useDispatch();
@@ -83,6 +84,7 @@ export default function CreatePlantProfileModal(props: Props) {
     setTextSciName("");
     setTextNickname("");
     setImage(defaultPhoto);
+    dispatch(getAllPlants(username));
     navigation.navigate("PlantProfile");
     setDisplayCreatePlantModal(false);
   }

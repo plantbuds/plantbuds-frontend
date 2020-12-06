@@ -2,7 +2,6 @@ import React, {useEffect, useState, useRef} from 'react';
 import {
   Platform,
   StyleSheet,
-  Text,
   View,
   Image,
   Dimensions,
@@ -11,14 +10,18 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   SafeAreaView,
-  TextInput as TextArea,
-} from 'react-native';
-import {Button, TextInput} from 'react-native-paper';
-import * as ImagePicker from 'expo-image-picker';
-import {useSelector, useDispatch} from 'react-redux';
-import DeletePlantModal from '../components/DeletePlantModal';
-import {RootState} from '../../store/store';
-import {deletePlant, getAllPlants, editPlantProfile} from '../../store/plantgroup/actions';
+  TextInput as TextArea
+} from "react-native";
+import { Text, Colors, IconButton, Button, TextInput } from "react-native-paper";
+import * as ImagePicker from "expo-image-picker";
+import { useSelector, useDispatch } from "react-redux";
+import DeletePlantModal from "../components/DeletePlantModal";
+import { RootState } from "../../store/store";
+import {
+  deletePlant,
+  getAllPlants,
+  editPlantProfile,
+} from "../../store/plantgroup/actions";
 
 // declare types for your props here
 interface Props {
@@ -80,45 +83,43 @@ export default function EditPlantProfileScreen(props: Props) {
       setTextErr(true);
       return;
     }
-    dispatch(
-      editPlantProfile(
-        plantID,
-        image ? image : photo,
-        textSciName ? textSciName : plant_name,
-        textNickname ? textNickname : nickname,
-        textNotes
+     dispatch(
+       editPlantProfile(
+         plantID,
+         image ? image : photo,
+         textSciName ? textSciName : plant_name,        
+         textNickname ? textNickname : nickname,
+         textNotes
+       )
+     );
+     setTextSciErr(false);
+     setTextErr(false);
+     setTextSciName("");
+     setTextNickname("");
+     dispatch(getAllPlants(username));
+     navigation.navigate("PlantProfile", {
+       plantID: plantID
+     });
+ }
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerBackTitle: "Cancel",
+      headerRight: () => (
+        <IconButton
+          icon="check-bold"
+          color={Colors.lightGreen900}
+          onPress={onSubmit}
+        />
       )
-    );
-    setTextSciErr(false);
-    setTextErr(false);
-    setTextSciName('');
-    setTextNickname('');
-    dispatch(getAllPlants(username));
-    navigation.navigate('PlantProfile', {
-      plantID: plantID,
     });
-  }
+  }, [navigation, textSciName, textNickname, image, textNotes]);
+
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : null} style={{flex: 1}}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
-          <View style={styles.row}>
-            <Button
-              labelStyle={styles.buttonStyle}
-              onPress={() =>
-                navigation.navigate('PlantProfile', {
-                  plantID: plantID,
-                })
-              }
-            >
-              <Text style={styles.textTitleLeft}>Cancel</Text>
-            </Button>
-            <Text style={styles.textTitle}>Edit Plant Profile</Text>
-            <Button labelStyle={styles.buttonStyle} onPress={onSubmit}>
-              <Text style={styles.textTitleRight}>Done</Text>
-            </Button>
-          </View>
           <View style={styles.containerPicture}>
             {(image && <Image style={styles.profilePicture} source={{uri: image}} />) ||
               (!image && <Image style={styles.profilePicture} source={{uri: photo}} />)}
@@ -228,9 +229,9 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   containerPicture: {
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    paddingTop: 10,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    //paddingTop: 10,
     //height: windowHeight * 0.29
     bottom: windowHeight * 0.45,
   },

@@ -2,14 +2,13 @@ import React, { useEffect, useState } from "react";
 import {
   Platform,
   StyleSheet,
-  Text,
   View,
   Image,
   Dimensions,
   PixelRatio,
   Switch
 } from "react-native";
-import { Button, TextInput } from "react-native-paper";
+import { Text, Colors, IconButton, Button, TextInput } from "react-native-paper";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store/store";
 import SetNotifTimeModal from "../components/SetNotifTimeModal";
@@ -71,21 +70,20 @@ export default function SettingsScreen(props: Props) {
     setShow(true);
   };
 
-  useEffect(() => {
-    console.log("updated profile useEffect hook");
-  }, [username, USDAZone, profilePic]);
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <IconButton
+          icon="pencil"
+          color={Colors.lightGreen900}
+          onPress={() => navigation.navigate("EditSettingsScreen")}
+        />
+      )
+    });
+  }, [navigation]);
 
   return (
     <View style={styles.container}>
-      <View style={styles.row}>
-        <Text style={styles.textTitle}></Text>
-        <Button
-          labelStyle={styles.buttonStyle}
-          onPress={() => navigation.navigate("EditSettingsScreen")}
-        >
-          <Text style={styles.editButtonStyle}>Edit</Text>
-        </Button>
-      </View>
       <View style={{ flexDirection: "row" }}>
         <View style={{ flexDirection: "column" }}>
           <View style={styles.containerPicture}>
