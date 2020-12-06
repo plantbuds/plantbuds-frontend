@@ -1,8 +1,8 @@
-import React from "react";
-import { View, StyleSheet, Text, Modal, Dimensions } from "react-native";
-import { Button } from "react-native-paper";
-import { useState } from "react";
-import { Picker } from "@react-native-picker/picker";
+import React from 'react';
+import {View, StyleSheet, Text, Modal, Dimensions} from 'react-native';
+import {Button} from 'react-native-paper';
+import {useState} from 'react';
+import {Picker} from '@react-native-picker/picker';
 
 interface Props {
   displayModal: boolean;
@@ -13,7 +13,7 @@ interface Props {
 }
 
 export default function SetFertilizeFreqModal(props: Props) {
-  const { displayModal, onExit, textFertFreq, setTextFertFreq, setShowModal } = props;
+  const {displayModal, onExit, textFertFreq, setTextFertFreq, setShowModal} = props;
   const [modalText, setModalText] = useState(textFertFreq);
 
   return (
@@ -31,13 +31,13 @@ export default function SetFertilizeFreqModal(props: Props) {
               Done
             </Button>
           </View>
-          <View style={{ alignItems: "center", justifyContent: "flex-start" }}>
+          <View style={{alignItems: 'center', justifyContent: 'flex-start'}}>
             <Picker
               selectedValue={modalText}
-              style={{ height: 40, width: 150, bottom: 50 }}
+              style={{height: 40, width: 150, bottom: 50}}
               onValueChange={(itemValue: string) => setModalText(itemValue)}
             >
-              <Picker.Item label="1 Day" value="1"/>
+              <Picker.Item label="1 Day" value="1" />
               <Picker.Item label="2 Days" value="2" />
               <Picker.Item label="3 Days" value="3" />
               <Picker.Item label="4 Days" value="4" />
@@ -54,16 +54,16 @@ export default function SetFertilizeFreqModal(props: Props) {
   );
 }
 
-const windowWidth = Dimensions.get("window").width;
-const windowHeight = Dimensions.get("window").height;
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
   // Specify the modal to appear from the bottom (dont change)
   bottomView: {
     flex: 1,
-    justifyContent: "flex-end",
-    alignItems: "center",
-    alignSelf: "center"
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    alignSelf: 'center',
   },
 
   // Specify the height, width, etc of the modal
@@ -74,16 +74,16 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
-    backgroundColor: "white",
-    shadowColor: "#000",
+    backgroundColor: 'white',
+    shadowColor: '#000',
 
     //temporary
     borderWidth: 1,
-    borderStyle: "solid"
+    borderStyle: 'solid',
   },
 
   header: {
-    flexDirection: "row",
-    justifyContent: "space-between"
-  }
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
 });

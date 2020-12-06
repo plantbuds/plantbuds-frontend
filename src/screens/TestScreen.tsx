@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { Button } from "react-native-paper";
+import React, {useEffect, useState} from 'react';
+import {StyleSheet, Text, View} from 'react-native';
+import {Button} from 'react-native-paper';
 
 // declare types for your props here
 interface Props {
@@ -8,7 +8,7 @@ interface Props {
 }
 
 export default function TestScreen(props: Props) {
-  const { navigation } = props;
+  const {navigation} = props;
 
   return (
     <View style={styles.container}>
@@ -29,17 +29,17 @@ export default function TestScreen(props: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center"
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   buttonText: {
-    color: "white"
+    color: 'white',
   },
   innerButton: {
-    padding: 10
+    padding: 10,
   },
   button: {
-    borderRadius: 50
-  }
+    borderRadius: 50,
+  },
 });

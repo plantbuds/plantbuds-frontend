@@ -12,7 +12,7 @@ import {
   SET_EDITED_ENTRY,
   RESET_PLANT_STATE,
   GET_MATCHING_PLANTS_SUCCESS,
-} from "./types";
+} from './types';
 
 const initialState: PlantGroupState = {
   editedPlant: false,
@@ -34,9 +34,9 @@ const initialState: PlantGroupState = {
   water_next_notif: null,
   repot_next_notif: null,
   fertilize_next_notif: null,
-  notes: "",
+  notes: '',
   encyclopedia: null,
-  user: null
+  user: null,
 };
 
 export function plantgroupReducer(
@@ -47,19 +47,19 @@ export function plantgroupReducer(
     case GET_ALL_PLANTS_SUCCESS:
       return {
         ...state,
-        plants: action.payload.data
+        plants: action.payload.data,
       };
-    case  GET_MATCHING_PLANTS_SUCCESS:
+    case GET_MATCHING_PLANTS_SUCCESS:
       return {
         ...state,
-        plants: action.payload.data
-      }
+        plants: action.payload.data,
+      };
     case GET_INDIVIDUAL_PLANT_SUCCESS:
       return {
         ...state,
         plant_name: action.payload.data.plant_name,
         nickname: action.payload.data.nickname,
-        plant_id: parseInt(action.payload.data.url.split("/")[5]),
+        plant_id: parseInt(action.payload.data.url.split('/')[5]),
         photo: action.payload.data.photo,
         history: action.payload.data.history,
         water_history: action.payload.data.water_history,
@@ -73,14 +73,14 @@ export function plantgroupReducer(
         fertilize_next_notif: action.payload.data.fertilize_next_notif,
         notes: action.payload.data.notes,
         encyclopedia: action.payload.data.encyclopedia,
-        user: action.payload.data.user
+        user: action.payload.data.user,
       };
     case CREATE_PLANT_SUCCESS:
       return {
         ...state,
         plant_name: action.payload.data.plant_name,
         nickname: action.payload.data.nickname,
-        plant_id: parseInt(action.payload.data.url.split("/")[5]),
+        plant_id: parseInt(action.payload.data.url.split('/')[5]),
         photo: action.payload.data.photo,
         history: action.payload.data.history,
         water_history: action.payload.data.water_history,
@@ -94,7 +94,7 @@ export function plantgroupReducer(
         fertilize_next_notif: action.payload.data.fertilize_next_notif,
         notes: action.payload.data.notes,
         encyclopedia: action.payload.data.encyclopedia,
-        user: action.payload.data.user
+        user: action.payload.data.user,
       };
     case EDIT_PLANT_SUCCESS:
       return {
@@ -103,27 +103,27 @@ export function plantgroupReducer(
         nickname: action.payload.nickname,
         photo: action.payload.imageURI,
         notes: action.payload.notes,
-        editedPlant: true
+        editedPlant: true,
       };
     case SET_EDITED_PLANT:
       return {
         ...state,
-        editedPlant: action.editedPlant
+        editedPlant: action.editedPlant,
       };
     case SET_CREATED_PLANT:
       return {
         ...state,
-        createdPlant: action.createdPlant
+        createdPlant: action.createdPlant,
       };
     case SET_DELETED_PLANT:
       return {
         ...state,
-        deletedPlant: action.deletedPlant
+        deletedPlant: action.deletedPlant,
       };
     case SET_EDITED_ENTRY:
       return {
         ...state,
-        editedEntry: action.editedEntry
+        editedEntry: action.editedEntry,
       };
     case DELETE_PLANT_SUCCESS:
       return {
@@ -144,14 +144,14 @@ export function plantgroupReducer(
         water_next_notif: null,
         repot_next_notif: null,
         fertilize_next_notif: null,
-        notes: "",
+        notes: '',
         encyclopedia: null,
-        deletedPlant: true
+        deletedPlant: true,
       };
     case RESET_PLANT_STATE:
       return {
         ...state,
-        deletedPlant: false, 
+        deletedPlant: false,
         editedPlant: false,
         createdPlant: false,
         plant_name: null,
@@ -168,8 +168,8 @@ export function plantgroupReducer(
         water_next_notif: null,
         repot_next_notif: null,
         fertilize_next_notif: null,
-        notes: "",
-        encyclopedia: null
+        notes: '',
+        encyclopedia: null,
       };
     default:
       return state;

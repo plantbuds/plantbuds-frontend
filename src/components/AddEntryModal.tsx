@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Modal, Dimensions } from "react-native";
+import React, {useEffect, useState} from 'react';
+import {View, Text, StyleSheet, Modal, Dimensions} from 'react-native';
 import {
   Button,
   ToggleButton,
@@ -7,10 +7,10 @@ import {
   Checkbox,
   Switch,
   IconButton,
-  Colors
-} from "react-native-paper";
-import { useDispatch } from "react-redux";
-import { setEditedEntry } from "../../store/plantgroup/actions";
+  Colors,
+} from 'react-native-paper';
+import {useDispatch} from 'react-redux';
+import {setEditedEntry} from '../../store/plantgroup/actions';
 
 interface Props {
   displayModal: boolean;
@@ -22,21 +22,15 @@ interface Props {
 }
 
 export default function AddEntryModal(props: Props) {
-  const {
-    displayModal,
-    onExit,
-    entries,
-    updateCalendarMarkings,
-    selectedDate
-  } = props;
+  const {displayModal, onExit, entries, updateCalendarMarkings, selectedDate} = props;
   const [waterStatus, setWaterStatus] = useState(false);
   const [repotStatus, setRepotStatus] = useState(false);
   const [fertilizeStatus, setFertilizeStatus] = useState(false);
   const dispatch = useDispatch();
 
   const getDate = () => {
-    const arr = new Date(selectedDate).toUTCString().split(" ");
-    return arr[0] + " " + arr[1] + " " + arr[2] + " " + arr[3];
+    const arr = new Date(selectedDate).toUTCString().split(' ');
+    return arr[0] + ' ' + arr[1] + ' ' + arr[2] + ' ' + arr[3];
   };
 
   useEffect(() => {
@@ -59,21 +53,19 @@ export default function AddEntryModal(props: Props) {
           <Button color={Colors.grey400} onPress={onExit}>
             Cancel
           </Button>
-          <Title style={{ color: Colors.grey500, textAlign: "center" }}>
-            Did you water, repot, or fertilize {"\n"} on {getDate()}?
+          <Title style={{color: Colors.grey500, textAlign: 'center'}}>
+            Did you water, repot, or fertilize {'\n'} on {getDate()}?
           </Title>
-          <Text style={{ color: Colors.grey500, textAlign: "center" }}>
-            Tap to edit.
-          </Text>
+          <Text style={{color: Colors.grey500, textAlign: 'center'}}>Tap to edit.</Text>
           <View
             style={{
-              flexDirection: "row",
+              flexDirection: 'row',
               margin: 20,
-              justifyContent: "center"
+              justifyContent: 'center',
             }}
           >
             <IconButton
-              icon={require("../../assets/water.png")}
+              icon={require('../../assets/water.png')}
               color={Colors.blue300}
               size={75}
               onPress={() => setWaterStatus(!waterStatus)}
@@ -81,13 +73,13 @@ export default function AddEntryModal(props: Props) {
                 waterStatus
                   ? {
                       borderColor: Colors.blue300,
-                      borderWidth: 2
+                      borderWidth: 2,
                     }
                   : {}
               }
             />
             <IconButton
-              icon={require("../../assets/repot.png")}
+              icon={require('../../assets/repot.png')}
               color={Colors.brown300}
               size={75}
               onPress={() => setRepotStatus(!repotStatus)}
@@ -95,13 +87,13 @@ export default function AddEntryModal(props: Props) {
                 repotStatus
                   ? {
                       borderColor: Colors.brown300,
-                      borderWidth: 2
+                      borderWidth: 2,
                     }
                   : {}
               }
             />
             <IconButton
-              icon={require("../../assets/fertilize.png")}
+              icon={require('../../assets/fertilize.png')}
               color={Colors.lightGreen300}
               size={75}
               onPress={() => setFertilizeStatus(!fertilizeStatus)}
@@ -109,7 +101,7 @@ export default function AddEntryModal(props: Props) {
                 fertilizeStatus
                   ? {
                       borderColor: Colors.lightGreen300,
-                      borderWidth: 2
+                      borderWidth: 2,
                     }
                   : {}
               }
@@ -119,17 +111,13 @@ export default function AddEntryModal(props: Props) {
             mode="contained"
             color={Colors.green400}
             onPress={() => {
-              if (
-                !waterStatus.valueOf() &&
-                !repotStatus.valueOf() &&
-                !fertilizeStatus.valueOf()
-              ) {
+              if (!waterStatus.valueOf() && !repotStatus.valueOf() && !fertilizeStatus.valueOf()) {
                 delete entries[selectedDate];
               } else {
                 entries[selectedDate] = [
                   waterStatus.valueOf(),
                   repotStatus.valueOf(),
-                  fertilizeStatus.valueOf()
+                  fertilizeStatus.valueOf(),
                 ];
               }
               updateCalendarMarkings();
@@ -138,7 +126,7 @@ export default function AddEntryModal(props: Props) {
             }}
             style={styles.roundToggle}
           >
-            <Text style={{ color: Colors.white }}>Save</Text>
+            <Text style={{color: Colors.white}}>Save</Text>
           </Button>
         </View>
       </View>
@@ -146,16 +134,16 @@ export default function AddEntryModal(props: Props) {
   );
 }
 
-const windowWidth = Dimensions.get("window").width;
-const windowHeight = Dimensions.get("window").height;
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
   // Specify the modal to appear from the bottom (dont change)
   bottomView: {
     flex: 1,
-    justifyContent: "flex-end",
-    alignItems: "center",
-    alignSelf: "center"
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    alignSelf: 'center',
   },
 
   // Specify the height, width, etc of the modal
@@ -166,17 +154,17 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
-    backgroundColor: "white",
+    backgroundColor: 'white',
 
     //temporary
     borderWidth: 1,
-    shadowColor: "#000"
+    shadowColor: '#000',
   },
   roundToggle: {
     borderRadius: 40,
     borderWidth: 2,
     padding: 4,
     margin: 30,
-    color: Colors.white
-  }
+    color: Colors.white,
+  },
 });

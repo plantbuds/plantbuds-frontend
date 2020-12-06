@@ -1,6 +1,6 @@
-import AsyncStorage from "@react-native-community/async-storage";
+import AsyncStorage from '@react-native-community/async-storage';
 
-const EXPOTOKEN = "@EXPOTOKEN";
+const EXPOTOKEN = '@EXPOTOKEN';
 
 export async function storeExpoToken(data) {
   try {

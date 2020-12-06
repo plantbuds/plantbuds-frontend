@@ -11,7 +11,7 @@ import {
   setDeletedPlant,
 } from '../../store/plantgroup/actions';
 
-import { Colors, FAB, Headline, Text, Searchbar } from "react-native-paper";
+import {Colors, FAB, Headline, Text, Searchbar} from 'react-native-paper';
 import {
   Button,
   StyleSheet,
@@ -24,10 +24,10 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Image,
-  KeyboardAvoidingView
-} from "react-native";
-import CreatePlantModal from "../components/CreatePlantModal";
-import { RootState } from "../../store/store";
+  KeyboardAvoidingView,
+} from 'react-native';
+import CreatePlantModal from '../components/CreatePlantModal';
+import {RootState} from '../../store/store';
 
 // declare types for your props here
 interface Props {
@@ -35,8 +35,7 @@ interface Props {
 }
 
 export default function HomeScreen(props: Props) {
-
-  const { navigation } = props;
+  const {navigation} = props;
   const notificationListener = useRef(null);
 
   // local state
@@ -57,7 +56,7 @@ export default function HomeScreen(props: Props) {
     }
     setSearchQuery(query);
   };
-  
+
   function queryTemporarySearch() {
     dispatch(getMatchingPlants(searchQuery, username));
   }
@@ -79,21 +78,17 @@ export default function HomeScreen(props: Props) {
 
   React.useEffect(() => {
     dispatch(getAllPlants(username));
-  }, [plants.join(",")]);
+  }, [JSON.stringify(plants)]);
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : null}
-      style={{ flex: 1 }}
-    >
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : null} style={{flex: 1}}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
-          {plants.length === 0 ?
+          {plants && plants.length === 0 ? (
             <Headline style={styles.noPlantsText}>
-              Oh no, you don't have any plants yet!
-              Tap the plus button below to get started.
+              Oh no, you don't have any plants yet! Tap the plus button below to get started.
             </Headline>
-            :
+          ) : (
             <Searchbar
               keyboardType="ascii-capable"
               style={styles.searchBar}
@@ -102,35 +97,35 @@ export default function HomeScreen(props: Props) {
               onSubmitEditing={() => queryTemporarySearch()}
               value={searchQuery}
             />
-          }
+          )}
           <FlatList
             numColumns={2}
             columnWrapperStyle={styles.displayWrapper}
-            keyExtractor={item => item.url.split("/")[5]}
+            keyExtractor={item => item.url.split('/')[5]}
             data={plants}
-            renderItem={({ item }) => (
+            renderItem={({item}) => (
               <TouchableHighlight
                 key={item.key}
                 activeOpacity={0.6}
                 underlayColor="#DDDDDD"
                 onPress={() => {
-                  let plantID = parseInt(item.url.split("/")[5]);
+                  let plantID = parseInt(item.url.split('/')[5]);
                   dispatch(getIndividualPlant(plantID));
-                  navigation.navigate("PlantProfile", {
-                    plantID: plantID
+                  navigation.navigate('PlantProfile', {
+                    plantID: plantID,
                   });
                 }}
               >
                 <View>
-                  <Image style={styles.item} source={{ uri: item.photo }} />
-                  <Text style={{ alignSelf: "center" }}>
+                  <Image style={styles.item} source={{uri: item.photo}} />
+                  <Text style={{alignSelf: 'center'}}>
                     {item.nickname && item.nickname.length > 19
-                      ? item.nickname.substring(0, 18) + "..."
+                      ? item.nickname.substring(0, 18) + '...'
                       : item.nickname}
                   </Text>
-                  <Text style={{ alignSelf: "center" }}>
+                  <Text style={{alignSelf: 'center'}}>
                     {item.plant_name && item.plant_name.length > 19
-                      ? item.plant_name.substring(0, 18) + "..."
+                      ? item.plant_name.substring(0, 18) + '...'
                       : item.plant_name}
                   </Text>
                 </View>
@@ -199,13 +194,13 @@ const styles = StyleSheet.create({
 
   fab: {
     backgroundColor: Colors.lightGreen900,
-    alignSelf: "flex-end",
+    alignSelf: 'flex-end',
     bottom: 30,
     right: windowWidth * 0.1,
   },
   noPlantsText: {
     width: windowWidth * 0.9,
-    textAlign: "center",
+    textAlign: 'center',
     paddingTop: 50,
-  }
+  },
 });

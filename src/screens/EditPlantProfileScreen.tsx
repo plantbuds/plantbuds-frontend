@@ -10,18 +10,14 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   SafeAreaView,
-  TextInput as TextArea
-} from "react-native";
-import { Text, Colors, IconButton, Button, TextInput } from "react-native-paper";
-import * as ImagePicker from "expo-image-picker";
-import { useSelector, useDispatch } from "react-redux";
-import DeletePlantModal from "../components/DeletePlantModal";
-import { RootState } from "../../store/store";
-import {
-  deletePlant,
-  getAllPlants,
-  editPlantProfile,
-} from "../../store/plantgroup/actions";
+  TextInput as TextArea,
+} from 'react-native';
+import {Text, Colors, IconButton, Button, TextInput} from 'react-native-paper';
+import * as ImagePicker from 'expo-image-picker';
+import {useSelector, useDispatch} from 'react-redux';
+import DeletePlantModal from '../components/DeletePlantModal';
+import {RootState} from '../../store/store';
+import {deletePlant, getAllPlants, editPlantProfile} from '../../store/plantgroup/actions';
 
 // declare types for your props here
 interface Props {
@@ -83,38 +79,33 @@ export default function EditPlantProfileScreen(props: Props) {
       setTextErr(true);
       return;
     }
-     dispatch(
-       editPlantProfile(
-         plantID,
-         image ? image : photo,
-         textSciName ? textSciName : plant_name,        
-         textNickname ? textNickname : nickname,
-         textNotes
-       )
-     );
-     setTextSciErr(false);
-     setTextErr(false);
-     setTextSciName("");
-     setTextNickname("");
-     dispatch(getAllPlants(username));
-     navigation.navigate("PlantProfile", {
-       plantID: plantID
-     });
- }
+    dispatch(
+      editPlantProfile(
+        plantID,
+        image ? image : photo,
+        textSciName ? textSciName : plant_name,
+        textNickname ? textNickname : nickname,
+        textNotes
+      )
+    );
+    setTextSciErr(false);
+    setTextErr(false);
+    setTextSciName('');
+    setTextNickname('');
+    dispatch(getAllPlants(username));
+    navigation.navigate('PlantProfile', {
+      plantID: plantID,
+    });
+  }
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      headerBackTitle: "Cancel",
+      headerBackTitle: 'Cancel',
       headerRight: () => (
-        <IconButton
-          icon="check-bold"
-          color={Colors.lightGreen900}
-          onPress={onSubmit}
-        />
-      )
+        <IconButton icon="check-bold" color={Colors.lightGreen900} onPress={onSubmit} />
+      ),
     });
   }, [navigation, textSciName, textNickname, image, textNotes]);
-
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : null} style={{flex: 1}}>
@@ -229,8 +220,8 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   containerPicture: {
-    backgroundColor: "#fff",
-    alignItems: "center",
+    backgroundColor: '#fff',
+    alignItems: 'center',
     //paddingTop: 10,
     //height: windowHeight * 0.29
     bottom: windowHeight * 0.45,
