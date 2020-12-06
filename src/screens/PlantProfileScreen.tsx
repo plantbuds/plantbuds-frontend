@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import {
   Platform,
   StyleSheet,
-  Text,
   ScrollView,
   View,
   Image,
@@ -13,7 +12,8 @@ import {
   PixelRatio,
   Switch
 } from "react-native";
-import { Button, TextInput } from "react-native-paper";
+import { Text, Colors, IconButton, Button, TextInput } from "react-native-paper";
+import { HeaderBackButton } from "@react-navigation/stack";
 import {
   updateTaskHistory,
   setEditedEntry,
@@ -266,26 +266,29 @@ export default function PlantProfileScreen(props: Props) {
     }
   }, [editedEntry]);
 
-  return (
-    <View style={styles.container}>
-      <View style={{ flexDirection: "row", alignSelf: "center" }}>
-        <Button
-          labelStyle={styles.buttonStyle}
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => (
+        <HeaderBackButton 
+          tintColor={Colors.lightGreen900}
           onPress={() => {
             navigation.navigate("Home");
             dispatch(resetPlantState());
           }}
-        >
-          <Text style={styles.homeButtonStyle}>Plant Home</Text>
-        </Button>
-        <Text style={styles.textTitle}></Text>
-        <Button
-          labelStyle={styles.buttonStyle}
+        />
+      ),
+      headerRight: () => (
+        <IconButton
+          icon="pencil"
+          color={Colors.lightGreen900}
           onPress={() => navigation.navigate("EditPlantProfile")}
-        >
-          <Text style={styles.editButtonStyle}>Edit</Text>
-        </Button>
-      </View>
+        />
+      )
+    });
+  }, [navigation]);
+
+  return (
+    <View style={styles.container}>
       <ScrollView>
         <View style={{ flexDirection: "row" }}>
           <View style={{ flexDirection: "column" }}>
@@ -583,7 +586,7 @@ const styles = StyleSheet.create({
     width: windowWidth * 0.32
   },
   contentStyle: {
-    backgroundColor: "white",
+    backgroundColor: Colors.grey300,
     height: windowHeight * 0.04
   },
   labelStyle: {
