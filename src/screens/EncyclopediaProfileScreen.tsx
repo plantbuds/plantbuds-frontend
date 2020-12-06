@@ -19,18 +19,32 @@ interface Props {
 
 export default function EncyclopediaProfileScreen(props: Props) {
   const { navigation, route } = props;
+  
   const defaultPlant = "http://i.imgur.com/4os1ZjY.png";
+  
   function parseStringArray(s: string[]) {
+    
     let parsedString = "";
+    
     if (s === null) return "Unknown";
+    
     for (let i = 0; i < s.length; i++) {
+      
       s[i] = s[i].replace(/'/g, "");
+      
       if (s[i] === "Unknown - Tell us") {
         parsedString += "Unknown\n";
-      } else if (s[i] === "Not Applicable") {
+      } 
+      else if (s[i] === "Not Applicable") {
         continue;
-      } else {
-        parsedString = parsedString + s[i] + "\n";
+      } 
+      else if (s[i] === "Average Water Needs") {
+        continue;
+      } 
+      else {
+        let stringCapitalized = s[i].charAt(0).toUpperCase() + s[i].slice(1);
+
+        parsedString = parsedString + "• " + stringCapitalized + "\n";
       }
     }
 

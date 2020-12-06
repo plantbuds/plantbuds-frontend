@@ -17,11 +17,9 @@ import {
   setUpdate
 } from "../../store/encyclopedia/actions";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../../store/session/actions";
 import { RootState } from "../../store/store";
 import { EncyclopediaState } from "../../store/encyclopedia/types";
 import { Button } from "react-native-paper";
-import { getIndividualPlant } from "../../store/plantgroup/actions";
 
 const deviceWidth = Dimensions.get("window").width;
 const deviceHeight = Dimensions.get("window").height;
