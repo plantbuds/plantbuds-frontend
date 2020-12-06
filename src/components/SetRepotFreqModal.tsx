@@ -12,6 +12,14 @@ interface Props {
   setShowModal: (val: boolean) => void;
 }
 
+// TODO make sure frontend can store date started for reminders
+// if user chooses only once, let user choose what time notif will occur that day 
+// use the history arrays stored in the backend to keep track of the dates
+// if user clears reminders clear the history array for that particualr reminder 
+// ISSUE TO ADDRESS: adding days that cause day date to go past 30/31. Make sure
+//                   it rolls over to a new month 
+// UI should be ready to go for demo though. Just need to adjust the plant profile UI. 
+
 export default function SetRepotFreqModal(props: Props) {
   const {displayModal, onExit, textRepFreq, setTextRepFreq, setShowModal} = props;
   const [modalText, setModalText] = useState(textRepFreq);
