@@ -16,7 +16,8 @@ import {
 import { Button, TextInput } from "react-native-paper";
 import {
   updateTaskHistory,
-  setEditedEntry
+  setEditedEntry,
+  resetPlantState
 } from "../../store/plantgroup/actions";
 import { RootState } from "../../store/store";
 import { useDispatch, useSelector } from "react-redux";
@@ -138,7 +139,6 @@ const greenBrown = {
 
 export default function PlantProfileScreen(props: Props) {
   const { navigation, route } = props;
-  const { plantID } = route.params;
   const [selectedDate, setSelectedDate] = useState(new Date().toDateString());
   const [markings, setMarkings] = useState({});
   const [waterStatus, setWaterStatus] = useState(false);
@@ -168,20 +168,26 @@ export default function PlantProfileScreen(props: Props) {
   const dispatch = useDispatch();
 
   const parseEntries = () => {
-    let history = []
+    let localHistory = [];
     for (const date in entries) {
+      // extract date
       let s = date + ":";
+
+      // extract boolean values
       for (let i = 0; i < 2; i++) {
         s += entries[date][i] + ",";
       }
       s += entries[date][2];
-      console.log(s);
-      history.push(s);
+
+      // push string that contains date and boolean values encoded in it to history array
+      localHistory.push(s);
     }
-    return history;
+
+    return localHistory;
   };
 
   const loadEntries = () => {
+    entries = {};
     if (history != null) {
       for (let i = 0; i < history.length; i++) {
         let booleanArr = [];
@@ -193,12 +199,15 @@ export default function PlantProfileScreen(props: Props) {
         for (let j = 0; j < 3; j++) {
           booleanArr.push(JSON.parse(booleanString.split(",")[j]));
         }
+
+        // pair the boolean array with the extracted date
         entries[history[i].split(":")[0]] = booleanArr;
       }
     } else {
       entries = {};
     }
   };
+
   const updateCalendarMarkings = () => {
     var markings = {};
     var selected = false;
@@ -228,8 +237,6 @@ export default function PlantProfileScreen(props: Props) {
         selected = true;
       }
       markings[date] = entry;
-      console.log("entry: ");
-      console.log(entry);
     }
     if (!selected) {
       markings[selectedDate] = {
@@ -244,7 +251,7 @@ export default function PlantProfileScreen(props: Props) {
   useEffect(() => {
     loadEntries();
     updateCalendarMarkings();
-  }, [plant_id]);
+  }, [plant_id, JSON.stringify(history)]);
 
   // Listener for updating calendar markings *note this hook will run every time since we are creating a new Date object
   useEffect(() => {
@@ -254,7 +261,7 @@ export default function PlantProfileScreen(props: Props) {
   useEffect(() => {
     if (editedEntry) {
       let history = parseEntries();
-      dispatch(updateTaskHistory(history, plant_id))
+      dispatch(updateTaskHistory(history, plant_id));
       dispatch(setEditedEntry(false));
     }
   }, [editedEntry]);
@@ -264,7 +271,10 @@ export default function PlantProfileScreen(props: Props) {
       <View style={{ flexDirection: "row", alignSelf: "center" }}>
         <Button
           labelStyle={styles.buttonStyle}
-          onPress={() => navigation.navigate("Home")}
+          onPress={() => {
+            navigation.navigate("Home");
+            dispatch(resetPlantState());
+          }}
         >
           <Text style={styles.homeButtonStyle}>Plant Home</Text>
         </Button>
@@ -294,16 +304,15 @@ export default function PlantProfileScreen(props: Props) {
                 ? nickname.length > 13
                   ? nickname.substring(0, 12) + "..."
                   : nickname
-                : "Nickname"}
+                : "My Plant"}
             </Text>
             <Text style={styles.scientificZoneStyle}>
               {plant_name
-                ? plant_name.length > 13
-                  ? plant_name.substring(0, 12) + "..."
+                ? plant_name.length > 20
+                  ? plant_name.substring(0, 19) + "..."
                   : plant_name
                 : "Scientific Plant Name"}
             </Text>
-            {/*<Text style={styles.scientificZoneStyle}>Zone: #</Text>*/}
           </View>
         </View>
 
@@ -332,7 +341,7 @@ export default function PlantProfileScreen(props: Props) {
             style={styles.freqButton}
             onPress={() => setShowWaterModal(true)}
           >
-            {"Every " + (textWatFreq ? textWatFreq : "0") + " Days"}
+            {"Every " + (textWatFreq ? textWatFreq : "1") + " Days"}
           </Button>
         </View>
         <View style={styles.smallerPhoneStyling}>
@@ -349,7 +358,7 @@ export default function PlantProfileScreen(props: Props) {
             style={styles.freqButton}
             onPress={() => setShowRepotModal(true)}
           >
-            {"Every " + (textRepFreq ? textRepFreq : "0") + " Days"}
+            {"Every " + (textRepFreq ? textRepFreq : "1") + " Days"}
           </Button>
         </View>
         <View style={styles.smallerPhoneStyling}>
@@ -366,7 +375,7 @@ export default function PlantProfileScreen(props: Props) {
             style={styles.freqButton}
             onPress={() => setShowFertilizeModal(true)}
           >
-            {"Every " + (textFertFreq ? textFertFreq : "0") + " Days"}
+            {"Every " + (textFertFreq ? textFertFreq : "1") + " Days"}
           </Button>
         </View>
 
@@ -578,6 +587,7 @@ const styles = StyleSheet.create({
     height: windowHeight * 0.04
   },
   labelStyle: {
-    fontSize: 9
+    fontSize: 9,
+    color: "black"
   }
 });

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Modal, Dimensions } from "react-native";
 import {
   Button,
@@ -39,15 +39,28 @@ export default function AddEntryModal(props: Props) {
     return arr[0] + " " + arr[1] + " " + arr[2] + " " + arr[3];
   };
 
-  // TODO: need to reset button status after saving
+  useEffect(() => {
+    let arr = entries[selectedDate];
+    if (arr) {
+      setWaterStatus(entries[selectedDate][0]);
+      setRepotStatus(entries[selectedDate][1]);
+      setFertilizeStatus(entries[selectedDate][2]);
+    } else {
+      setWaterStatus(false);
+      setFertilizeStatus(false);
+      setRepotStatus(false);
+    }
+  }, [displayModal]);
 
   return (
     <Modal animationType="slide" transparent={true} visible={displayModal}>
       <View style={styles.bottomView}>
         <View style={styles.modalView}>
-          <Button color={Colors.grey400} onPress={onExit}>Cancel</Button>
+          <Button color={Colors.grey400} onPress={onExit}>
+            Cancel
+          </Button>
           <Title style={{ color: Colors.grey500, textAlign: "center" }}>
-            Did you water, repot, or fertilize {'\n'} on {getDate()}?
+            Did you water, repot, or fertilize {"\n"} on {getDate()}?
           </Title>
           <Text style={{ color: Colors.grey500, textAlign: "center" }}>
             Tap to edit.
@@ -60,34 +73,46 @@ export default function AddEntryModal(props: Props) {
             }}
           >
             <IconButton
-              icon={require('../../assets/water.png')}
+              icon={require("../../assets/water.png")}
               color={Colors.blue300}
               size={75}
               onPress={() => setWaterStatus(!waterStatus)}
-              style={waterStatus ? {
-                borderColor: Colors.blue300,
-                borderWidth: 2
-              } : {}}
+              style={
+                waterStatus
+                  ? {
+                      borderColor: Colors.blue300,
+                      borderWidth: 2
+                    }
+                  : {}
+              }
             />
             <IconButton
-              icon={require('../../assets/repot.png')}
+              icon={require("../../assets/repot.png")}
               color={Colors.brown300}
               size={75}
               onPress={() => setRepotStatus(!repotStatus)}
-              style={repotStatus ? {
-                borderColor: Colors.brown300,
-                borderWidth: 2
-              } : {}}
+              style={
+                repotStatus
+                  ? {
+                      borderColor: Colors.brown300,
+                      borderWidth: 2
+                    }
+                  : {}
+              }
             />
             <IconButton
-              icon={require('../../assets/fertilize.png')}
+              icon={require("../../assets/fertilize.png")}
               color={Colors.lightGreen300}
               size={75}
               onPress={() => setFertilizeStatus(!fertilizeStatus)}
-              style={fertilizeStatus ? {
-                borderColor: Colors.lightGreen300,
-                borderWidth: 2
-              } : {}}
+              style={
+                fertilizeStatus
+                  ? {
+                      borderColor: Colors.lightGreen300,
+                      borderWidth: 2
+                    }
+                  : {}
+              }
             />
           </View>
           <Button
@@ -108,15 +133,12 @@ export default function AddEntryModal(props: Props) {
                 ];
               }
               updateCalendarMarkings();
-              setWaterStatus(false);
-              setFertilizeStatus(false);
-              setRepotStatus(false);
               dispatch(setEditedEntry(true));
               onExit();
             }}
             style={styles.roundToggle}
           >
-            <Text style={{color: Colors.white}}>Save</Text>
+            <Text style={{ color: Colors.white }}>Save</Text>
           </Button>
         </View>
       </View>
@@ -156,5 +178,5 @@ const styles = StyleSheet.create({
     padding: 4,
     margin: 30,
     color: Colors.white
-  },
+  }
 });

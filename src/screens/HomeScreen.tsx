@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   getAllPlants,
   getIndividualPlant,
-  createPlant,
+  getMatchingPlants,
   setEditedPlant,
   setCreatedPlant,
   setDeletedPlant
@@ -64,6 +64,9 @@ export default function HomeScreen(props: Props) {
 
   const dispatch = useDispatch();
   const onChangeSearch = (query: string) => setSearchQuery(query);
+  function queryTemporarySearch() {
+    dispatch(getMatchingPlants(searchQuery, username));
+  }
 
   // Use Effect for initial mounting of application
   useEffect(() => {
@@ -75,7 +78,6 @@ export default function HomeScreen(props: Props) {
       notificationListener.current = Notifications.addNotificationReceivedListener(
         notif => {
           Vibration.vibrate();
-          console.log(notif);
         }
       );
 
@@ -85,7 +87,6 @@ export default function HomeScreen(props: Props) {
 
   // Listening for updates to plants array
   useEffect(() => {
-    console.log("use effect with dp array in homescreen");
     if (createdPlant || editedPlant || deletedPlant) {
       dispatch(getAllPlants(username));
     }
@@ -93,13 +94,12 @@ export default function HomeScreen(props: Props) {
     dispatch(setEditedPlant(false));
     dispatch(setCreatedPlant(false));
     dispatch(setDeletedPlant(false));
-  }, [createdPlant, editedPlant, deletedPlant]);
-
+  }, [createdPlant, editedPlant, deletedPlant, displayCreatePlantModal]);
 
   const { navigation } = props;
   const notificationListener = useRef(null);
 
-  if (plants.length === 0) {
+  if (plants && plants.length === 0) {
     return (
       <View style={styles.container}>
         <Text style={styles.noPlantsText}>
@@ -110,7 +110,6 @@ export default function HomeScreen(props: Props) {
           color="white"
           icon="plus"
           onPress={() => {
-            dispatch(createPlant(userID));
             setDisplayCreatePlantModal(true);
           }}
         />
@@ -131,10 +130,12 @@ export default function HomeScreen(props: Props) {
           <View style={styles.container}>
             <Searchbar
               theme={theme}
+              keyboardType="ascii-capable"
               inputStyle={styles.searchBarInput}
               style={styles.searchBar}
               placeholder="Search my plants"
               onChangeText={onChangeSearch}
+              onSubmitEditing={() => queryTemporarySearch()}
               value={searchQuery}
             />
 
@@ -150,25 +151,20 @@ export default function HomeScreen(props: Props) {
                   underlayColor="#DDDDDD"
                   onPress={() => {
                     let plantID = parseInt(item.url.split("/")[5]);
-                    console.log(
-                      "calling get individual plant from home screen"
-                    );
                     dispatch(getIndividualPlant(plantID));
-                    navigation.navigate("PlantProfile", {
-                      plantID: plantID
-                    });
+                    navigation.navigate("PlantProfile");
                   }}
                 >
                   <View>
                     <Image style={styles.item} source={{ uri: item.photo }} />
                     <Text style={{ alignSelf: "center" }}>
-                      {item.nickname && item.nickname.length > 19
-                        ? item.nickname.substring(0, 18) + "..."
+                      {item.nickname && item.nickname.length > 17
+                        ? item.nickname.substring(0, 16) + "..."
                         : item.nickname}
                     </Text>
                     <Text style={{ alignSelf: "center" }}>
-                      {item.plantname && item.plant_name.length > 19
-                        ? item.plant_name.substring(0, 18) + "..."
+                      {item.plant_name && item.plant_name.length > 17
+                        ? item.plant_name.substring(0, 16) + "..."
                         : item.plant_name}
                     </Text>
                     <Text style={{ alignSelf: "center" }}>
@@ -183,7 +179,6 @@ export default function HomeScreen(props: Props) {
               color="white"
               icon="plus"
               onPress={() => {
-                dispatch(createPlant(userID));
                 setDisplayCreatePlantModal(true);
               }}
             />
@@ -259,7 +254,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#CBE4B1",
     alignSelf: "flex-end",
     right: windowWidth * 0.1,
-    top: windowHeight * 0.3
+    top: windowHeight * 0.32
   },
   noPlantsText: {
     width: windowWidth * 0.9,

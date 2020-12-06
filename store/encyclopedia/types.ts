@@ -10,16 +10,21 @@ export interface EncyclopediaState {
     genus: string, 
     species: string,
     where_to_grow: string[],
-    img: string
+    img: string,
+    updatedList: boolean
 };
 
 export const GET_MATCHING_ENTRIES = "GET_MATCHING_ENTRIES";
 export const GET_MATCHING_ENTRIES_SUCCESS = "GET_MATCHING_ENTRIES_SUCCESS";
-export const GET_MATCHING_ENTRIES_FAIL = "GET_MATCHING_ENTRIES_FAIL"; 
+export const GET_MATCHING_ENTRIES_FAIL = "GET_MATCHING_ENTRIES_FAIL";
+export const SET_UPDATE_SUCCESS = "SET_UPDATE_SUCCESS";
 
-interface GetMatchingEntriesSuccessAction {
+export interface GetMatchingEntriesSuccessAction {
     type: typeof GET_MATCHING_ENTRIES_SUCCESS;
     payload: any;
   }
-
-export type EncyclopediaActionTypes = | GetMatchingEntriesSuccessAction
+interface SetUpdateSuccessAction {
+    type: typeof SET_UPDATE_SUCCESS;
+    updatedList: boolean
+}
+export type EncyclopediaActionTypes = | GetMatchingEntriesSuccessAction | SetUpdateSuccessAction;
