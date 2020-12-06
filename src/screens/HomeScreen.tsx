@@ -40,6 +40,7 @@ export default function HomeScreen(props: Props) {
 
   // local state
   const [searchQuery, setSearchQuery] = useState('');
+  const [submit, setSubmit] = useState(false);
   const [displayCreatePlantModal, setDisplayCreatePlantModal] = useState(false);
   const username = useSelector((state: RootState) => state.session.username);
   const userID = useSelector((state: RootState) => state.session.userID);
@@ -52,12 +53,15 @@ export default function HomeScreen(props: Props) {
   const dispatch = useDispatch();
   const onChangeSearch = (query: string) => {
     if (query.length == 0) {
+      setSubmit(false);
       dispatch(getAllPlants(username));
     }
     setSearchQuery(query);
   };
 
   function queryTemporarySearch() {
+    setSubmit(true);
+    console.log("searching plants");
     dispatch(getMatchingPlants(searchQuery, username));
   }
 
@@ -76,8 +80,11 @@ export default function HomeScreen(props: Props) {
     })();
   }, []);
 
-  React.useEffect(() => {
-    dispatch(getAllPlants(username));
+  useEffect(() => {
+    if (!submit) {
+      console.log("use effect that listens to changes to plants array")
+      dispatch(getAllPlants(username));
+    }
   }, [JSON.stringify(plants)]);
 
   return (

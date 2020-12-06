@@ -22,7 +22,6 @@ const OnboardingNavigator = () => {
   return (
     <Onboarding.Navigator headerMode="none">
       <Onboarding.Screen name="Landing" component={LandingScreen} />
-      <Onboarding.Screen name="Home" component={HomeScreen} />
     </Onboarding.Navigator>
   );
 };

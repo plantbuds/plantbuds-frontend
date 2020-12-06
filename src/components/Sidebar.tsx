@@ -1,10 +1,12 @@
 import React from 'react';
+import { NavigationActions } from '@react-navigation/';
 import {DrawerContentScrollView, DrawerItemList, DrawerItem} from '@react-navigation/drawer';
 import {Colors} from 'react-native-paper';
 import {Dimensions, StyleSheet} from 'react-native';
 import {useDispatch} from 'react-redux';
 import {logoutUser} from '../../store/session/actions';
 // declare types for your props here
+
 
 export default function Sidebar(props: any) {
   const dispatch = useDispatch();
@@ -17,6 +19,7 @@ export default function Sidebar(props: any) {
         label="Sign Out"
         onPress={() => {
           dispatch(logoutUser());
+          
         }}
       />
     </DrawerContentScrollView>
