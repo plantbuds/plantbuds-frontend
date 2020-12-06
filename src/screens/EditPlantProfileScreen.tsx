@@ -12,7 +12,7 @@ import {
   SafeAreaView,
   TextInput as TextArea,
 } from 'react-native';
-import {Text, Colors, IconButton, Button, TextInput} from 'react-native-paper';
+import {Text, Colors, IconButton, Button, TextInput, Portal} from 'react-native-paper';
 import * as ImagePicker from 'expo-image-picker';
 import {useSelector, useDispatch} from 'react-redux';
 import DeletePlantModal from '../components/DeletePlantModal';
@@ -108,6 +108,7 @@ export default function EditPlantProfileScreen(props: Props) {
   }, [navigation, textSciName, textNickname, image, textNotes]);
 
   return (
+    <Portal.Host>
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : null} style={{flex: 1}}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
@@ -206,6 +207,7 @@ export default function EditPlantProfileScreen(props: Props) {
         </View>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
+    </Portal.Host>
   );
 }
 const windowWidth = Dimensions.get('window').width;
