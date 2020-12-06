@@ -5,8 +5,8 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   EDIT_NOTIF_TIME_SUCCESS,
-  EDIT_USER_SUCCESS
-} from "./types";
+  EDIT_USER_SUCCESS,
+} from './types';
 
 const initialState: SessionState = {
   loggedIn: false,
@@ -18,13 +18,10 @@ const initialState: SessionState = {
   receive_water_notif: null,
   receive_repot_notif: null,
   receive_fertilizing_notif: null,
-  notif_time: null
+  notif_time: null,
 };
 
-export function sessionReducer(
-  state = initialState,
-  action: SessionActionTypes
-): SessionState {
+export function sessionReducer(state = initialState, action: SessionActionTypes): SessionState {
   switch (action.type) {
     case LOGIN_SUCCESS:
       return {
@@ -37,14 +34,13 @@ export function sessionReducer(
         USDA_zone: action.payload.data.USDA_zone,
         receive_water_notif: action.payload.data.receive_water_notif,
         receive_repot_notif: action.payload.data.receive_water_notif,
-        receive_fertilizing_notif:
-          action.payload.data.receive_fertilizing_notif,
-        notif_time: action.payload.data.notif_time
+        receive_fertilizing_notif: action.payload.data.receive_fertilizing_notif,
+        notif_time: action.payload.data.notif_time,
       };
     case LOGIN_FAIL:
       return {
         ...state,
-        loggedIn: false
+        loggedIn: false,
       };
     case LOGOUT:
       return {
@@ -58,20 +54,19 @@ export function sessionReducer(
         notif_time: null,
         receive_fertilizing_notif: null,
         receive_water_notif: null,
-        receive_repot_notif: null
+        receive_repot_notif: null,
       };
     case EDIT_USER_SUCCESS:
-
       return {
         ...state,
         username: action.payload.username,
         USDA_zone: action.payload.zone,
-        profileURI: action.payload.imageURI
+        profileURI: action.payload.imageURI,
       };
     case EDIT_NOTIF_TIME_SUCCESS:
       return {
         ...state,
-        notif_time: action.time
+        notif_time: action.time,
       };
     default:
       return state;

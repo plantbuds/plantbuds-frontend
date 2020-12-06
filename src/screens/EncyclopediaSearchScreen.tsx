@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { Animated, SafeAreaView, StatusBar } from "react-native";
-import { Button } from "react-native-paper";
-import SearchBar from "../components/EncyclopediaSearchBar";
-import EncyclopediaSearchComponent from "../components/EncyclopediaSearchBar";
+import React, {useEffect, useState} from 'react';
+import {StyleSheet, Text, View} from 'react-native';
+import {Animated, SafeAreaView, StatusBar} from 'react-native';
+import {Button} from 'react-native-paper';
+import SearchBar from '../components/EncyclopediaSearchBar';
+import EncyclopediaSearchComponent from '../components/EncyclopediaSearchBar';
 
 // declare types for your props here
 interface Props {
@@ -11,15 +11,15 @@ interface Props {
 }
 
 export default function EncyclopediaSearchScreen(props: Props) {
-  const { navigation } = props;
+  const {navigation} = props;
   const [scrollYValue, setScrollYValue] = useState(new Animated.Value(0));
-  const [searchedTerm, setSearchedTerm] = useState("");
+  const [searchedTerm, setSearchedTerm] = useState('');
   const clampedScroll = Animated.diffClamp(
     Animated.add(
       scrollYValue.interpolate({
         inputRange: [0, 1],
         outputRange: [0, 1],
-        extrapolateLeft: "clamp"
+        extrapolateLeft: 'clamp',
       }),
       new Animated.Value(0)
     ),
@@ -42,17 +42,17 @@ export default function EncyclopediaSearchScreen(props: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center"
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   buttonText: {
-    color: "white"
+    color: 'white',
   },
   innerButton: {
-    padding: 10
+    padding: 10,
   },
   button: {
-    borderRadius: 50
-  }
+    borderRadius: 50,
+  },
 });

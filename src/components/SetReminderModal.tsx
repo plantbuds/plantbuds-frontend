@@ -1,9 +1,8 @@
-import React from "react";
-import { View, StyleSheet, Text, Modal, Dimensions } from "react-native";
-import { Button } from "react-native-paper";
-import { Calendar as ReactCalendar } from "react-native-calendars";
-import { useState } from "react";
-
+import React from 'react';
+import {View, StyleSheet, Text, Modal, Dimensions} from 'react-native';
+import {Button} from 'react-native-paper';
+import {Calendar as ReactCalendar} from 'react-native-calendars';
+import {useState} from 'react';
 
 interface Props {
   displayModal: boolean;
@@ -12,9 +11,9 @@ interface Props {
 }
 
 export default function SetReminderModal(props: Props) {
-  const { displayModal, onExit } = props;
+  const {displayModal, onExit} = props;
 
-const [selectedDate, setSelectedDate] = useState("");
+  const [selectedDate, setSelectedDate] = useState('');
 
   return (
     <Modal animationType="slide" transparent={true} visible={displayModal}>
@@ -22,9 +21,11 @@ const [selectedDate, setSelectedDate] = useState("");
         <View style={styles.modalView}>
           <Button onPress={onExit}>Done</Button>
           <ReactCalendar
-            onDayPress={(day) => setSelectedDate(day.dateString)}
+            onDayPress={day => setSelectedDate(day.dateString)}
             current={new Date().toISOString().split('T')[0]}
-            markedDates={{[selectedDate]: {selected: true, marked: false, selectedColor: '#00adf5'}}}
+            markedDates={{
+              [selectedDate]: {selected: true, marked: false, selectedColor: '#00adf5'},
+            }}
             theme={{
               backgroundColor: '#ffffff',
               calendarBackground: '#ffffff',
@@ -41,16 +42,16 @@ const [selectedDate, setSelectedDate] = useState("");
   );
 }
 
-const windowWidth = Dimensions.get("window").width;
-const windowHeight = Dimensions.get("window").height;
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
   // Specify the modal to appear from the bottom (dont change)
   bottomView: {
     flex: 1,
-    justifyContent: "flex-end",
-    alignItems: "center",
-    alignSelf: "center"
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    alignSelf: 'center',
   },
 
   // Specify the height, width, etc of the modal
@@ -61,11 +62,11 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
-    backgroundColor: "white",
-    shadowColor: "#000",
+    backgroundColor: 'white',
+    shadowColor: '#000',
 
     //temporary
     borderWidth: 1,
-    borderStyle: "solid"
-  }
+    borderStyle: 'solid',
+  },
 });
