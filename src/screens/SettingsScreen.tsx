@@ -47,12 +47,14 @@ export default function SettingsScreen(props: Props) {
   const dispatch = useDispatch();
   const [waterNotif, setWaterNotif] = useState(receive_water_notif);
   const [repotNotif, setRepotNotif] = useState(receive_repot_notif);
-  const [fertilizeNotif, setFertilizeNotif] = useState(receive_fertilizing_notif);
+  const [fertilizeNotif, setFertilizeNotif] = useState(
+    receive_fertilizing_notif
+  );
   const [show, setShow] = useState(false);
 
   const toggleWater = () => {
     setWaterNotif(previousState => !previousState);
-    
+
     // previous state has not gone through yet, so need to manually flip boolean
     dispatch(editWaterNotif(!waterNotif, userID));
   };
@@ -156,7 +158,11 @@ export default function SettingsScreen(props: Props) {
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
         <Text style={styles.optionsStyle}>Notification Delivery</Text>
         <View style={styles.notifStyle}>
-          <Text>{notif_time ? new Date(notif_time).toISOString().split("T")[1] : "N/A"}</Text>
+          <Text>
+            {notif_time
+              ? new Date(notif_time).toISOString().split("T")[1]
+              : "N/A"}
+          </Text>
         </View>
       </View>
       <Button onPress={showTimepicker}>Select a notification time</Button>

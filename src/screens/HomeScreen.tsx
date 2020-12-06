@@ -6,6 +6,10 @@ import {
   getAllPlants,
   getIndividualPlant,
   createPlant,
+  getMatchingPlants,
+  setEditedPlant,
+  setCreatedPlant,
+  setDeletedPlant
 } from "../../store/plantgroup/actions";
 
 import { Colors, FAB, Headline, Text, Searchbar } from "react-native-paper";
@@ -46,6 +50,10 @@ export default function HomeScreen(props: Props) {
   const { navigation } = props;
   const notificationListener = useRef(null);
 
+  function queryTemporarySearch() {
+    dispatch(getMatchingPlants(searchQuery, username));
+  }
+
   // Use Effect for initial mounting of application
   useEffect(() => {
     (async () => {
@@ -56,7 +64,6 @@ export default function HomeScreen(props: Props) {
       notificationListener.current = Notifications.addNotificationReceivedListener(
         notif => {
           Vibration.vibrate();
-          console.log(notif);
         }
       );
 
@@ -82,9 +89,11 @@ export default function HomeScreen(props: Props) {
             </Headline>
             :
             <Searchbar
+              keyboardType="ascii-capable"
               style={styles.searchBar}
               placeholder="Search my plants"
               onChangeText={onChangeSearch}
+              onSubmitEditing={() => queryTemporarySearch()}
               value={searchQuery}
             />
           }
@@ -127,7 +136,6 @@ export default function HomeScreen(props: Props) {
             color="white"
             icon="plus"
             onPress={() => {
-              dispatch(createPlant(userID));
               setDisplayCreatePlantModal(true);
             }}
           />
@@ -190,7 +198,6 @@ const styles = StyleSheet.create({
     bottom: 30,
     right: windowWidth * 0.1
   },
-
   noPlantsText: {
     width: windowWidth * 0.9,
     textAlign: "center",

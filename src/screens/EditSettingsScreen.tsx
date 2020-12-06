@@ -9,18 +9,15 @@ import {
   Keyboard,
   GestureResponderEvent,
   KeyboardAvoidingView,
-  PixelRatio
+  PixelRatio,
+  PushNotificationIOS
 } from "react-native";
 import { Text, IconButton, Colors, Button, TextInput } from "react-native-paper";
 import SetZoneModal from "../components/SetZoneModal";
 import * as ImagePicker from "expo-image-picker";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store/store";
-import {
-  editProfilePic,
-  editUsername,
-  editZone
-} from "../../store/session/actions";
+import { editUserProfile } from "../../store/session/actions";
 
 // declare types for your props here
 interface Props {
@@ -48,7 +45,6 @@ export default function EditSettingsScreen(props: Props) {
   const [textName, setTextName] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [textErr, setTextErr] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -74,11 +70,27 @@ export default function EditSettingsScreen(props: Props) {
       aspect: [4, 3],
       quality: 1
     });
-    console.log(result);
     if (!result.cancelled) {
       setImage(result.uri);
     }
   };
+
+  function onSubmit() {
+    if (textName && textName.length < 3) {
+      setTextErr(true);
+      return;
+    }
+    dispatch(
+      editUserProfile(
+        textName ? textName : username,
+        textZone,
+        image ? image : profilePic,
+        userID
+      )
+    );
+    setTextErr(false);
+    navigation.goBack();
+  }
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -87,25 +99,7 @@ export default function EditSettingsScreen(props: Props) {
         <IconButton
           icon="check-bold"
           color={Colors.lightGreen900}
-          onPress={() => {
-            if (textName) {
-              if (textName.length < 3) {
-                setTextErr(true);
-                return;
-              }
-              dispatch(editUsername(textName, userID));
-            }
-            if (textZone) {
-              dispatch(editZone(textZone, userID));
-            }
-
-            if (image) {
-              dispatch(editProfilePic(image, userID));
-            }
-            if (!textErr) {
-              navigation.goBack();
-            }
-          }}
+          onPress={onSubmit}
         />
       )
     });
@@ -151,7 +145,7 @@ export default function EditSettingsScreen(props: Props) {
               </View>
               <View style={{ flex: 2 }}>
                 <TextInput
-                  keyboardType='ascii-capable' 
+                  keyboardType="ascii-capable"
                   mode="flat"
                   maxLength={13}
                   theme={theme}
@@ -314,6 +308,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.grey300
   },
   labelStyle: {
+    color: "black",
     fontSize: 12
   }
 });
