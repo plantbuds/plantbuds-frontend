@@ -12,17 +12,16 @@ import {
   PixelRatio,
   Switch,
 } from 'react-native';
-import {Text, Colors, IconButton, Button, TextInput} from 'react-native-paper';
+import {Text, Colors, IconButton, Button, FAB} from 'react-native-paper';
 import {HeaderBackButton} from '@react-navigation/stack';
 import {updateTaskHistory, setEditedEntry, resetPlantState} from '../../store/plantgroup/actions';
 import {RootState} from '../../store/store';
 import {useDispatch, useSelector} from 'react-redux';
-import SetReminderModal from '../components/SetReminderModal';
+import SetWaterReminderModal from '../components/SetWaterReminderModal';
+import SetRepotReminderModal from '../components/SetRepotReminderModal';
+import SetFertilizeReminderModal from '../components/SetFertilizeReminderModal';
 import AddEntryModal from '../components/AddEntryModal';
 import {Calendar as ReactCalendar} from 'react-native-calendars';
-import SetWaterFreqModal from '../components/SetWaterFreqModal';
-import SetRepotFreqModal from '../components/SetRepotFreqModal';
-import SetFertilizeFreqModal from '../components/SetFertilizeFreqModal';
 
 // declare types for your props here
 interface Props {
@@ -140,14 +139,11 @@ export default function PlantProfileScreen(props: Props) {
   const [waterStatus, setWaterStatus] = useState(false);
   const [repotStatus, setRepotStatus] = useState(false);
   const [fertilizeStatus, setFertilizeStatus] = useState(false);
-  const [textWatFreq, setTextWatFreq] = useState('');
-  const [textRepFreq, setTextRepFreq] = useState('');
-  const [textFertFreq, setTextFertFreq] = useState('');
-  const [showWaterModal, setShowWaterModal] = useState(false);
-  const [showRepotModal, setShowRepotModal] = useState(false);
-  const [showFertilizeModal, setShowFertilizeModal] = useState(false);
+
   const [displayAddEntryModal, setDisplayAddEntryModal] = useState(false);
-  const [displayReminderModal, setDisplayReminderModal] = useState(false);
+  const [displayWaterModal, setDisplayWaterModal] = useState(false);
+  const [displayRepotModal, setDisplayRepotModal] = useState(false);
+  const [displayFertilizeModal, setDisplayFertilizeModal] = useState(false);
 
   const plant_name = useSelector((state: RootState) => state.plantgroup.plant_name);
   const plant_id = useSelector((state: RootState) => state.plantgroup.plant_id);
@@ -158,7 +154,7 @@ export default function PlantProfileScreen(props: Props) {
   const editedEntry = useSelector((state: RootState) => state.plantgroup.editedEntry);
 
   const dispatch = useDispatch();
-
+  let token = '';
   const parseEntries = () => {
     let localHistory = [];
     for (const date in entries) {
@@ -322,54 +318,16 @@ export default function PlantProfileScreen(props: Props) {
 
         <View style={styles.smallerPhoneStyling}>
           <Text style={styles.NRTChildStyle}>Next Watering Reminder</Text>
-          <Text style={styles.NRTChildStyle}>N/A</Text>
+          <FAB small={true} icon="plus" onPress={() => setDisplayWaterModal(true)} />
         </View>
-        <View style={styles.frequencyContainer}>
-          <Text>Frequency:</Text>
-          <Button
-            icon={showWaterModal ? 'chevron-up' : 'chevron-down'}
-            mode="contained"
-            contentStyle={styles.contentStyle}
-            labelStyle={styles.labelStyle}
-            style={styles.freqButton}
-            onPress={() => setShowWaterModal(true)}
-          >
-            {'Every ' + (textWatFreq ? textWatFreq : '1') + ' Days'}
-          </Button>
-        </View>
+
         <View style={styles.smallerPhoneStyling}>
           <Text style={styles.NRTChildStyle}>Next Repotting Reminder</Text>
-          <Text style={styles.NRTChildStyle}>N/A</Text>
-        </View>
-        <View style={styles.frequencyContainer}>
-          <Text>Frequency:</Text>
-          <Button
-            icon={showRepotModal ? 'chevron-up' : 'chevron-down'}
-            mode="contained"
-            contentStyle={styles.contentStyle}
-            labelStyle={styles.labelStyle}
-            style={styles.freqButton}
-            onPress={() => setShowRepotModal(true)}
-          >
-            {'Every ' + (textRepFreq ? textRepFreq : '1') + ' Days'}
-          </Button>
+          <FAB small={true} icon="plus" onPress={() => setDisplayRepotModal(true)} />
         </View>
         <View style={styles.smallerPhoneStyling}>
           <Text style={styles.NRTChildStyle}>Next Fertilizing Reminder</Text>
-          <Text style={styles.NRTChildStyle}>N/A</Text>
-        </View>
-        <View style={styles.frequencyContainer}>
-          <Text>Frequency:</Text>
-          <Button
-            icon={showFertilizeModal ? 'chevron-up' : 'chevron-down'}
-            mode="contained"
-            contentStyle={styles.contentStyle}
-            labelStyle={styles.labelStyle}
-            style={styles.freqButton}
-            onPress={() => setShowFertilizeModal(true)}
-          >
-            {'Every ' + (textFertFreq ? textFertFreq : '1') + ' Days'}
-          </Button>
+          <FAB small={true} icon="plus" onPress={() => setDisplayFertilizeModal(true)} />
         </View>
 
         <View>
@@ -402,8 +360,6 @@ export default function PlantProfileScreen(props: Props) {
             }}
           />
           <Button onPress={() => setDisplayAddEntryModal(true)}>Edit Entry</Button>
-
-          <Button onPress={() => setDisplayReminderModal(true)}>Add start date for reminder</Button>
           <AddEntryModal
             selectedDate={selectedDate}
             displayModal={displayAddEntryModal}
@@ -414,33 +370,21 @@ export default function PlantProfileScreen(props: Props) {
             entries={entries}
             updateCalendarMarkings={() => updateCalendarMarkings}
           />
-          <SetReminderModal
-            displayModal={displayReminderModal}
-            onPress={() => {
-              setDisplayReminderModal(false);
+          <SetWaterReminderModal
+            displayModal={displayWaterModal}
+            onExit={() => setDisplayWaterModal(false)}
+          />
+          <SetRepotReminderModal
+            displayModal={displayRepotModal}
+            onExit={() => {
+              setDisplayRepotModal(false);
             }}
-            onExit={() => setDisplayReminderModal(false)}
           />
-          <SetWaterFreqModal
-            displayModal={showWaterModal}
-            textWatFreq={textWatFreq}
-            setTextWatFreq={setTextWatFreq}
-            setShowModal={setShowWaterModal}
-            onExit={() => setShowWaterModal(false)}
-          />
-          <SetRepotFreqModal
-            displayModal={showRepotModal}
-            textRepFreq={textRepFreq}
-            setTextRepFreq={setTextRepFreq}
-            setShowModal={setShowRepotModal}
-            onExit={() => setShowRepotModal(false)}
-          />
-          <SetFertilizeFreqModal
-            displayModal={showFertilizeModal}
-            textFertFreq={textFertFreq}
-            setTextFertFreq={setTextFertFreq}
-            setShowModal={setShowFertilizeModal}
-            onExit={() => setShowFertilizeModal(false)}
+          <SetFertilizeReminderModal
+            displayModal={displayFertilizeModal}
+            onExit={() => {
+              setDisplayFertilizeModal(false);
+            }}
           />
         </View>
       </ScrollView>
@@ -513,7 +457,6 @@ const styles = StyleSheet.create({
     lineHeight: 30,
     justifyContent: 'space-around',
   },
-
   plantNameStyle: {
     alignContent: 'center',
     top: '30%',

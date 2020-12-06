@@ -34,6 +34,14 @@ interface Props {
   navigation: any;
 }
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
+
 export default function HomeScreen(props: Props) {
   const {navigation} = props;
   const notificationListener = useRef(null);

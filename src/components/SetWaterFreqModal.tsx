@@ -37,15 +37,17 @@ export default function SetWaterFreqModal(props: Props) {
               style={{height: 40, width: 150, bottom: 50}}
               onValueChange={(itemValue: string) => setModalText(itemValue)}
             >
+              <Picker.Item label="Only once" value="0"/>
               <Picker.Item label="1 Day" value="1" />
               <Picker.Item label="2 Days" value="2" />
               <Picker.Item label="3 Days" value="3" />
               <Picker.Item label="4 Days" value="4" />
               <Picker.Item label="5 Days" value="5" />
+              <Picker.Item label="6 Days" value="6" />
+              <Picker.Item label="7 Days" value="7" />
+              <Picker.Item label="8 Days" value="8" />
+              <Picker.Item label="9 Days" value="9" />
               <Picker.Item label="10 Days" value="10" />
-              <Picker.Item label="15 Days" value="15" />
-              <Picker.Item label="20 Days" value="20" />
-              <Picker.Item label="25 Days" value="25" />
             </Picker>
           </View>
         </View>

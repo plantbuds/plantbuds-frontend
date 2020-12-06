@@ -25,10 +25,11 @@ import {
   EDIT_PLANT_FAIL,
   EDIT_PLANT_SUCCESS,
   RESET_PLANT_STATE,
+  SEND_WATER_NOTIF,
 } from './types';
 
-import {API_ROOT} from '../../src/constants/index';
-``;
+import {API_ROOT, BASIC_TOKEN} from '../../src/constants/index';
+import {getExpoToken} from '../../src/utils/AsyncStorage';
 
 export const getAllPlants = (username: string) => {
   return {
@@ -37,6 +38,9 @@ export const getAllPlants = (username: string) => {
       client: 'default',
       request: {
         url: `${API_ROOT}/api/plantprofile/?username=${username}`,
+        headers: {
+          "Authorization": "Basic " + BASIC_TOKEN
+        },
         method: 'GET',
       },
     },
@@ -50,6 +54,9 @@ export const getIndividualPlant = (plantID: number) => {
       client: 'default',
       request: {
         url: `${API_ROOT}/api/plantprofile/${plantID}/`,
+        headers: {
+          "Authorization": "Basic " + BASIC_TOKEN
+        },
         method: 'GET',
       },
     },
@@ -63,6 +70,9 @@ export const getMatchingPlants = (searchterm: string, username: string) => {
       client: 'default',
       request: {
         url: `${API_ROOT}/api/plantprofile/?username=${username}&search=${searchterm}`,
+        headers: {
+          "Authorization": "Basic " + BASIC_TOKEN
+        },
         method: 'GET',
       },
       options: {
@@ -94,6 +104,9 @@ export const createPlant = (
       client: 'default',
       request: {
         url: `${API_ROOT}/api/plantprofile/`,
+        headers: {
+          "Authorization": "Basic " + BASIC_TOKEN
+        },
         method: 'POST',
         data: {
           plant_name: plant_name,
@@ -118,6 +131,9 @@ export const deletePlant = (plantID: number) => {
       client: 'default',
       request: {
         url: `${API_ROOT}/api/plantprofile/${plantID}/`,
+        headers: {
+          "Authorization": "Basic " + BASIC_TOKEN
+        },
         method: 'DELETE',
       },
     },
@@ -137,6 +153,9 @@ export const editPlantProfile = (
       client: 'default',
       request: {
         url: `${API_ROOT}/api/plantprofile/${plantID}/`,
+        headers: {
+          "Authorization": "Basic " + BASIC_TOKEN
+        },
         method: 'PATCH',
         data: {
           plant_name: plant_name,
@@ -161,6 +180,9 @@ export const updateTaskHistory = (history: string[], plantID: number) => {
       client: 'default',
       request: {
         url: `${API_ROOT}/api/plantprofile/${plantID}/`,
+        headers: {
+          "Authorization": "Basic " + BASIC_TOKEN
+        },
         method: 'PATCH',
         data: {
           history: history,
