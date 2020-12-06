@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from "react";
 import {
   Platform,
   StyleSheet,
-  Text,
   View,
   Image,
   Dimensions,
@@ -13,7 +12,7 @@ import {
   SafeAreaView,
   TextInput as TextArea
 } from "react-native";
-import { Button, TextInput } from "react-native-paper";
+import { Text, Colors, IconButton, Button, TextInput } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
 import { useSelector, useDispatch } from "react-redux";
 import DeletePlantModal from "../components/DeletePlantModal";
@@ -23,7 +22,8 @@ import {
   editPlantPic,
   editPlantName,
   editNotes,
-  editPlantNickname
+  editPlantNickname,
+  getAllPlants,
 } from "../../store/plantgroup/actions";
 
 // declare types for your props here
@@ -43,6 +43,7 @@ export default function EditPlantProfileScreen(props: Props) {
   const [textSciErr, setTextSciErr] = useState(false);
   const [textNotes, setTextNotes] = useState(notes);
   const [displayDeletePlantModal, setDisplayDeletePlantModal] = useState(false);
+  const username = useSelector((state: RootState) => state.session.username);
 
   const plant_name = useSelector(
     (state: RootState) => state.plantgroup.plant_name
@@ -79,6 +80,53 @@ export default function EditPlantProfileScreen(props: Props) {
     }
   };
 
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerBackTitle: "Cancel",
+      headerRight: () => (
+        <IconButton
+          icon="check-bold"
+          color={Colors.lightGreen900}
+          onPress={() => {
+            let err = false;
+            if (textSciName && textSciName.length > 0) {
+              if (textSciName.length < 3) {
+                setTextSciErr(true);
+                setTextSciName("");
+                err = true;
+              } else {
+                dispatch(editPlantName(textSciName, plantID));
+                setTextSciErr(false);
+              }
+            }
+            if (textNickname && textNickname.length > 0) {
+              if (textNickname.length < 2) {
+                setTextErr(true);
+                setTextNickname("");
+                err = true;
+              } else {
+                dispatch(editPlantNickname(textNickname, plantID));
+                setTextErr(false);
+              }
+            }
+            if (image) {
+              dispatch(editPlantPic(image, plantID));
+            }
+            if (textNotes) {
+              dispatch(editNotes(textNotes, plantID));
+            }
+            if (!err) {
+              dispatch(getAllPlants(username));
+              navigation.navigate("PlantProfile", {
+                plantID: plantID
+              });
+            }
+          }}
+        />
+      )
+    });
+  }, [navigation, textSciName, textNickname, image, textNotes]);
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : null}
@@ -86,58 +134,6 @@ export default function EditPlantProfileScreen(props: Props) {
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
-          <View style={styles.row}>
-            <Button
-              labelStyle={styles.buttonStyle}
-              onPress={() =>
-                navigation.navigate("PlantProfile", {
-                  plantID: plantID
-                })
-              }
-            >
-              <Text style={styles.textTitleLeft}>Cancel</Text>
-            </Button>
-            <Text style={styles.textTitle}>Edit Plant Profile</Text>
-            <Button
-              labelStyle={styles.buttonStyle}
-              onPress={() => {
-                let err = false;
-                if (textSciName && textSciName.length > 0) {
-                  if (textSciName.length < 3) {
-                    setTextSciErr(true);
-                    setTextSciName("");
-                    err = true;
-                  } else {
-                    dispatch(editPlantName(textSciName, plantID));
-                    setTextSciErr(false);
-                  }
-                }
-                if (textNickname && textNickname.length > 0) {
-                  if (textNickname.length < 2) {
-                    setTextErr(true);
-                    setTextNickname("");
-                    err = true;
-                  } else {
-                    dispatch(editPlantNickname(textNickname, plantID));
-                    setTextErr(false);
-                  }
-                }
-                if (image) {
-                  dispatch(editPlantPic(image, plantID));
-                }
-                if (textNotes) {
-                  dispatch(editNotes(textNotes, plantID));
-                }
-                if (!err) {
-                  navigation.navigate("PlantProfile", {
-                    plantID: plantID
-                  });
-                }
-              }}
-            >
-              <Text style={styles.textTitleRight}>Done</Text>
-            </Button>
-          </View>
           <View style={styles.containerPicture}>
             {(image && (
               <Image style={styles.profilePicture} source={{ uri: image }} />
@@ -231,6 +227,7 @@ export default function EditPlantProfileScreen(props: Props) {
               displayModal={displayDeletePlantModal}
               onPress={() => {
                 dispatch(deletePlant(plantID));
+                dispatch(getAllPlants(username));
                 navigation.navigate("Home");
                 setDisplayDeletePlantModal(false);
               }}
@@ -256,7 +253,7 @@ const styles = StyleSheet.create({
   containerPicture: {
     backgroundColor: "#fff",
     alignItems: "center",
-    paddingTop: 10,
+    //paddingTop: 10,
     //height: windowHeight * 0.29
     bottom: windowHeight * 0.45
   },

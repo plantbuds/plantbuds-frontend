@@ -19,7 +19,8 @@ import {
   editPlantPic,
   editPlantName,
   editPlantNickname,
-  setCreatedPlant
+  setCreatedPlant,
+  getAllPlants
 } from "../../store/plantgroup/actions";
 
 // declare types for your props here
@@ -37,6 +38,7 @@ export default function CreatePlantProfileModal(props: Props) {
   const [textErr, setTextErr] = useState(false);
   const [textSciErr, setTextSciErr] = useState(false);
 
+  const username = useSelector((state: RootState) => state.session.username);
   const plantID = useSelector((state: RootState) => state.plantgroup.plant_id);
   const photo = useSelector((state: RootState) => state.plantgroup.photo);
   const dispatch = useDispatch();
@@ -113,6 +115,7 @@ export default function CreatePlantProfileModal(props: Props) {
                       plantID: plantID
                     });
                     dispatch(setCreatedPlant(true));
+                    dispatch(getAllPlants(username));
                     setDisplayCreatePlantModal(false);
                     setTextSciName("");
                     setTextNickname("");

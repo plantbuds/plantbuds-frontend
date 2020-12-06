@@ -1,79 +1,103 @@
 import React from "react";
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
-import {createStackNavigator} from "@react-navigation/stack";
-import {createDrawerNavigator} from "@react-navigation/drawer";
+import { createStackNavigator } from "@react-navigation/stack";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import { Colors } from "react-native-paper";
+import { Image } from "react-native";
 import HomeScreen from "../screens/HomeScreen";
 import SettingsScreen from "../screens/SettingsScreen";
-import CalendarScreen from "../screens/CalendarScreen";
 import LandingScreen from "../screens/LandingScreen";
-import TestScreen from "../screens/TestScreen";
 import EditSettingsScreen from "../screens/EditSettingsScreen";
 import EditPlantProfileScreen from "../screens/EditPlantProfileScreen";
 import PlantProfileScreen from "../screens/PlantProfileScreen";
 import EncyclopediaSearchScreen from "../screens/EncyclopediaSearchScreen";
 import EncyclopediaProfileScreen from "../screens/EncyclopediaProfileScreen";
-import Sidebar from "../components/Sidebar";
+
 
 // Onboarding stack navigator 
-const Stack = createStackNavigator();
+const Onboarding = createStackNavigator();
 const OnboardingNavigator = () => {
   return (
-    <Stack.Navigator headerMode="none">
-      <Stack.Screen name="Landing" component={LandingScreen} />
-      <Stack.Screen name="Home" component={HomeScreen} />
-    </Stack.Navigator>
+    <Onboarding.Navigator headerMode="none">
+      <Onboarding.Screen name="Landing" component={LandingScreen} />
+      <Onboarding.Screen name="Home" component={HomeScreen} />
+    </Onboarding.Navigator>
   );
 };
 
-// Homepage stack navigator 
-const AppStack = createStackNavigator();
-const AppNavigator = () => {
+// Base navigator
+const Home = createStackNavigator();
+const HomeNavigator = () => {
   return (
-    <AppStack.Navigator headerMode="none" initialRouteName="Home">
-      <AppStack.Screen name="Home" component={HomeScreen} />
-      <AppStack.Screen name="PlantProfile" component={PlantProfileScreen} />
-      <AppStack.Screen name="EditPlantProfile" component={EditPlantProfileScreen} />
-    </AppStack.Navigator>
-  );
-};
+    <Home.Navigator screenOptions={styles.screenOptions} >
 
-const SettingsStack = createStackNavigator(); 
-const SettingsNavigator = () => {
-  return (
-    <SettingsStack.Navigator headerMode="none" initialRouteName="Settings">
-      <SettingsStack.Screen name="Settings" component={SettingsScreen} />
-      <SettingsStack.Screen name="EditSettingsScreen" component={EditSettingsScreen}/>
-    </SettingsStack.Navigator>
+      <Home.Screen options={{ headerShown: false }} name="Home" component={DrawerNavigator} />
+
+      <Home.Screen options={{ title: "Plant Profile"}} name="PlantProfile" component={PlantProfileScreen} />
+      <Home.Screen options={{ title: "Edit Plant Profile"}} name="EditPlantProfile" component={EditPlantProfileScreen} />
+
+      <Home.Screen options={{ headerShown: false }} name="Profile" component={SettingsScreen} />
+      <Home.Screen options={{ title: "Edit My Profile"}} name="EditSettingsScreen" component={EditSettingsScreen}/>
+
+      <Home.Screen options={{ headerShown: false }} name="Encyclopedia" component={EncyclopediaSearchScreen}/>
+      <Home.Screen options={{ title: "Encyclopedia Entry"}} name="EncyclopediaProfile" component={EncyclopediaProfileScreen}/>
+
+    </Home.Navigator>
   )
 }
 
-const EncyclopediaStack = createStackNavigator(); 
-const EncyclopediaNavigator = () => {
+// Navigation navigator (lol)
+const Drawer = createDrawerNavigator();
+const DrawerNavigator = () => {
   return (
-    <EncyclopediaStack.Navigator headerMode="none" initialRouteName="Search">
-      <EncyclopediaStack.Screen name="Search" component={EncyclopediaSearchScreen}/>
-      <EncyclopediaStack.Screen name="EncyclopediaProfile" component={EncyclopediaProfileScreen}/>
-    </EncyclopediaStack.Navigator>
+    <Drawer.Navigator 
+      drawerStyle={styles.drawerStyle}
+      drawerContentOptions={styles.drawerContentOptions}
+      screenOptions={styles.screenOptions}
+    >
+
+      <Drawer.Screen options={{ headerTitle: props => <HomeTitle {...props} /> }} name="Home" component={HomeScreen} />
+      <Drawer.Screen name="Encyclopedia" component={EncyclopediaSearchScreen} />
+      <Drawer.Screen options={{ title: "My Profile"}} name="Profile" component={SettingsScreen} />
+
+    </Drawer.Navigator>
   )
 }
-
-// Sidebar stack navigator
-const AppDrawer = createDrawerNavigator();
-const SidebarAppNavigator = () => {
-  return (
-    <AppDrawer.Navigator drawerContent={props => <Sidebar {...props} />}>
-      <AppDrawer.Screen options={{ headerTitle: "PlantBuds" }} name="Home" component={AppNavigator} />
-      <AppDrawer.Screen name="Search" component={EncyclopediaNavigator} />
-      <AppDrawer.Screen name="Settings" component={SettingsNavigator} />
-    </AppDrawer.Navigator>
-  );
-};
 
 // RootNavigator to navigate between different stacks
 const RootNavigator = () => {
   const loggedIn = useSelector((state: RootState) => state.session.loggedIn);
-    return (loggedIn) ? SidebarAppNavigator() : OnboardingNavigator();
+    return (loggedIn) ? HomeNavigator() : OnboardingNavigator();
 };
 
 export default RootNavigator;
+
+// Logo header for homepage
+const HomeTitle = ( props : any ) => {
+  return (
+    <Image
+      style={{ resizeMode: 'contain', width: 100, height: 80 }}
+      source={require('../../assets/logo.png')}
+    />
+  );
+};
+
+// Drawer and header styles
+const styles = {
+  drawerStyle: {
+    backgroundColor: Colors.lightGreen50,
+  },
+  drawerContentOptions: {
+    activeTintColor: Colors.lightGreen900,
+    activeBackgroundColor: Colors.lightGreen100,
+    inactiveTintColor: Colors.lightGreen900,
+  },
+  screenOptions: {
+    headerStyle: {
+      backgroundColor: Colors.lightGreen50,
+      borderColor: Colors.white,
+    },
+    headerTintColor: Colors.lightGreen900,
+  }
+};
