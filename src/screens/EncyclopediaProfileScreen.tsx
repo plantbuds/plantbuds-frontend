@@ -5,14 +5,16 @@ import { Button } from "react-native-paper";
 // declare types for your props here
 interface Props {
   navigation: any;
+  route:any;
+  name:string;
 }
 
 export default function TestScreen(props: Props) {
-  const { navigation } = props;
+  const { navigation,route } = props;
 
   return (
     <View style={styles.container}>
-
+      <Text>{JSON.stringify(route.params)}</Text>
       <View style={{ flexDirection: "row" }}>
         <Button
           labelStyle={styles.searchButtonStyle}
