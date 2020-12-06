@@ -308,6 +308,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white"
   },
   labelStyle: {
+    color: "black",
     fontSize: 12
   }
 });

@@ -20,6 +20,7 @@ import DeletePlantModal from "../components/DeletePlantModal";
 import { RootState } from "../../store/store";
 import {
   deletePlant,
+  getAllPlants,
   editPlantProfile,
 } from "../../store/plantgroup/actions";
 
@@ -33,6 +34,7 @@ let padding = false;
 export default function EditPlantProfileScreen(props: Props) {
   const { navigation } = props;
   const notes = useSelector((state: RootState) => state.plantgroup.notes);
+  const username = useSelector((state: RootState) => state.session.username);
   const plantID = useSelector((state: RootState) => state.plantgroup.plant_id);
   const nickname = useSelector((state: RootState) => state.plantgroup.nickname);
   const photo = useSelector((state: RootState) => state.plantgroup.photo);
@@ -100,6 +102,7 @@ export default function EditPlantProfileScreen(props: Props) {
       setTextErr(false);
       setTextSciName("");
       setTextNickname("");
+      dispatch(getAllPlants(username));
       navigation.navigate("PlantProfile", {
         plantID: plantID
       });
@@ -224,6 +227,7 @@ export default function EditPlantProfileScreen(props: Props) {
               displayModal={displayDeletePlantModal}
               onPress={() => {
                 dispatch(deletePlant(plantID));
+                dispatch(getAllPlants(username));
                 navigation.navigate("Home");
                 setDisplayDeletePlantModal(false);
               }}

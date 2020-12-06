@@ -341,7 +341,7 @@ export default function PlantProfileScreen(props: Props) {
             style={styles.freqButton}
             onPress={() => setShowWaterModal(true)}
           >
-            {"Every " + (textWatFreq ? textWatFreq : "0") + " Days"}
+            {"Every " + (textWatFreq ? textWatFreq : "1") + " Days"}
           </Button>
         </View>
         <View style={styles.smallerPhoneStyling}>
@@ -358,7 +358,7 @@ export default function PlantProfileScreen(props: Props) {
             style={styles.freqButton}
             onPress={() => setShowRepotModal(true)}
           >
-            {"Every " + (textRepFreq ? textRepFreq : "0") + " Days"}
+            {"Every " + (textRepFreq ? textRepFreq : "1") + " Days"}
           </Button>
         </View>
         <View style={styles.smallerPhoneStyling}>
@@ -375,7 +375,7 @@ export default function PlantProfileScreen(props: Props) {
             style={styles.freqButton}
             onPress={() => setShowFertilizeModal(true)}
           >
-            {"Every " + (textFertFreq ? textFertFreq : "0") + " Days"}
+            {"Every " + (textFertFreq ? textFertFreq : "1") + " Days"}
           </Button>
         </View>
 
@@ -587,6 +587,7 @@ const styles = StyleSheet.create({
     height: windowHeight * 0.04
   },
   labelStyle: {
-    fontSize: 9
+    fontSize: 9,
+    color: "black"
   }
 });

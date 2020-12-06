@@ -4,6 +4,7 @@ import axiosMiddleware from "redux-axios-middleware";
 import { sessionReducer } from "./session/reducer";
 import { plantgroupReducer } from "./plantgroup/reducer";
 import { API_ROOT, BASIC_TOKEN } from "../src/constants/index";
+import {encyclopediaReducer} from "./encyclopedia/reducer";
 
 const client = axios.create({
   //all axios can be used, shown in axios documentation
@@ -13,7 +14,8 @@ const client = axios.create({
 
 const rootReducer = combineReducers({
   session: sessionReducer,
-  plantgroup: plantgroupReducer
+  plantgroup: plantgroupReducer,
+  encyclopedia: encyclopediaReducer
 });
 
 const middlewareConfig = {

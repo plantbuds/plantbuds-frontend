@@ -27,6 +27,9 @@ export const GET_ALL_PLANTS_REQUEST = "GET_ALL_PLANTS_REQUEST";
 export const EDIT_PLANT = "EDIT_PLANT";
 export const GET_ALL_PLANTS_SUCCESS = "GET_ALL_PLANTS_SUCCESS";
 export const GET_ALL_PLANTS_FAIL = "GET_ALL_PLANTS_FAIL";
+export const GET_MATCHING_PLANTS = "GET_MATCHING_PLANTS";
+export const GET_MATCHING_PLANTS_SUCCESS = "GET_MATCHING_PLANTS";
+export const GET_MATCHING_PLANTS_FAIL = "GET_MATCHING_PLANTS_FAIL";
 export const GET_INDIVIDUAL_PLANT_REQUEST = "GET_INDIVIDUAL_PLANT_REQUEST";
 export const GET_INDIVIDUAL_PLANT_SUCCESS = "GET_INDIVIDUAL_PLANT_SUCCESS";
 export const GET_INDIVIDUAL_PLANT_FAIL = "GET_INDIVIDUAL_PLANT_FAIL";
@@ -64,6 +67,11 @@ interface GetIndividualPlantSuccessAction {
 
 interface GetAllPlantsRequestAction {
   type: typeof GET_ALL_PLANTS_REQUEST;
+  payload: any;
+}
+
+interface GetMatchingPlantsSuccessAction {
+  type: typeof GET_MATCHING_PLANTS_SUCCESS;
   payload: any;
 }
 
@@ -106,6 +114,7 @@ export type PlantGroupActionTypes =
   | SetCreatedPlantAction
   | GetAllPlantsRequestAction
   | GetAllPlantsSuccessAction
+  | GetMatchingPlantsSuccessAction
   | GetIndividualPlantSuccessAction
   | EditPlantSuccessAction
   | SetEditedPlantAction

@@ -49,7 +49,7 @@ export const loginUser = (accessToken: string) => {
   };
 };
 
-export const logout = () => {
+export const logoutUser = () => {
   return {
     type: LOGOUT
   };

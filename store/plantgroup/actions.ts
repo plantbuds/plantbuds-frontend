@@ -2,6 +2,9 @@ import {
   GET_ALL_PLANTS_REQUEST,
   GET_ALL_PLANTS_SUCCESS,
   GET_ALL_PLANTS_FAIL,
+  GET_MATCHING_PLANTS,
+  GET_MATCHING_PLANTS_FAIL,
+  GET_MATCHING_PLANTS_SUCCESS,
   GET_INDIVIDUAL_PLANT_REQUEST,
   GET_INDIVIDUAL_PLANT_SUCCESS,
   GET_INDIVIDUAL_PLANT_FAIL,
@@ -60,6 +63,36 @@ export const getIndividualPlant = (plantID: number) => {
   };
 };
 
+export const getMatchingPlants = (searchterm: string, username: string) => {
+  return {
+    types: [
+      GET_MATCHING_PLANTS,
+      GET_MATCHING_PLANTS_SUCCESS,
+      GET_MATCHING_PLANTS_FAIL
+    ],
+    payload: {
+      client: "default",
+      request: {
+        url: `${API_ROOT}/api/plantprofile/?username=${username}&search=${searchterm}`,
+        method: "GET"
+      },
+      options: {
+        onError({ getState, dispatch, error }) {
+          try {
+            if (error) {
+              throw error;
+            }
+          } catch (e) {
+            if (e.response.data.msg != null) {
+              console.log("Error: " + e.response.data.msg);
+            }
+          }
+        }
+      }
+    }
+  };
+};
+
 export const createPlant = (
   userID: number,
   imageURI = "http://i.imgur.com/4os1ZjY.png",
@@ -78,6 +111,9 @@ export const createPlant = (
           photo: imageURI,
           nickname: nickname,
           history: [],
+          water_frequency: "1",
+          repot_frequency: "1",
+          fertilize_frequency: "1",
           notes: "",
           user: `${API_ROOT}/api/users/${userID}/`
         }

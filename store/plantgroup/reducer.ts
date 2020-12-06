@@ -11,6 +11,7 @@ import {
   SET_DELETED_PLANT,
   SET_EDITED_ENTRY,
   RESET_PLANT_STATE,
+  GET_MATCHING_PLANTS_SUCCESS,
 } from "./types";
 
 const initialState: PlantGroupState = {
@@ -48,6 +49,11 @@ export function plantgroupReducer(
         ...state,
         plants: action.payload.data
       };
+    case  GET_MATCHING_PLANTS_SUCCESS:
+      return {
+        ...state,
+        plants: action.payload.data
+      }
     case GET_INDIVIDUAL_PLANT_SUCCESS:
       return {
         ...state,
