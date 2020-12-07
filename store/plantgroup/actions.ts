@@ -96,7 +96,8 @@ export const createPlant = (
   userID: number,
   imageURI = 'http://i.imgur.com/4os1ZjY.png',
   plant_name = 'Scientific Name',
-  nickname = 'My Plant'
+  nickname = 'My Plant',
+  notes = ''
 ) => {
   return {
     types: [CREATE_PLANT, CREATE_PLANT_SUCCESS, CREATE_PLANT_FAIL],
@@ -116,7 +117,7 @@ export const createPlant = (
           water_frequency: '1',
           repot_frequency: '1',
           fertilize_frequency: '1',
-          notes: '',
+          notes: notes,
           user: `${API_ROOT}/api/users/${userID}/`,
         },
       },
