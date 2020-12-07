@@ -10,8 +10,18 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   GestureResponderEvent,
+  ScrollView,
 } from 'react-native';
-import { Headline, Colors, Title, Text, Button, TextInput, IconButton, DefaultTheme } from 'react-native-paper';
+import {
+  Headline,
+  Colors,
+  Title,
+  Text,
+  Button,
+  TextInput,
+  IconButton,
+  DefaultTheme,
+} from 'react-native-paper';
 import * as ImagePicker from 'expo-image-picker';
 import {useSelector, useDispatch} from 'react-redux';
 import {RootState} from '../../store/store';
@@ -90,33 +100,31 @@ export default function CreatePlantProfileModal(props: Props) {
   }
 
   return (
-    <Modal animationType="slide" presentationStyle={"pageSheet"} visible={displayModal}>
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : null} style={{flex: 1}}>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={styles.modalContainer}>
-
-            <View style={styles.topContainer}>
-              <IconButton
-                icon="close"
-                size={30}
-                color={Colors.grey400}
-                onPress={() => {
-                  clearFields();
-                  setDisplayCreatePlantModal(false);
-                }}
-              />
-              <Title style={{ paddingTop: 10 }}>Add a Plant</Title>
-              <IconButton 
-                icon="check-bold" 
-                color={Colors.lightGreen900}
-                size={30}
-                onPress={onSubmit} 
-              />
-            </View>
-
+    <Modal animationType="slide" presentationStyle={'pageSheet'} visible={displayModal}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.modalContainer}>
+          <View style={styles.topContainer}>
+            <IconButton
+              icon="close"
+              size={30}
+              color={Colors.grey400}
+              onPress={() => {
+                clearFields();
+                setDisplayCreatePlantModal(false);
+              }}
+            />
+            <Title style={{paddingTop: 10}}>Add a Plant</Title>
+            <IconButton
+              icon="check-bold"
+              color={Colors.lightGreen900}
+              size={30}
+              onPress={onSubmit}
+            />
+          </View>
+          <KeyboardAvoidingView behavior="position" enabled={true}>
             <View style={styles.photoContainer}>
-              {(image && <Image style={styles.photo} source={{ uri: image }} />) ||
-                (!image && <Image style={styles.photo} source={{ uri: defaultPhoto }} />)}
+              {(image && <Image style={styles.photo} source={{uri: image}} />) ||
+                (!image && <Image style={styles.photo} source={{uri: defaultPhoto}} />)}
               <Button icon="camera" color={Colors.lightGreen300} onPress={pickImage}>
                 Change Photo
               </Button>
@@ -124,44 +132,43 @@ export default function CreatePlantProfileModal(props: Props) {
 
             <View style={styles.formContainer}>
               <TextInput
-                 mode='outlined'
-                 label='Nickname'
-                 theme={{ colors: { primary: Colors.lightGreen300 } }}
-                 style={styles.form}
-                 keyboardType='ascii-capable'
-                 maxLength={22}
-                 placeholder="e.g. My Plant"
-                 value={textNickname}
-                 onChangeText={textNickname => setTextNickname(textNickname)}
+                mode="outlined"
+                label="Nickname"
+                theme={{colors: {primary: Colors.lightGreen300}}}
+                style={styles.form}
+                keyboardType="ascii-capable"
+                maxLength={22}
+                placeholder="e.g. My Plant"
+                value={textNickname}
+                onChangeText={textNickname => setTextNickname(textNickname)}
               />
               <TextInput
-                 mode='outlined'
-                 label='Species'
-                 theme={{ colors: { primary: Colors.lightGreen300 } }}
-                 style={styles.form}
-                 keyboardType='ascii-capable'
-                 maxLength={26}
-                 placeholder="e.g. Aloe vera"
-                 value={textSciName}
-                 onChangeText={textSciName => setTextSciName(textSciName)}
+                mode="outlined"
+                label="Species"
+                theme={{colors: {primary: Colors.lightGreen300}}}
+                style={styles.form}
+                keyboardType="ascii-capable"
+                maxLength={26}
+                placeholder="e.g. Aloe vera"
+                value={textSciName}
+                onChangeText={textSciName => setTextSciName(textSciName)}
               />
               <TextInput
-                 mode='outlined'
-                 label='Notes'
-                 multiline={true}
-                 theme={{ colors: { primary: Colors.lightGreen300 } }}
-                 dense={true}
-                 style={{ ...styles.form, height: 100, paddingVertical: 0 }}
-                 keyboardType='ascii-capable'
-                 placeholder="e.g. Always keep in partial shade"
-                 value={textNotes}
-                 onChangeText={textNotes => setTextNotes(textNotes)}
+                mode="outlined"
+                label="Notes"
+                multiline={true}
+                theme={{colors: {primary: Colors.lightGreen300}}}
+                dense={true}
+                style={{...styles.form, height: 100, paddingVertical: 0}}
+                keyboardType="ascii-capable"
+                placeholder="e.g. Always keep in partial shade"
+                value={textNotes}
+                onChangeText={textNotes => setTextNotes(textNotes)}
               />
             </View>
-
-          </View>
-        </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
+          </KeyboardAvoidingView>
+        </View>
+      </TouchableWithoutFeedback>
     </Modal>
   );
 }
@@ -169,7 +176,6 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
   modalContainer: {
-    flex: 1,
     flexWrap: 'wrap',
     alignItems: 'center',
     justifyContent: 'flex-start',
@@ -180,11 +186,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: windowWidth,
     paddingTop: 10,
+    zIndex: 2,
+    backgroundColor: 'white',
   },
 
   photoContainer: {
-    paddingTop: 15, 
-    alignItems: 'center'
+    paddingTop: 15,
+    alignItems: 'center',
   },
   photo: {
     width: 150,
