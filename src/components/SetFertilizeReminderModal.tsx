@@ -50,7 +50,7 @@ var localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, -1);
     let fertilizeArray = [];
     let currDate = new Date(selectedDate);
     for (let i = 0; i < 5; i++) {
-      fertilizeArray.push(addDays(currDate, rate * i));
+      fertilizeArray.push(addDays(currDate, fertFreq * i));
     }
 
     // update backend with water notification array
