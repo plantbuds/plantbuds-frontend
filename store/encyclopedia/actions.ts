@@ -5,7 +5,7 @@ import {
   SET_UPDATE_SUCCESS,
 } from './types';
 
-import {API_ROOT} from '../../src/constants/index';
+import {API_ROOT, BASIC_TOKEN} from '../../src/constants/index';
 
 export const getMatchingEntries = (searchterm: string) => {
   return {
@@ -14,6 +14,9 @@ export const getMatchingEntries = (searchterm: string) => {
       client: 'default',
       request: {
         url: `${API_ROOT}/api/encyclopedia/?limit=500&search=${searchterm}`,
+        headers: {
+          "Authorization": "Basic " + BASIC_TOKEN
+        },
         method: 'GET',
       },
       options: {

@@ -12,9 +12,9 @@ export interface PlantGroupState {
   water_history: string[];
   repot_history: string[];
   fertilize_history: string[];
-  water_frequency: string;
-  fertilize_frequency: string;
-  repot_frequency: string;
+  water_frequency: number;
+  fertilize_frequency: number;
+  repot_frequency: number;
   water_next_notif: string;
   fertilize_next_notif: string;
   repot_next_notif: string;
@@ -49,6 +49,19 @@ export const SET_EDITED_ENTRY = 'SET_EDITED_ENTRY';
 export const UPDATE_TASK_HISTORY = 'UPDATE_TASK_HISTORY';
 export const UPDATE_TASK_HISTORY_SUCCESS = 'UPDATE_TASK_HISTORY_SUCCESS';
 export const UPDATE_TASK_HISTORY_FAIL = 'UPDATE_TASK_HISTORY_FAIL';
+export const SEND_WATER_NOTIF = 'SEND_WATER_NOTIF';
+export const UPDATE_WATER_NOTIF = 'UPDATE_WATER_NOTIF';
+export const UPDATE_WATER_NOTIF_SUCCESS = 'UPDATE_WATER_NOTIF_SUCCESS';
+export const UPDATE_WATER_NOTIF_FAIL = 'UPDATE_WATER_NOTIF_FAIL';
+export const UPDATE_REPOT_NOTIF = 'UPDATE_REPOT_NOTIF';
+export const UPDATE_REPOT_NOTIF_SUCCESS = 'UPDATE_REPOT_NOTIF_SUCCESS';
+export const UPDATE_REPOT_NOTIF_FAIL = 'UPDATE_REPOT_NOTIF_FAIL';
+export const UPDATE_FERTILIZE_NOTIF = 'UPDATE_FERTILIZE_NOTIF';
+export const UPDATE_FERTILIZE_NOTIF_SUCCESS = 'UPDATE_FERTILIZE_NOTIF_SUCCESS';
+export const UPDATE_FERTILIZE_NOTIF_FAIL = 'UPDATE_FERTILIZE_NOTIF_FAIL';
+export const SET_WATER_NOTIF = "SET_WATER_NOTIF";
+export const SET_REPOT_NOTIF = "SET_REPOT_NOTIF"; 
+export const SET_FERTILIZE_NOTIF = "SET_FERTILIZE_NOTIF";
 
 interface GetAllPlantsSuccessAction {
   type: typeof GET_ALL_PLANTS_SUCCESS;
@@ -108,6 +121,23 @@ interface ResetPlantStateAction {
   type: typeof RESET_PLANT_STATE;
 }
 
+interface SetWaterNotifAction {
+  type: typeof SET_WATER_NOTIF;
+  payload: any;
+}
+
+
+interface SetRepotNotifAction {
+  type: typeof SET_REPOT_NOTIF;
+  payload: any;
+}
+
+
+interface SetFertilizeNotifAction {
+  type: typeof SET_FERTILIZE_NOTIF;
+  payload: any;
+}
+
 export type PlantGroupActionTypes =
   | ResetPlantStateAction
   | CreatePlantSuccessAction
@@ -120,4 +150,7 @@ export type PlantGroupActionTypes =
   | SetEditedPlantAction
   | SetDeletedPlantAction
   | SetEditedEntryAction
+  | SetWaterNotifAction
+  | SetRepotNotifAction
+  | SetFertilizeNotifAction
   | DeletePlantSuccessAction;

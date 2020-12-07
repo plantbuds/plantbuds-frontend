@@ -21,12 +21,6 @@ const rootReducer = combineReducers({
 const middlewareConfig = {
   
   interceptors: {
-    request: [
-      function({ getState, dispatch, getSourceAction }, config) {
-        config.headers["Authorization"] = "Basic " + BASIC_TOKEN;
-        return config;
-      }
-    ],
     response: [
       {
         success: function ({getState, dispatch, getSourceAction}, res) {

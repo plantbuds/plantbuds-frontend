@@ -25,10 +25,21 @@ import {
   EDIT_PLANT_FAIL,
   EDIT_PLANT_SUCCESS,
   RESET_PLANT_STATE,
+  UPDATE_WATER_NOTIF,
+  UPDATE_WATER_NOTIF_SUCCESS,
+  UPDATE_WATER_NOTIF_FAIL,
+  UPDATE_FERTILIZE_NOTIF,
+  UPDATE_FERTILIZE_NOTIF_FAIL,
+  UPDATE_FERTILIZE_NOTIF_SUCCESS,
+  UPDATE_REPOT_NOTIF,
+  UPDATE_REPOT_NOTIF_FAIL,
+  UPDATE_REPOT_NOTIF_SUCCESS,
+  SET_WATER_NOTIF,
+  SET_FERTILIZE_NOTIF,
+  SET_REPOT_NOTIF
 } from './types';
 
-import {API_ROOT} from '../../src/constants/index';
-``;
+import {API_ROOT, BASIC_TOKEN} from '../../src/constants/index';
 
 export const getAllPlants = (username: string) => {
   return {
@@ -37,6 +48,9 @@ export const getAllPlants = (username: string) => {
       client: 'default',
       request: {
         url: `${API_ROOT}/api/plantprofile/?username=${username}`,
+        headers: {
+          Authorization: 'Basic ' + BASIC_TOKEN,
+        },
         method: 'GET',
       },
     },
@@ -50,6 +64,9 @@ export const getIndividualPlant = (plantID: number) => {
       client: 'default',
       request: {
         url: `${API_ROOT}/api/plantprofile/${plantID}/`,
+        headers: {
+          Authorization: 'Basic ' + BASIC_TOKEN,
+        },
         method: 'GET',
       },
     },
@@ -63,6 +80,9 @@ export const getMatchingPlants = (searchterm: string, username: string) => {
       client: 'default',
       request: {
         url: `${API_ROOT}/api/plantprofile/?username=${username}&search=${searchterm}`,
+        headers: {
+          Authorization: 'Basic ' + BASIC_TOKEN,
+        },
         method: 'GET',
       },
       options: {
@@ -95,15 +115,18 @@ export const createPlant = (
       client: 'default',
       request: {
         url: `${API_ROOT}/api/plantprofile/`,
+        headers: {
+          Authorization: 'Basic ' + BASIC_TOKEN,
+        },
         method: 'POST',
         data: {
           plant_name: plant_name,
           photo: imageURI,
           nickname: nickname,
           history: [],
-          water_frequency: '1',
-          repot_frequency: '1',
-          fertilize_frequency: '1',
+          water_frequency: '0',
+          repot_frequency: '0',
+          fertilize_frequency: '0',
           notes: notes,
           user: `${API_ROOT}/api/users/${userID}/`,
         },
@@ -119,6 +142,9 @@ export const deletePlant = (plantID: number) => {
       client: 'default',
       request: {
         url: `${API_ROOT}/api/plantprofile/${plantID}/`,
+        headers: {
+          Authorization: 'Basic ' + BASIC_TOKEN,
+        },
         method: 'DELETE',
       },
     },
@@ -138,6 +164,9 @@ export const editPlantProfile = (
       client: 'default',
       request: {
         url: `${API_ROOT}/api/plantprofile/${plantID}/`,
+        headers: {
+          Authorization: 'Basic ' + BASIC_TOKEN,
+        },
         method: 'PATCH',
         data: {
           plant_name: plant_name,
@@ -162,11 +191,89 @@ export const updateTaskHistory = (history: string[], plantID: number) => {
       client: 'default',
       request: {
         url: `${API_ROOT}/api/plantprofile/${plantID}/`,
+        headers: {
+          Authorization: 'Basic ' + BASIC_TOKEN,
+        },
         method: 'PATCH',
         data: {
           history: history,
         },
       },
+    },
+  };
+};
+
+export const updateWaterNotifHistory = (waterHistory: string[], frequency: number,  plantID: number) => {
+  return {
+    type: [UPDATE_WATER_NOTIF, UPDATE_WATER_NOTIF_SUCCESS, UPDATE_WATER_NOTIF_FAIL],
+    payload: {
+      client: 'default',
+      request: {
+        url: `${API_ROOT}/api/plantprofile/${plantID}/`,
+        headers: {
+          Authorization: 'Basic ' + BASIC_TOKEN,
+        },
+        method: 'PATCH',
+        data: {
+          water_history: waterHistory,
+          water_frequency: frequency
+        },
+      },
+      options: {
+        onSuccess ({dispatch}){
+          dispatch(setWaterNotif(waterHistory, frequency));
+        }
+      }
+    },
+  };
+};
+
+export const updateRepotNotifHistory = (repotHistory: string[], frequency: number, plantID: number) => {
+  return {
+    type: [UPDATE_WATER_NOTIF, UPDATE_WATER_NOTIF_SUCCESS, UPDATE_WATER_NOTIF_FAIL],
+    payload: {
+      client: 'default',
+      request: {
+        url: `${API_ROOT}/api/plantprofile/${plantID}/`,
+        headers: {
+          Authorization: 'Basic ' + BASIC_TOKEN,
+        },
+        method: 'PATCH',
+        data: {
+          repot_history: repotHistory,
+          repot_frequency: frequency
+        },
+      },
+      options: {
+        onSuccess ({dispatch}){
+          dispatch(setRepotNotif(repotHistory, frequency));
+        }
+      }
+    },
+  };
+};
+
+export const updateFertilizeNotifHistory = (fertilizeHistory: string[], frequency: number, plantID: number) => {
+  return {
+    type: [UPDATE_WATER_NOTIF, UPDATE_WATER_NOTIF_SUCCESS, UPDATE_WATER_NOTIF_FAIL],
+    payload: {
+      client: 'default',
+      request: {
+        url: `${API_ROOT}/api/plantprofile/${plantID}/`,
+        headers: {
+          Authorization: 'Basic ' + BASIC_TOKEN,
+        },
+        method: 'PATCH',
+        data: {
+          fertilize_history: fertilizeHistory,
+          fertilize_frequency: frequency
+        },
+      },
+      options: {
+        onSuccess ({dispatch}){
+          dispatch(setWaterNotif(fertilizeHistory, frequency));
+        }
+      }
     },
   };
 };
@@ -196,6 +303,36 @@ export const setEditedEntry = (editedEntry: boolean) => {
   return {
     type: SET_EDITED_ENTRY,
     editedEntry,
+  };
+};
+
+export const setWaterNotif = (waterArray: string[], frequency: number) => {
+  return {
+    type: SET_WATER_NOTIF,
+    payload: {
+      waterArray,
+      frequency
+    }
+  };
+};
+
+export const setFertilizeNotif = (fertilizeArray: string[], frequency: number) => {
+  return {
+    type: SET_FERTILIZE_NOTIF,
+    payload: {
+      fertilizeArray,
+      frequency
+    }
+  };
+};
+
+export const setRepotNotif = (repotArray: string[], frequency: number) => {
+  return {
+    type: SET_REPOT_NOTIF,
+    payload: {
+      repotArray,
+      frequency
+    }
   };
 };
 
