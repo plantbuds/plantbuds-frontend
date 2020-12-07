@@ -17,7 +17,7 @@ import {
   EDIT_WATER_NOTIF,
 } from './types';
 
-import {API_ROOT} from '../../src/constants/index';
+import {API_ROOT, BASIC_TOKEN} from '../../src/constants/index';
 import {Alert} from 'react-native';
 
 export const loginUser = (accessToken: string) => {
@@ -27,6 +27,9 @@ export const loginUser = (accessToken: string) => {
       client: 'default',
       request: {
         url: `${API_ROOT}/api/users/login/`,
+        headers: {
+          "Authorization": `Basic ${BASIC_TOKEN}`
+        },
         method: 'POST',
         data: {
           access_token: accessToken,
@@ -62,6 +65,9 @@ export const createUser = (idToken: string, accessToken: string) => {
       client: 'default',
       request: {
         url: `${API_ROOT}/api/users/`,
+        headers: {
+          "Authorization": `Basic ${BASIC_TOKEN}`
+        },
         method: 'POST',
         data: {
           id_token: idToken,
@@ -104,6 +110,9 @@ export const editUserProfile = (
       client: 'default',
       request: {
         url: `${API_ROOT}/api/users/${userID}/`,
+        headers: {
+          "Authorization": `Basic ${BASIC_TOKEN}`
+        },
         method: 'PATCH',
         data: {
           username: username,
@@ -127,6 +136,9 @@ export const editNotifTime = (time: string, userID: number) => {
       client: 'default',
       request: {
         url: `${API_ROOT}/api/users/${userID}/`,
+        headers: {
+          "Authorization": `Basic ${BASIC_TOKEN}`
+        },
         method: 'PATCH',
         data: {
           notif_time: time,
@@ -146,6 +158,9 @@ export const editWaterNotif = (val: boolean, userID: number) => {
       client: 'default',
       request: {
         url: `${API_ROOT}/api/users/${userID}/`,
+        headers: {
+          "Authorization": `Basic ${BASIC_TOKEN}`
+        },
         method: 'PATCH',
         data: {
           receive_water_notif: val,
@@ -162,6 +177,9 @@ export const editRepotNotif = (val: boolean, userID: number) => {
       client: 'default',
       request: {
         url: `${API_ROOT}/api/users/${userID}/`,
+        headers: {
+          "Authorization": `Basic ${BASIC_TOKEN}`
+        },
         method: 'PATCH',
         data: {
           receive_repot_notif: val,
@@ -178,6 +196,9 @@ export const editFertilizingNotif = (val: boolean, userID: number) => {
       client: 'default',
       request: {
         url: `${API_ROOT}/api/users/${userID}/`,
+        headers: {
+          "Authorization": `Basic ${BASIC_TOKEN}`
+        },
         method: 'PATCH',
         data: {
           receive_fertilizing_notif: val,

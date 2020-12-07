@@ -12,13 +12,16 @@ import {
   SET_EDITED_ENTRY,
   RESET_PLANT_STATE,
   GET_MATCHING_PLANTS_SUCCESS,
+  SET_WATER_NOTIF,
+  SET_REPOT_NOTIF,
+  SET_FERTILIZE_NOTIF
 } from './types';
 
 const initialState: PlantGroupState = {
   editedPlant: false,
   createdPlant: false,
   deletedPlant: false,
-  editedEntry: false,
+  editedEntry: false, 
   plants: [],
   plant_name: null,
   plant_id: null,
@@ -125,6 +128,22 @@ export function plantgroupReducer(
         ...state,
         editedEntry: action.editedEntry,
       };
+    case SET_WATER_NOTIF: 
+      return {
+        ...state, 
+        water_history: action.payload.waterArray,
+      }
+    case SET_REPOT_NOTIF: 
+      return {
+        ...state, 
+        repot_history: action.payload.repotArray,
+        repot_frequency: action.payload.frequency
+      }
+    case SET_FERTILIZE_NOTIF: 
+      return {
+        ...state, 
+        fertilize_history: action.payload.fertilizeArray
+      }
     case DELETE_PLANT_SUCCESS:
       return {
         ...state,

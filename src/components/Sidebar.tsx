@@ -1,5 +1,4 @@
 import React from 'react';
-import { NavigationActions } from '@react-navigation/';
 import {DrawerContentScrollView, DrawerItemList, DrawerItem} from '@react-navigation/drawer';
 import {Colors} from 'react-native-paper';
 import {Dimensions, StyleSheet} from 'react-native';

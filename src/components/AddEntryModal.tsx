@@ -109,7 +109,7 @@ export default function AddEntryModal(props: Props) {
           </View>
           <Button
             mode="contained"
-            color={Colors.green400}
+            color={Colors.lightGreen900}
             onPress={() => {
               if (!waterStatus.valueOf() && !repotStatus.valueOf() && !fertilizeStatus.valueOf()) {
                 delete entries[selectedDate];
