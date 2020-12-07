@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Platform, StyleSheet, View, Image, Dimensions, PixelRatio, Switch} from 'react-native';
-import {Text, Colors, IconButton, Button, TextInput} from 'react-native-paper';
+import {Text, Colors, IconButton, Button, TextInput, Headline, Title, Divider, Subheading} from 'react-native-paper';
 import {useSelector, useDispatch} from 'react-redux';
 import {RootState} from '../../store/store';
 import SetNotifTimeModal from '../components/SetNotifTimeModal';
@@ -74,12 +74,12 @@ export default function SettingsScreen(props: Props) {
           </View>
         </View>
         <View style={{flexDirection: 'column'}}>
-          <Text style={styles.usernameStyle}>{username}</Text>
-          <Text style={styles.zoneStyle}>USDA Zone: {USDAZone ? USDAZone : 'N/A'}</Text>
+          <Headline style={styles.usernameStyle}>{username}</Headline>
+          <Title style={styles.zoneStyle}>USDA Zone: {USDAZone ? USDAZone : 'N/A'}</Title>
         </View>
       </View>
       <View>
-        <Text style={styles.notificationSettingStyle}> Notifications </Text>
+        <Title style={styles.notificationSettingStyle}> Notifications </Title>
       </View>
       <View style={{flexDirection: 'column'}}>
         <View style={{flexDirection: 'row'}}>
@@ -96,6 +96,7 @@ export default function SettingsScreen(props: Props) {
               value={waterNotif}
             />
           </View>
+          <Divider />
         </View>
 
         <View style={{flexDirection: 'row'}}>
@@ -112,6 +113,7 @@ export default function SettingsScreen(props: Props) {
               value={repotNotif}
             />
           </View>
+          <Divider />
         </View>
 
         <View style={{flexDirection: 'row'}}>
@@ -128,16 +130,20 @@ export default function SettingsScreen(props: Props) {
               value={fertilizeNotif}
             />
           </View>
+          <Divider />
         </View>
       </View>
-      <Text style={styles.notificationSettingStyle}>Settings</Text>
-      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-        <Text style={styles.optionsStyle}>Notification Delivery</Text>
-        <View style={styles.notifStyle}>
-          <Text>{notif_time ? new Date(notif_time).toISOString().split('T')[1] : 'N/A'}</Text>
-        </View>
+      <Title style={styles.notificationSettingStyle}>Settings</Title>
+      <View style={styles.row}>
+        <Subheading style={styles.optionsStyle}>Notification Time</Subheading>
+        <Text>{notif_time ? new Date(notif_time).toISOString().split('T')[1] : 'N/A'}</Text>
+        <IconButton
+          icon="pencil"
+          onPress={showTimepicker}
+          //style={{alignSelf: 'flex-end'}}
+        />
       </View>
-      <Button onPress={showTimepicker}>Select a notification time</Button>
+      {/*<Button onPress={showTimepicker}>Select a notification time</Button>*/}
       <SetNotifTimeModal displayModal={show} setShow={setShow} />
     </View>
   );
@@ -146,14 +152,20 @@ export default function SettingsScreen(props: Props) {
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
-  buttonStyle: {
-    textTransform: 'none',
-    fontSize: 18,
-  },
-
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    justifyContent: 'flex-start'
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    alignSelf: 'center',
+    // borderWidth: 1, 
+    // borderStyle: "solid",
+    width: windowWidth * 0.85,
+    height: windowHeight * 0.047,
   },
   containerPicture: {
     backgroundColor: '#fff',
@@ -173,42 +185,24 @@ const styles = StyleSheet.create({
     height: windowHeight * 0.08,
   },
 
-  editButtonStyle: {
-    fontSize: 18,
-    color: '#64A3A3',
-    fontStyle: 'normal',
-    fontWeight: 'normal',
-  },
-
   notificationSettingStyle: {
     marginLeft: 15,
-    fontStyle: 'normal',
-    fontWeight: 'normal',
-    color: '#000',
-    fontSize: 22,
     lineHeight: 30,
     paddingTop: 20,
   },
 
   optionsStyle: {
-    fontSize: 16,
-    color: '#666666',
-    fontStyle: 'normal',
-    fontWeight: 'normal',
     marginLeft: 30,
     lineHeight: 30,
   },
   notifStyle: {
-    fontSize: 16,
-    color: '#666666',
-    fontStyle: 'normal',
-    fontWeight: 'normal',
-    justifyContent: 'center',
-    right: windowWidth * 0.16,
+    //justifyContent: 'center',
+    //right: windowWidth * 0.16,
   },
   profilePicture: {
     flexDirection: 'column',
-    borderColor: 'black',
+    borderColor: Colors.grey400,
+    borderWidth: 2,
     width: 150,
     height: 150,
     borderRadius: 100,
@@ -224,10 +218,6 @@ const styles = StyleSheet.create({
   },
 
   textTitle: {
-    fontSize: 24,
-    color: '#000000',
-    fontStyle: 'normal',
-    fontWeight: 'normal',
     textAlign: 'center',
     marginLeft: 160,
   },
@@ -240,22 +230,14 @@ const styles = StyleSheet.create({
   usernameStyle: {
     alignContent: 'center',
     top: '30%',
-    fontSize: 26,
     marginLeft: 10,
-    fontStyle: 'normal',
-    fontWeight: 'normal',
-    color: '#000',
     paddingBottom: 3,
   },
 
   zoneStyle: {
     alignContent: 'center',
     top: '30%',
-    fontSize: 16,
     marginLeft: 10,
-    fontStyle: 'normal',
-    fontWeight: 'normal',
-    color: '#666666',
     paddingBottom: 3,
   },
 
