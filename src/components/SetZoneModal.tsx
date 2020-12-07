@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, StyleSheet, Text, Modal, Dimensions} from 'react-native';
-import {Button} from 'react-native-paper';
+import {Button, Colors} from 'react-native-paper';
 import {useState} from 'react';
 import {Picker} from '@react-native-picker/picker';
 
@@ -21,16 +21,18 @@ export default function SetZoneModal(props: Props) {
       <View style={styles.bottomView}>
         <View style={styles.modalView}>
           <View style={styles.header}>
-            <Button onPress={onExit}>Cancel</Button>
+            <Button color={Colors.grey400} onPress={onExit}>Cancel</Button>
             <Button
+              color={Colors.lightGreen900}
               onPress={() => {
                 setTextZone(modalZone);
                 setShowModal(false);
               }}
             >
               Done
-            </Button>
+          </Button>
           </View>
+
           <View style={{alignItems: 'center', justifyContent: 'flex-start'}}>
             <Picker
               selectedValue={modalZone}
@@ -52,6 +54,7 @@ export default function SetZoneModal(props: Props) {
               <Picker.Item label="USDA Zone 13" value="13" />
             </Picker>
           </View>
+
         </View>
       </View>
     </Modal>
@@ -82,8 +85,16 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
 
     //temporary
-    borderWidth: 1,
+    borderWidth: 2,
     borderStyle: 'solid',
+    borderColor: Colors.grey300
+  },
+
+  doneButton: {
+    borderRadius: 40,
+    borderWidth: 2,
+    padding: 4,
+    margin: 30,
   },
 
   header: {
