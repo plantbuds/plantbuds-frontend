@@ -35,101 +35,78 @@ var entries = {};
 
 const greenBlueBrown = {
   container: {
-    backgroundColor: 'white',
     borderWidth: 4,
-    borderBottomColor: '#1CA7EC',
-    borderTopColor: '#31e627',
-    borderLeftColor: '#AA6F5D',
-    borderRightColor: '#1CA7EC',
+    borderBottomColor: Colors.lightBlue300,
+    borderTopColor: Colors.green300,
+    borderLeftColor: Colors.brown300,
+    borderRightColor: Colors.lightBlue300,
   },
   text: {
     bottom: 3,
-    color: 'black',
   },
 };
 const brown = {
   container: {
-    backgroundColor: 'white',
     borderWidth: 4,
-    borderBottomColor: '#AA6F5D',
-    borderTopColor: '#AA6F5D',
-    borderLeftColor: '#AA6F5D',
-    borderRightColor: '#AA6F5D',
+    borderColor: Colors.brown300,
   },
   text: {
     bottom: 3,
-    color: 'black',
   },
 };
 const green = {
   container: {
-    backgroundColor: 'white',
     borderWidth: 4,
-    borderBottomColor: '#31e627',
-    borderTopColor: '#31e627',
-    borderLeftColor: '#31e627',
-    borderRightColor: '#31e627',
+    borderColor: Colors.green300,
   },
   text: {
     bottom: 3,
-    color: 'black',
   },
 };
 const blue = {
   container: {
-    backgroundColor: 'white',
     borderWidth: 4,
-    borderBottomColor: '#1CA7EC',
-    borderTopColor: '#1CA7EC',
-    borderLeftColor: '#1CA7EC',
-    borderRightColor: '#1CA7EC',
+    borderColor: Colors.lightBlue300,
   },
   text: {
     bottom: 3,
-    color: 'black',
   },
 };
 
 const blueBrown = {
   container: {
-    backgroundColor: 'white',
     borderWidth: 4,
-    borderBottomColor: '#1CA7EC',
-    borderTopColor: '#AA6F5D',
-    borderLeftColor: '#1CA7EC',
-    borderRightColor: '#AA6F5D',
+    borderBottomColor: Colors.lightBlue300,
+    borderTopColor: Colors.brown300,
+    borderLeftColor: Colors.lightBlue300,
+    borderRightColor: Colors.brown300,
   },
   text: {
     bottom: 3,
-    color: 'black',
   },
 };
 const blueGreen = {
   container: {
-    backgroundColor: 'white',
     borderWidth: 4,
-    borderBottomColor: '#1CA7EC',
-    borderTopColor: '#31e627',
-    borderLeftColor: '#1CA7EC',
-    borderRightColor: '#31e627',
+    borderBottomColor: Colors.lightBlue300,
+    borderTopColor: Colors.green300,
+    borderLeftColor: Colors.lightBlue300,
+    borderRightColor: Colors.green300,
   },
   text: {
     bottom: 3,
-    color: 'black',
   },
 };
 const greenBrown = {
   container: {
-    backgroundColor: 'white',
     borderWidth: 4,
-    borderBottomColor: '#31e627',
-    borderTopColor: '#AA6F5D',
-    borderLeftColor: '#31e627',
-    borderRightColor: '#AA6F5D',
+    borderBottomColor: Colors.green300,
+    borderTopColor: Colors.brown300,
+    borderLeftColor: Colors.green300,
+    borderRightColor: Colors.brown300,
   },
   text: {
     bottom: 3,
-    color: 'black',
   },
 };
 
@@ -225,17 +202,12 @@ export default function PlantProfileScreen(props: Props) {
       }
       if (date === selectedDate) {
         entry['selected'] = true;
-        entry['customStyles']['container']['backgroundColor'] = 'green';
-        entry['customStyles']['text']['color'] = 'white';
         selected = true;
       }
       markings[date] = entry;
     }
     if (!selected) {
-      markings[selectedDate] = {
-        selected: true,
-        customStyles: {container: {backgroundColor: 'green'}},
-      };
+      markings[selectedDate] = { selected: true };
     }
     setMarkings(markings);
   };
@@ -259,6 +231,7 @@ export default function PlantProfileScreen(props: Props) {
     }
   }, [editedEntry]);
 
+  // Header
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: () => (
@@ -314,7 +287,7 @@ export default function PlantProfileScreen(props: Props) {
 
         <View style={{paddingTop: 10}}>
           <Text style={styles.NRTParentStyle}> Notes </Text>
-          <Text style={styles.randomStyling}>{notes ? notes : 'No notes currently'}</Text>
+          <Text style={styles.randomStyling}>{notes ? notes : 'No notes yet'}</Text>
         </View>
 
         <View>
@@ -382,20 +355,20 @@ export default function PlantProfileScreen(props: Props) {
             theme={{
               backgroundColor: '#ffffff',
               calendarBackground: '#ffffff',
-              textSectionTitleColor: '#b6c1cd',
+              textSectionTitleColor: Colors.grey600,
               selectedDayTextColor: 'white',
-              todayTextColor: '#00adf5',
-              dayTextColor: 'black',
-              textDisabledColor: '#979797',
+              selectedDayBackgroundColor: Colors.lightGreen300,
+              arrowColor: Colors.lightGreen300,
+              todayTextColor: Colors.lightGreen300,
+              dayTextColor: Colors.grey600,
+              textDisabledColor: Colors.grey400,
             }}
           />
           <Button onPress={() => setDisplayAddEntryModal(true)}>Edit Entry</Button>
           <AddEntryModal
             selectedDate={selectedDate}
             displayModal={displayAddEntryModal}
-            onPress={() => {
-              setDisplayAddEntryModal(false);
-            }}
+            onPress={() => setDisplayAddEntryModal(false)}
             onExit={() => setDisplayAddEntryModal(false)}
             entries={entries}
             updateCalendarMarkings={() => updateCalendarMarkings}
@@ -406,15 +379,11 @@ export default function PlantProfileScreen(props: Props) {
           />
           <SetRepotReminderModal
             displayModal={displayRepotModal}
-            onExit={() => {
-              setDisplayRepotModal(false);
-            }}
+            onExit={() => setDisplayRepotModal(false)}
           />
           <SetFertilizeReminderModal
             displayModal={displayFertilizeModal}
-            onExit={() => {
-              setDisplayFertilizeModal(false);
-            }}
+            onExit={() => setDisplayFertilizeModal(false)}
           />
         </View>
       </ScrollView>
