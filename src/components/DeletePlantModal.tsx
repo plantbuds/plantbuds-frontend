@@ -19,7 +19,7 @@ export default function DeletePlantModal(props: Props) {
         </Dialog.Content>
         <Dialog.Actions>
           <Button color={Colors.grey400} onPress={onExit}>Cancel</Button>
-          <Button onPress={onPress}>Delete</Button>
+          <Button color={Colors.red400} onPress={onPress}>Delete</Button>
         </Dialog.Actions>
       </Dialog>
     </Portal>
