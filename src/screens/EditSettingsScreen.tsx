@@ -7,10 +7,7 @@ import {
   Dimensions,
   TouchableWithoutFeedback,
   Keyboard,
-  GestureResponderEvent,
   KeyboardAvoidingView,
-  PixelRatio,
-  PushNotificationIOS,
 } from 'react-native';
 import {Text, IconButton, Colors, Button, TextInput} from 'react-native-paper';
 import SetZoneModal from '../components/SetZoneModal';
@@ -40,7 +37,7 @@ export default function EditSettingsScreen(props: Props) {
 
   const [image, setImage] = useState(null);
   const [textZone, setTextZone] = useState(USDAZone);
-  const [textName, setTextName] = useState('');
+  const [textName, setTextName] = useState(username);
   const [showModal, setShowModal] = useState(false);
   const [textErr, setTextErr] = useState(false);
 
@@ -77,7 +74,11 @@ export default function EditSettingsScreen(props: Props) {
       return;
     }
     dispatch(
-      editUserProfile(textName ? textName : username, textZone, image ? image : profilePic, userID)
+      editUserProfile(
+        textName ? textName : username, 
+        textZone, 
+        image ? image : profilePic, 
+        userID)
     );
     setTextErr(false);
     navigation.goBack();
@@ -96,194 +97,88 @@ export default function EditSettingsScreen(props: Props) {
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : null} style={{flex: 1}}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
-          <View style={styles.containerPicture}>
-            {(image && <Image style={styles.profilePicture} source={{uri: image}} />) ||
-              (!image && <Image style={styles.profilePicture} source={{uri: profilePic}} />)}
-            <Button
-              color="#64A3A3"
-              icon="camera"
-              labelStyle={styles.buttonStyle}
-              onPress={pickImage}
-            >
-              Change Profile Photo
+
+          <View style={styles.photoContainer}>
+            {(image && <Image style={styles.photo} source={{uri: image}} />) ||
+              (!image && <Image style={styles.photo} source={{uri: profilePic}} />)}
+            <Button icon="camera" color={Colors.lightGreen300} onPress={pickImage}>
+              Change Photo
             </Button>
           </View>
-          <View style={styles.containerTest}>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                backgroundColor: '#fff',
-                paddingTop: 10,
-              }}
-            >
-              <View style={{flex: 1}}>
-                <Text style={styles.inputFontStyleLabelTop}>Username</Text>
-              </View>
-              <View style={{flex: 2}}>
-                <TextInput
-                  keyboardType="ascii-capable"
-                  mode="flat"
-                  maxLength={13}
-                  theme={theme}
-                  style={styles.inputFontStyle}
-                  placeholder={username}
-                  underlineColor="#fff"
-                  value={textName}
-                  onChangeText={textName => setTextName(textName)}
-                />
-              </View>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                backgroundColor: '#fff',
-                paddingTop: 10,
-              }}
-            >
-              <View style={{flex: 1}}>
-                <Text style={styles.inputFontStyleLabelBottom}>USDA Zone</Text>
-              </View>
-              <View style={{flex: 2}}>
-                <Button
-                  icon={showModal ? 'chevron-up' : 'chevron-down'}
-                  mode="contained"
-                  contentStyle={styles.contentStyle}
-                  labelStyle={styles.labelStyle}
-                  style={styles.zoneButton}
-                  onPress={() => setShowModal(true)}
-                >
+
+          <View style={styles.formContainer}>
+            <TextInput
+              mode='outlined'
+              label='Username'
+              keyboardType='ascii-capable'
+              maxLength={13}
+              theme={{ colors: { primary: Colors.lightGreen300 } }}
+              placeholder={username}
+              value={textName}
+              onChangeText={textName => setTextName(textName)}
+            />
+            <View style={{ paddingTop: 10 }}>
+              <Button
+                icon={showModal ? 'chevron-up' : 'chevron-down'}
+                mode='outlined'
+                color={Colors.grey600}
+                style={styles.zoneButton}
+                contentStyle={{ justifyContent: 'flex-start' }}
+                onPress={() => setShowModal(true)}
+              >
+                <Text style={{ color: Colors.grey600 }}>
                   {'USDA Zone: ' + textZone}
-                </Button>
-              </View>
+                </Text>
+              </Button>
             </View>
-            {textErr && (
-              <Text style={styles.textError}>username must be between 3-13 characters long</Text>
-            )}
+            <SetZoneModal
+              displayModal={showModal}
+              textZone={textZone}
+              setTextZone={setTextZone}
+              setShowModal={setShowModal}
+              onExit={() => setShowModal(false)}
+            />
           </View>
-          <SetZoneModal
-            displayModal={showModal}
-            textZone={textZone}
-            setTextZone={setTextZone}
-            setShowModal={setShowModal}
-            onExit={() => setShowModal(false)}
-          />
         </View>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   );
 }
+
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: 'white',
     flex: 1,
-    backgroundColor: '#fff',
     flexWrap: 'wrap',
     alignItems: 'center',
-    height: windowHeight,
+    justifyContent: 'flex-start',
+    paddingLeft: 30,
   },
-  containerPicture: {
-    backgroundColor: '#fff',
+  photoContainer: {
     alignItems: 'center',
     paddingTop: 10,
-    height: windowHeight * 0.29,
   },
-  containerTest: {
-    backgroundColor: '#fff',
-    alignItems: 'flex-start',
-    alignSelf: 'flex-start',
-    marginLeft: 25,
-    justifyContent: 'space-between',
-    textAlignVertical: 'top',
-    height: windowHeight * 0.08,
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    justifyContent: 'space-between',
-    width: '100%',
-    height: windowHeight * 0.06,
-  },
-  textTitle: {
-    fontSize: 24,
-    color: '#000000',
-    fontStyle: 'normal',
-    fontWeight: 'normal',
-  },
-  textTitleLeft: {
-    fontSize: 18,
-    color: '#000000',
-    fontStyle: 'normal',
-    fontWeight: 'normal',
-  },
-  textTitleRight: {
-    fontSize: 18,
-    color: '#64A3A3',
-    fontStyle: 'normal',
-    fontWeight: 'normal',
-  },
-  profilePicture: {
-    flexDirection: 'column',
-    borderColor: '#000000',
+  photo: {
     width: 150,
     height: 150,
     borderRadius: 100,
-    borderWidth: 0.5,
+    borderColor: Colors.grey400,
+    borderWidth: 1,
   },
-  textContainer: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+  formContainer: {
+    paddingTop: 10,
+    width: windowWidth * 0.85,
   },
-  inputFontStyle: {
-    borderColor: 'black',
-    backgroundColor: '#ffffff',
-    height: 25,
-    width: windowWidth * 0.6,
-    color: '#666666',
-    fontSize: 18,
-  },
-  inputPickerStyle: {
-    borderColor: 'black',
-    backgroundColor: '#ffffff',
-    height: 40,
-    width: windowWidth * 0.15,
-    color: '#666666',
-    fontSize: 18,
-  },
-  inputFontStyleLabelTop: {
-    color: '#666666',
-    fontSize: 18,
-    marginRight: 29,
-    fontWeight: '500',
-  },
-  inputFontStyleLabelBottom: {
-    color: '#666666',
-    fontSize: 18,
-    marginRight: 20,
-    fontWeight: '500',
-  },
-  textError: {
-    paddingTop: 30,
-    color: 'red',
-  },
-  buttonStyle: {
-    textTransform: 'none',
-    fontSize: 18,
+  form: {
+    paddingTop: 10,
   },
   zoneButton: {
-    width: windowWidth * 0.38,
-  },
-  contentStyle: {
-    backgroundColor: Colors.grey300,
-  },
-  labelStyle: {
-    color: 'black',
-    fontSize: 12,
-  },
+    padding: 5,
+    alignSelf: 'stretch',
+    borderWidth: 1,
+    borderColor: Colors.grey400,
+    backgroundColor: Colors.grey50
+  }
 });
