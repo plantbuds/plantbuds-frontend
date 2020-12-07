@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import {Text, Colors, IconButton, Button, FAB} from 'react-native-paper';
 import {HeaderBackButton} from '@react-navigation/stack';
-import {updateTaskHistory, setEditedEntry, resetPlantState} from '../../store/plantgroup/actions';
+import {updateTaskHistory, setEditedEntry, resetPlantState, setEditedNotif} from '../../store/plantgroup/actions';
 import {RootState} from '../../store/store';
 import {useDispatch, useSelector} from 'react-redux';
 import SetWaterReminderModal from '../components/SetWaterReminderModal';
@@ -22,6 +22,7 @@ import SetRepotReminderModal from '../components/SetRepotReminderModal';
 import SetFertilizeReminderModal from '../components/SetFertilizeReminderModal';
 import AddEntryModal from '../components/AddEntryModal';
 import {Calendar as ReactCalendar} from 'react-native-calendars';
+import {State} from 'react-native-gesture-handler';
 
 // declare types for your props here
 interface Props {
@@ -151,7 +152,11 @@ export default function PlantProfileScreen(props: Props) {
   const photo = useSelector((state: RootState) => state.plantgroup.photo);
   const notes = useSelector((state: RootState) => state.plantgroup.notes);
   const history = useSelector((state: RootState) => state.plantgroup.history);
+  const water_history = useSelector((state: RootState) => state.plantgroup.water_history);
+  const repot_history = useSelector((state: RootState) => state.plantgroup.repot_history);
+  const fertilize_history = useSelector((state: RootState) => state.plantgroup.fertilize_history);
   const editedEntry = useSelector((state: RootState) => state.plantgroup.editedEntry);
+  const editedNotif = useSelector((state: RootState) => state.plantgroup.editedNotif);
 
   const dispatch = useDispatch();
   let token = '';
@@ -239,7 +244,7 @@ export default function PlantProfileScreen(props: Props) {
   useEffect(() => {
     loadEntries();
     updateCalendarMarkings();
-  }, [plant_id, JSON.stringify(history)]);
+  }, [plant_id, JSON.stringify(history), JSON.stringify(water_history)]);
 
   // Listener for updating calendar markings *note this hook will run every time since we are creating a new Date object
   useEffect(() => {
@@ -313,26 +318,51 @@ export default function PlantProfileScreen(props: Props) {
         </View>
 
         <View>
-          <Text style={styles.NRTParentStyle}> Reminders </Text>
+          <Text style={styles.NRTParentStyle}>Scheduled Reminders</Text>
         </View>
 
         <View style={styles.smallerPhoneStyling}>
-          <Text style={styles.NRTChildStyle}>Next Watering Reminder</Text>
-          <FAB small={true} icon="plus" onPress={() => setDisplayWaterModal(true)} />
+          <Text style={styles.NRTChildStyle}>Water</Text>
+          <Text>
+            {water_history && water_history.length > 0 ? water_history[0] : 'No Reminders'}
+          </Text>
+          <IconButton
+            icon="pencil"
+            style={styles.editButton}
+            onPress={() => setDisplayWaterModal(true)}
+          />
         </View>
 
         <View style={styles.smallerPhoneStyling}>
-          <Text style={styles.NRTChildStyle}>Next Repotting Reminder</Text>
-          <FAB small={true} icon="plus" onPress={() => setDisplayRepotModal(true)} />
-        </View>
-        <View style={styles.smallerPhoneStyling}>
-          <Text style={styles.NRTChildStyle}>Next Fertilizing Reminder</Text>
-          <FAB small={true} icon="plus" onPress={() => setDisplayFertilizeModal(true)} />
+          <Text style={styles.NRTChildStyle}>Repot</Text>
+          <Text>
+            {repot_history && repot_history.length > 0 ? repot_history[0] : 'No Reminders'}
+          </Text>
+          <IconButton
+            icon="pencil"
+            style={styles.editButton}
+            onPress={() => setDisplayRepotModal(true)}
+          />
         </View>
 
-        <View>
+        <View style={styles.smallerPhoneStyling}>
+          <Text style={styles.NRTChildStyle}>Fertilize</Text>
+          <Text style={styles.fertilizeText}>
+            {fertilize_history && fertilize_history.length > 0
+              ? fertilize_history[0]
+              : 'No Reminders'}
+          </Text>
+          <IconButton
+            icon="pencil"
+            style={styles.editButton}
+            onPress={() => setDisplayFertilizeModal(true)}
+          />
+        </View>
+
+        <View style={{paddingTop: 10}}>
           <Text style={styles.NRTParentStyle}> Task History </Text>
           <ReactCalendar
+            enableSwipeMonths={true}
             onDayPress={day => {
               setSelectedDate(day.dateString);
               if (entries[selectedDate] != null) {
@@ -441,6 +471,7 @@ const styles = StyleSheet.create({
   },
 
   NRTChildStyle: {
+    alignSelf: 'center',
     fontStyle: 'normal',
     fontWeight: 'normal',
     color: '#666666',
@@ -490,19 +521,13 @@ const styles = StyleSheet.create({
 
   smallerPhoneStyling: {
     flexDirection: 'row',
+    alignItems: "center",
     justifyContent: 'space-between',
     alignSelf: 'center',
+   // borderWidth: 1, 
+   // borderStyle: "solid",
     width: windowWidth * 0.78,
-  },
-  frequencyContainer: {
-    marginTop: 5,
-    marginBottom: 5,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignSelf: 'flex-start',
-    alignItems: 'center',
-    left: windowWidth * 0.11,
-    width: windowWidth * 0.56,
+    height: windowHeight * 0.047,
   },
   textTitle: {
     fontSize: 24,
@@ -522,4 +547,14 @@ const styles = StyleSheet.create({
     fontSize: 9,
     color: 'black',
   },
+  editButton: {
+    alignSelf: "flex-start",
+    right: windowWidth * 0.03,
+    width: 35,
+    height: 24,
+    bottom: 5,
+  },
+  fertilizeText: {
+    right: windowWidth * 0.02,
+  }
 });

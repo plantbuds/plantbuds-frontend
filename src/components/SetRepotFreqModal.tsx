@@ -2,27 +2,22 @@ import React from 'react';
 import {View, StyleSheet, Text, Modal, Dimensions} from 'react-native';
 import {Button} from 'react-native-paper';
 import {useState} from 'react';
+import {RootState} from '../../store/store';
+import {useSelector} from 'react-redux';
 import {Picker} from '@react-native-picker/picker';
 
 interface Props {
   displayModal: boolean;
   onExit: () => void;
-  textRepFreq: string;
-  setTextRepFreq: React.Dispatch<React.SetStateAction<string>>;
+  repFreq: number;
+  setRepFreq: React.Dispatch<React.SetStateAction<number>>;
   setShowModal: (val: boolean) => void;
 }
 
-// TODO make sure frontend can store date started for reminders
-// if user chooses only once, let user choose what time notif will occur that day 
-// use the history arrays stored in the backend to keep track of the dates
-// if user clears reminders clear the history array for that particualr reminder 
-// ISSUE TO ADDRESS: adding days that cause day date to go past 30/31. Make sure
-//                   it rolls over to a new month 
-// UI should be ready to go for demo though. Just need to adjust the plant profile UI. 
-
 export default function SetRepotFreqModal(props: Props) {
-  const {displayModal, onExit, textRepFreq, setTextRepFreq, setShowModal} = props;
-  const [modalText, setModalText] = useState(textRepFreq);
+  const {displayModal, onExit, repFreq, setRepFreq, setShowModal} = props;
+  const repot_frequency = useSelector((state: RootState) => state.plantgroup.water_frequency);
+  const [modalText, setModalText] = useState(repot_frequency);
 
   return (
     <Modal animationType="slide" transparent={true} visible={displayModal}>
@@ -32,7 +27,7 @@ export default function SetRepotFreqModal(props: Props) {
             <Button onPress={onExit}>Cancel</Button>
             <Button
               onPress={() => {
-                setTextRepFreq(modalText);
+                setRepFreq(modalText);
                 setShowModal(false);
               }}
             >
@@ -43,17 +38,19 @@ export default function SetRepotFreqModal(props: Props) {
             <Picker
               selectedValue={modalText}
               style={{height: 40, width: 150, bottom: 50}}
-              onValueChange={(itemValue: string) => setModalText(itemValue)}
+              onValueChange={(itemValue: number) => setModalText(itemValue)}
             >
-              <Picker.Item label="1 Day" value="1" />
-              <Picker.Item label="2 Days" value="2" />
-              <Picker.Item label="3 Days" value="3" />
-              <Picker.Item label="4 Days" value="4" />
-              <Picker.Item label="5 Days" value="5" />
-              <Picker.Item label="10 Days" value="10" />
-              <Picker.Item label="15 Days" value="15" />
-              <Picker.Item label="20 Days" value="20" />
-              <Picker.Item label="25 Days" value="25" />
+               <Picker.Item label="Only once" value={0} />
+              <Picker.Item label="1 Day" value={1} />
+              <Picker.Item label="2 Days" value={2} />
+              <Picker.Item label="3 Days" value={3} />
+              <Picker.Item label="4 Days" value={4} />
+              <Picker.Item label="5 Days" value={5} />
+              <Picker.Item label="6 Days" value={6} />
+              <Picker.Item label="7 Days" value={7} />
+              <Picker.Item label="8 Days" value={8} />
+              <Picker.Item label="9 Days" value={9} />
+              <Picker.Item label="10 Days" value={10} />
             </Picker>
           </View>
         </View>

@@ -2,20 +2,22 @@ import React from 'react';
 import {View, StyleSheet, Text, Modal, Dimensions} from 'react-native';
 import {Button} from 'react-native-paper';
 import {useState} from 'react';
+import {RootState} from '../../store/store';
+import {useSelector} from 'react-redux';
 import {Picker} from '@react-native-picker/picker';
 
 interface Props {
   displayModal: boolean;
   onExit: () => void;
-  textFertFreq: string;
-  setTextFertFreq: React.Dispatch<React.SetStateAction<string>>;
+  fertFreq: number;
+  setFertFreq: React.Dispatch<React.SetStateAction<number>>;
   setShowModal: (val: boolean) => void;
 }
 
 export default function SetFertilizeFreqModal(props: Props) {
-  const {displayModal, onExit, textFertFreq, setTextFertFreq, setShowModal} = props;
-  const [modalText, setModalText] = useState(textFertFreq);
-
+  const {displayModal, onExit, fertFreq, setFertFreq, setShowModal} = props;
+  const fertilize_frequency = useSelector((state: RootState) => state.plantgroup.fertilize_frequency);
+  const [modalText, setModalText] = useState(fertilize_frequency);
   return (
     <Modal animationType="slide" transparent={true} visible={displayModal}>
       <View style={styles.bottomView}>
@@ -24,7 +26,7 @@ export default function SetFertilizeFreqModal(props: Props) {
             <Button onPress={onExit}>Cancel</Button>
             <Button
               onPress={() => {
-                setTextFertFreq(modalText);
+                setFertFreq(modalText);
                 setShowModal(false);
               }}
             >
@@ -35,17 +37,19 @@ export default function SetFertilizeFreqModal(props: Props) {
             <Picker
               selectedValue={modalText}
               style={{height: 40, width: 150, bottom: 50}}
-              onValueChange={(itemValue: string) => setModalText(itemValue)}
+              onValueChange={(itemValue: number) => setModalText(itemValue)}
             >
-              <Picker.Item label="1 Day" value="1" />
-              <Picker.Item label="2 Days" value="2" />
-              <Picker.Item label="3 Days" value="3" />
-              <Picker.Item label="4 Days" value="4" />
-              <Picker.Item label="5 Days" value="5" />
-              <Picker.Item label="10 Days" value="10" />
-              <Picker.Item label="15 Days" value="15" />
-              <Picker.Item label="20 Days" value="20" />
-              <Picker.Item label="25 Days" value="25" />
+              <Picker.Item label="Only once" value={0} />
+              <Picker.Item label="1 Day" value={1} />
+              <Picker.Item label="2 Days" value={2} />
+              <Picker.Item label="3 Days" value={3} />
+              <Picker.Item label="4 Days" value={4} />
+              <Picker.Item label="5 Days" value={5} />
+              <Picker.Item label="6 Days" value={6} />
+              <Picker.Item label="7 Days" value={7} />
+              <Picker.Item label="8 Days" value={8} />
+              <Picker.Item label="9 Days" value={9} />
+              <Picker.Item label="10 Days" value={10} />
             </Picker>
           </View>
         </View>

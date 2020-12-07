@@ -4,52 +4,88 @@ import {View, StyleSheet, Text, Modal, Dimensions} from 'react-native';
 import {Colors, Button} from 'react-native-paper';
 import {Calendar as ReactCalendar} from 'react-native-calendars';
 import {useState} from 'react';
+import {RootState} from '../../store/store';
+import {useSelector, useDispatch} from 'react-redux';
 import SetFertilizeFreqModal from './SetFertilizeFreqModal';
+import {updateFertilizeNotifHistory} from '../../store/plantgroup/actions';
 
 interface Props {
   displayModal: boolean;
   onExit: () => void;
 }
 
-// TODO make sure frontend can store date started for reminders
-// if user chooses only once, let user choose what time notif will occur that day 
-// use the history arrays stored in the backend to keep track of the dates
-// if user clears reminders clear the history array for that particualr reminder 
-// ISSUE TO ADDRESS: adding days that cause day date to go past 30/31. Make sure
-//                   it rolls over to a new month 
-// UI should be ready to go for demo though. Just need to adjust the plant profile UI. 
-
 export default function SetFertilizeReminderModal(props: Props) {
   const {displayModal, onExit} = props;
 
-  const [selectedDate, setSelectedDate] = useState('');
+  function setStartDateString() {
+    var tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+var localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, -1);
+    return localISOTime.split("T")[0];
+  }
+
+  const fertilize_history = useSelector((state: RootState) => state.plantgroup.fertilize_history);
+  const fertilize_frequency = useSelector(
+    (state: RootState) => state.plantgroup.fertilize_frequency
+  );
+  const [selectedDate, setSelectedDate] = useState(
+    fertilize_history && fertilize_history.length > 0
+      ? fertilize_history[0]
+      : setStartDateString()
+  );
   const [showFertilizeModal, setShowFertilizeModal] = useState(false);
-  const [textFertFreq, setTextFertFreq] = useState('0');
+  const [fertFreq, setFertFreq] = useState(fertilize_frequency);
+  const plant_id = useSelector((state: RootState) => state.plantgroup.plant_id);
+  const dispatch = useDispatch();
+
+  function addDays(date, days) {
+    const copy = new Date(Number(date));
+    let datestring = '';
+    copy.setDate(date.getDate() + days);
+    datestring = copy.toISOString().split('T')[0];
+    return datestring;
+  }
+
+  function pushNotifHistory() {
+    // setup new water history array
+    let fertilizeArray = [];
+    let currDate = new Date(selectedDate);
+    for (let i = 0; i < 5; i++) {
+      fertilizeArray.push(addDays(currDate, rate * i));
+    }
+
+    // update backend with water notification array
+    dispatch(updateFertilizeNotifHistory(fertilizeArray, fertFreq, plant_id));
+  }
+
+  function clearNotifHistory() {
+    dispatch(updateFertilizeNotifHistory([], 0, plant_id));
+  }
   return (
     <Modal animationType="slide" transparent={true} visible={displayModal}>
       <View style={styles.bottomView}>
         <View style={styles.modalView}>
           <Button onPress={onExit}>Cancel</Button>
-          <Text>Set Fertilize Reminder Start Date</Text>
+          <Text style={styles.reminderTitle}>Set Fertilize Reminder</Text>
           <ReactCalendar
+            enableSwipeMonths={true}
             onDayPress={day => setSelectedDate(day.dateString)}
             current={new Date().toISOString().split('T')[0]}
             minDate={new Date()}
             markedDates={{
-              [selectedDate]: {selected: true, marked: false, selectedColor: '#00adf5'},
+              [selectedDate]: {selected: true, marked: false, selectedColor: 'green'},
             }}
             theme={{
               backgroundColor: '#ffffff',
               calendarBackground: '#ffffff',
               textSectionTitleColor: '#b6c1cd',
-              selectedDayTextColor: 'black',
+              selectedDayTextColor: 'white',
               todayTextColor: '#00adf5',
               dayTextColor: 'black',
               textDisabledColor: '#979797',
             }}
           />
           <View style={styles.frequencyContainer}>
-            <Text>Frequency:</Text>
+            <Text style={styles.frequencyText}>Frequency:</Text>
             <Button
               icon={showFertilizeModal ? 'chevron-up' : 'chevron-down'}
               mode="contained"
@@ -58,16 +94,16 @@ export default function SetFertilizeReminderModal(props: Props) {
               style={styles.freqButton}
               onPress={() => setShowFertilizeModal(true)}
             >
-              {textFertFreq === '0'
+              {!fertFreq || fertFreq === 0
                 ? 'Only once'
-                : textFertFreq === '1'
+                : fertFreq === 1
                 ? 'Every day'
-                : 'Every ' + textFertFreq + ' days'}
+                : 'Every ' + fertFreq.toString() + ' days'}
             </Button>
             <SetFertilizeFreqModal
               displayModal={showFertilizeModal}
-              textFertFreq={textFertFreq}
-              setTextFertFreq={setTextFertFreq}
+              fertFreq={fertFreq}
+              setFertFreq={setFertFreq}
               setShowModal={setShowFertilizeModal}
               onExit={() => setShowFertilizeModal(false)}
             />
@@ -76,20 +112,23 @@ export default function SetFertilizeReminderModal(props: Props) {
             mode="contained"
             color={Colors.green400}
             onPress={() => {
-              Notifications.scheduleNotificationAsync({
-                content: {
-                  title: 'Time to fertilize!',
-                  body: 'Your plant needs to be fertilized!',
-                },
-                trigger: {
-                  seconds: 5,
-                },
-              });
+              pushNotifHistory();
               onExit();
             }}
             style={styles.roundToggle}
           >
             <Text style={{color: Colors.white}}>Save</Text>
+          </Button>
+          <Button
+            mode="contained"
+            color={Colors.red300}
+            onPress={() => {
+              clearNotifHistory();
+              onExit();
+            }}
+            style={styles.roundToggle}
+          >
+            <Text style={{color: Colors.white}}>Clear Reminder</Text>
           </Button>
         </View>
       </View>
@@ -117,6 +156,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     shadowColor: '#000',
   },
+  reminderTitle: {
+    fontSize: 22,
+    alignSelf: 'center',
+  },
+  frequencyText: {
+    fontSize: 18,
+  },
   frequencyContainer: {
     marginTop: 5,
     marginBottom: 5,
@@ -125,7 +171,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     alignItems: 'center',
     left: windowWidth * 0.11,
-    width: windowWidth * 0.56,
+    width: windowWidth * 0.6,
   },
   freqButton: {
     width: windowWidth * 0.32,
@@ -142,7 +188,8 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     borderWidth: 2,
     padding: 4,
-    margin: 30,
+    marginHorizontal: 30,
+    marginTop: 30,
     color: Colors.white,
   },
 });
