@@ -1,7 +1,10 @@
-import {removePushTokenSubscription} from 'expo-notifications';
-import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, View, ScrollView, Dimensions, Image} from 'react-native';
-import {Button} from 'react-native-paper';
+import { HeaderBackButton } from '@react-navigation/stack';
+import { removePushTokenSubscription } from 'expo-notifications';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, View, ScrollView, Dimensions, Image } from 'react-native';
+import { Button, Divider, Headline, Subheading, Text, Title } from 'react-native-paper';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
+import { useDispatch } from 'react-redux';
 
 // declare types for your props here
 interface Props {
@@ -11,7 +14,8 @@ interface Props {
 }
 
 export default function EncyclopediaProfileScreen(props: Props) {
-  const {navigation, route} = props;
+  const { navigation, route } = props;
+  const dispatch = useDispatch();
 
   const defaultPlant = 'http://i.imgur.com/4os1ZjY.png';
 
@@ -39,87 +43,75 @@ export default function EncyclopediaProfileScreen(props: Props) {
     return parsedString;
   }
 
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerBackTitle: 'Back'
+    });
+  }, [navigation]);
+
   return (
     <View style={styles.container}>
-      <View style={{flexDirection: 'row'}}>
-        <Button labelStyle={styles.searchButtonStyle} onPress={() => navigation.navigate('Search')}>
-          Back to Search
-        </Button>
-      </View>
-
       <ScrollView>
-        <View style={{flexDirection: 'row'}}>
-          <View style={{flexDirection: 'column'}}>
-            <View style={styles.containerPicture}>
-              <Image
-                style={styles.profilePicture}
-                source={{
-                  uri: route.params.img
-                    ? 'https://davesgarden.com' +
-                      route.params.img.split('&')[0] +
-                      '&width=150&height=150'
-                    : defaultPlant,
-                }}
-              />
-            </View>
+        <View style={{ flexDirection: 'row' }}>
+          <View style={styles.containerPicture}>
+            <Image
+              style={styles.profilePicture}
+              source={{
+                uri: route.params.img
+                  ? 'https://davesgarden.com' +
+                  route.params.img.split('&')[0] +
+                  '&width=150&height=150'
+                  : defaultPlant,
+              }}
+            />
           </View>
-          <View style={{flexDirection: 'column'}}>
-            <Text style={styles.speciesNameStyle}>
-              {route.params.species ? route.params.species : ''}
-            </Text>
-            <Text style={styles.commonNameStyle}>{route.params.name}</Text>
-          </View>
+          <Headline style={styles.title}>{route.params.name}</Headline>
         </View>
 
-        {/* <View style={{ paddingTop: 20 }}>
-          <Text style={styles.parentTitleStyle}>Description</Text>
-          <Text style={styles.descriptionStyle}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua.
-          </Text>
-        </View> */}
-
-        <View style={{paddingTop: 10}}>
-          <Text style={styles.parentTitleStyle}>Scientific Classification</Text>
-        </View>
+        <Title style={styles.sectionTitle}>Scientific Classification</Title>
 
         <View style={styles.rowStyling}>
-          <Text style={styles.infoTitleStyle}>Family</Text>
-          <Text style={styles.infoFieldStyle}>{route.params.family}</Text>
+          <Subheading style={styles.sectionSubTitle}>Family</Subheading>
+          <Text style={styles.sectionContent}>{route.params.family}</Text>
         </View>
+        <Divider />
         <View style={styles.rowStyling}>
-          <Text style={styles.infoTitleStyle}>Genus</Text>
-          <Text style={styles.infoFieldStyle}>{route.params.genus}</Text>
+          <Subheading style={styles.sectionSubTitle}>Genus</Subheading>
+          <Text style={styles.sectionContent}>{route.params.genus}</Text>
         </View>
+        <Divider />
         <View style={styles.rowStyling}>
-          <Text style={styles.infoTitleStyle}>Species</Text>
-          <Text style={styles.infoFieldStyle}>{route.params.species}</Text>
+          <Subheading style={styles.sectionSubTitle}>Species</Subheading>
+          <Text style={styles.sectionContent}>{route.params.species}</Text>
         </View>
 
-        <View style={{paddingTop: 10}}>
-          <Text style={styles.parentTitleStyle}>Plant Care</Text>
-        </View>
+        <Title style={styles.sectionTitle}>Care</Title>
+
 
         <View style={styles.rowStyling}>
-          <Text style={styles.infoTitleStyle}>Water Requirements</Text>
-          <Text style={styles.infoFieldStyle}>{parseStringArray(route.params.water)}</Text>
+          <Subheading style={styles.sectionSubTitle}>Water Requirements</Subheading>
+          <Text style={styles.sectionContent}>{parseStringArray(route.params.water)}</Text>
         </View>
+        <Divider />
         <View style={styles.rowStyling}>
-          <Text style={styles.infoTitleStyle}>Sun Exposure</Text>
-          <Text style={styles.infoFieldStyle}>{parseStringArray(route.params.sun)}</Text>
+          <Subheading style={styles.sectionSubTitle}>Sun Exposure</Subheading>
+          <Text style={styles.sectionContent}>{parseStringArray(route.params.sun)}</Text>
         </View>
+        <Divider />
         <View style={styles.rowStyling}>
-          <Text style={styles.infoTitleStyle}>Hardiness</Text>
-          <Text style={styles.infoFieldStyle}>{parseStringArray(route.params.hardiness)}</Text>
+          <Subheading style={styles.sectionSubTitle}>Hardiness</Subheading>
+          <Text style={styles.sectionContent}>{parseStringArray(route.params.hardiness)}</Text>
         </View>
+        <Divider />
         {/* <View style={styles.rowStyling}>
           <Text style={styles.infoTitleStyle}>Soil pH Requirements</Text>
           <Text style={styles.infoFieldStyle}># pH - # pH</Text>
         </View> */}
         <View style={styles.rowStyling}>
-          <Text style={styles.infoTitleStyle}>Propagation</Text>
-          <Text style={styles.infoFieldStyle}>{parseStringArray(route.params.propagation)}</Text>
+          <Subheading style={styles.sectionSubTitle}>Propagation</Subheading>
+          <Text style={styles.sectionContent}>{parseStringArray(route.params.propagation)}</Text>
         </View>
+        <Divider />
 
         {/* <View style={{ paddingTop: 10 }}>
           <Text style={styles.parentTitleStyle}>FAQs</Text>
@@ -135,8 +127,8 @@ export default function EncyclopediaProfileScreen(props: Props) {
         </View> */}
 
         <View style={styles.rowStyling}>
-          <Text style={styles.infoTitleStyle}>Where to Grow</Text>
-          <Text style={styles.infoFieldStyle}>{parseStringArray(route.params.where_to_grow)}</Text>
+          <Subheading style={styles.sectionSubTitle}>Where to Grow</Subheading>
+          <Text style={styles.sectionContent}>{parseStringArray(route.params.where_to_grow)}</Text>
         </View>
 
         {/* <View style={styles.rowStyling}>
@@ -165,140 +157,47 @@ const windowHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    display: 'flex',
     backgroundColor: '#fff',
-    //alignItems: "center",
-    //justifyContent: "center"
-  },
-
-  buttonText: {
-    color: 'white',
-  },
-
-  innerButton: {
-    padding: 10,
-  },
-
-  button: {
-    borderRadius: 50,
-  },
-
-  containerPicture: {
-    backgroundColor: '#fff',
+    flexWrap: 'wrap',
     alignItems: 'center',
-    paddingTop: 10,
-    height: windowHeight * 0.23,
-    marginLeft: 20,
+    justifyContent: 'flex-start',
+    paddingLeft: 20,
   },
-
-  profilePicture: {
-    flexDirection: 'column',
-    borderColor: 'black',
-    width: 150,
-    height: 150,
-    borderRadius: 100,
-  },
-
-  speciesNameStyle: {
+  title: {
     alignContent: 'center',
-    top: 0,
-    fontSize: 36,
-    marginLeft: 10,
-    fontStyle: 'normal',
-    fontWeight: 'normal',
-    color: '#000',
-    paddingBottom: 0,
+    alignSelf: 'center',
     width: windowWidth * 0.51,
+    marginTop: 10,
+    marginLeft: 10
   },
-
-  commonNameStyle: {
-    alignContent: 'center',
-    top: 0,
-    fontSize: 24,
-    marginLeft: 10,
-    fontStyle: 'normal',
-    fontWeight: 'normal',
-    color: '#959695',
-    paddingBottom: 0,
-    width: windowWidth * 0.5,
-  },
-
-  parentTitleStyle: {
-    marginLeft: 20,
-    fontStyle: 'normal',
-    fontWeight: 'normal',
-    color: '#000',
-    fontSize: 20,
-    lineHeight: 30,
+  sectionTitle: {
     paddingTop: 10,
     paddingBottom: 5,
-    //justifyContent: "space-around"
   },
-
-  descriptionStyle: {
-    fontStyle: 'normal',
-    fontWeight: 'normal',
-    color: '#959695',
-    fontSize: 16,
-    lineHeight: 30,
-    marginLeft: 20,
-    marginRight: 20,
-  },
-
-  textStyle: {
-    fontStyle: 'normal',
-    fontWeight: 'normal',
-    color: '#666666',
-    fontSize: 12,
-    lineHeight: 30,
-    marginLeft: 20,
-    marginRight: 20,
-  },
-
-  rowStyling: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginLeft: 20,
-    marginRight: 20,
-    //alignSelf: "center",
-    //width: windowWidth * 0.78
-  },
-
-  infoTitleStyle: {
-    fontStyle: 'normal',
-    fontWeight: 'normal',
-    color: '#666666',
-    fontSize: 16,
-    lineHeight: 30,
+  sectionSubTitle: {
     width: windowWidth * 0.4,
   },
-
-  infoFieldStyle: {
-    fontStyle: 'normal',
-    fontWeight: 'normal',
-    color: '#959695',
-    fontSize: 16,
-    lineHeight: 25,
+  sectionContent: {
+    paddingTop: 5,
     textAlign: 'left',
     width: windowWidth * 0.45,
   },
-
-  buttonStyle: {
-    width: 60,
-    height: 15,
-    fontSize: 10,
-    textTransform: 'none',
-    color: '#64A3A3',
-    fontStyle: 'normal',
-    fontWeight: 'normal',
+  rowStyling: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    width: windowWidth * 0.85
   },
-
-  searchButtonStyle: {
-    borderRadius: 1,
-    fontSize: 18,
-    textTransform: 'none',
-    color: '#64A3A3',
-    fontStyle: 'normal',
-    fontWeight: 'normal',
+  containerPicture: {
+    backgroundColor: '#fff',
+    paddingTop: 10,
+  },
+  profilePicture: {
+    borderColor: Colors.grey300,
+    width: 150,
+    height: 150,
+    marginTop: 15,
+    borderRadius: 100,
+    borderWidth: 2,
   },
 });
