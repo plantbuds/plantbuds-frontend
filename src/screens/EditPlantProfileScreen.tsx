@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {
   Platform,
   StyleSheet,
@@ -9,12 +9,12 @@ import {
   Keyboard,
   KeyboardAvoidingView,
 } from 'react-native';
-import { Text, Colors, IconButton, Button, TextInput, Portal } from 'react-native-paper';
+import {Text, Colors, IconButton, Button, TextInput, Portal} from 'react-native-paper';
 import * as ImagePicker from 'expo-image-picker';
-import { useSelector, useDispatch } from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import DeletePlantModal from '../components/DeletePlantModal';
-import { RootState } from '../../store/store';
-import { deletePlant, getAllPlants, editPlantProfile } from '../../store/plantgroup/actions';
+import {RootState} from '../../store/store';
+import {deletePlant, getAllPlants, editPlantProfile} from '../../store/plantgroup/actions';
 
 // declare types for your props here
 interface Props {
@@ -22,7 +22,7 @@ interface Props {
 }
 
 export default function EditPlantProfileScreen(props: Props) {
-  const { navigation } = props;
+  const {navigation} = props;
   const notes = useSelector((state: RootState) => state.plantgroup.notes);
   const username = useSelector((state: RootState) => state.session.username);
   const plantID = useSelector((state: RootState) => state.plantgroup.plant_id);
@@ -43,7 +43,7 @@ export default function EditPlantProfileScreen(props: Props) {
   useEffect(() => {
     (async () => {
       if (Platform.OS !== 'web') {
-        const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
+        const {status} = await ImagePicker.requestCameraRollPermissionsAsync();
         if (status !== 'granted') {
           alert('Sorry, we need camera roll permissions to make this work!');
         }
@@ -103,13 +103,15 @@ export default function EditPlantProfileScreen(props: Props) {
 
   return (
     <Portal.Host>
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : null} style={{ flex: 1 }}>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={styles.container}>
-
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.container}>
+          <KeyboardAvoidingView
+            behavior="position"
+            style={{flex: 1}}
+          >
             <View style={styles.photoContainer}>
-              {(image && <Image style={styles.photo} source={{ uri: image }} />) ||
-                (!image && <Image style={styles.photo} source={{ uri: photo }} />)}
+              {(image && <Image style={styles.photo} source={{uri: image}} />) ||
+                (!image && <Image style={styles.photo} source={{uri: photo}} />)}
               <Button icon="camera" color={Colors.lightGreen300} onPress={pickImage}>
                 Change Photo
               </Button>
@@ -117,40 +119,40 @@ export default function EditPlantProfileScreen(props: Props) {
 
             <View style={styles.formContainer}>
               <TextInput
-                mode='outlined'
-                label='Nickname'
-                theme={{ colors: { primary: Colors.lightGreen300 } }}
+                mode="outlined"
+                label="Nickname"
+                theme={{colors: {primary: Colors.lightGreen300}}}
                 style={styles.form}
-                keyboardType='ascii-capable'
+                keyboardType="ascii-capable"
                 maxLength={22}
                 placeholder={nickname}
                 value={textNickname}
                 onChangeText={textNickname => setTextNickname(textNickname)}
               />
               <TextInput
-                mode='outlined'
-                label='Species'
-                theme={{ colors: { primary: Colors.lightGreen300 } }}
+                mode="outlined"
+                label="Species"
+                theme={{colors: {primary: Colors.lightGreen300}}}
                 style={styles.form}
-                keyboardType='ascii-capable'
+                keyboardType="ascii-capable"
                 maxLength={26}
                 placeholder={plant_name ? plant_name : 'e.g. Aloe vera'}
                 value={textSciName}
                 onChangeText={textSciName => setTextSciName(textSciName)}
               />
-              <View style={{ paddingTop: 15 }}>
-              <TextInput
-                mode='flat'
-                label='Notes'
-                multiline={true}
-                theme={{ colors: { primary: Colors.lightGreen300 } }}
-                dense={true}
-                style={styles.notes}
-                keyboardType='ascii-capable'
-                placeholder={notes ? notes : 'Add notes'}
-                value={textNotes}
-                onChangeText={textNotes => setTextNotes(textNotes)}
-              />
+              <View style={{paddingTop: 15}}>
+                <TextInput
+                  mode="flat"
+                  label="Notes"
+                  multiline={true}
+                  theme={{colors: {primary: Colors.lightGreen300}}}
+                  dense={true}
+                  style={styles.notes}
+                  keyboardType="ascii-capable"
+                  placeholder={notes ? notes : 'Add notes'}
+                  value={textNotes}
+                  onChangeText={textNotes => setTextNotes(textNotes)}
+                />
               </View>
               <Button
                 style={styles.deleteButton}
@@ -158,7 +160,7 @@ export default function EditPlantProfileScreen(props: Props) {
                 mode="contained"
                 onPress={() => setDisplayDeletePlantModal(true)}
               >
-                <Text style={{ color: 'white' }}>Delete Plant</Text>
+                <Text style={{color: 'white'}}>Delete Plant</Text>
               </Button>
               <DeletePlantModal
                 displayModal={displayDeletePlantModal}
@@ -171,10 +173,9 @@ export default function EditPlantProfileScreen(props: Props) {
                 onExit={() => setDisplayDeletePlantModal(false)}
               />
             </View>
-
-          </View>
-        </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
+          </KeyboardAvoidingView>
+        </View>
+      </TouchableWithoutFeedback>
     </Portal.Host>
   );
 }
@@ -208,10 +209,10 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   notes: {
-    borderRadius: 1, 
-    borderColor: Colors.grey400, 
-    backgroundColor: Colors.grey50, 
-    height: 100
+    borderRadius: 1,
+    borderColor: Colors.grey400,
+    backgroundColor: Colors.grey50,
+    height: 100,
   },
   deleteButton: {
     alignSelf: 'stretch',
@@ -219,5 +220,5 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     padding: 4,
     margin: 30,
-  }
+  },
 });
