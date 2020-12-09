@@ -111,7 +111,7 @@ export default function HomeScreen(props: Props) {
               value={searchQuery}
             />
           )}
-          {plantSearchError && plantSearchError.length > 0 ? <Text>{plantSearchError}</Text> : null}
+          {plantSearchError && plantSearchError.length > 0 ? <Text style={styles.searchErrorText}>{plantSearchError}</Text> : null}
           <FlatList
             numColumns={2}
             columnWrapperStyle={styles.displayWrapper}
@@ -217,4 +217,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingTop: 50,
   },
+  searchErrorText: {
+    textAlign: 'center',
+    paddingVertical: 10,
+    fontSize: 14,
+  }
 });
