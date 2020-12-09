@@ -68,7 +68,7 @@ export function plantgroupReducer(
         } else {
           return {
             ...state,
-            plantSearchError: 'Could not find plant specified in search',
+            plantSearchError: 'Oops! We didn\'t find any plants with that name.',
           };
         }
       } else {
