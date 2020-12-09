@@ -25,6 +25,7 @@ import {
   Keyboard,
   Image,
   KeyboardAvoidingView,
+  Alert,
 } from 'react-native';
 import CreatePlantModal from '../components/CreatePlantModal';
 import {RootState} from '../../store/store';
@@ -51,12 +52,8 @@ export default function HomeScreen(props: Props) {
   const [submit, setSubmit] = useState(false);
   const [displayCreatePlantModal, setDisplayCreatePlantModal] = useState(false);
   const username = useSelector((state: RootState) => state.session.username);
-  const userID = useSelector((state: RootState) => state.session.userID);
+  const plantSearchError = useSelector((state: RootState) => state.plantgroup.plantSearchError);
   const plants = useSelector((state: RootState) => state.plantgroup.plants);
-  const plant_id = useSelector((state: RootState) => state.plantgroup.plant_id);
-  const editedPlant = useSelector((state: RootState) => state.plantgroup.editedPlant);
-  const createdPlant = useSelector((state: RootState) => state.plantgroup.createdPlant);
-  const deletedPlant = useSelector((state: RootState) => state.plantgroup.deletedPlant);
 
   const dispatch = useDispatch();
   const onChangeSearch = (query: string) => {
@@ -68,9 +65,10 @@ export default function HomeScreen(props: Props) {
   };
 
   function queryTemporarySearch() {
-    setSubmit(true);
-    console.log("searching plants");
-    dispatch(getMatchingPlants(searchQuery, username));
+    if (searchQuery && searchQuery.length > 0) {
+      setSubmit(true);
+      dispatch(getMatchingPlants(searchQuery, username));
+    }
   }
 
   // Use Effect for initial mounting of application
@@ -90,7 +88,7 @@ export default function HomeScreen(props: Props) {
 
   useEffect(() => {
     if (!submit) {
-      console.log("use effect that listens to changes to plants array")
+      console.log('use effect that listens to changes to plants array');
       dispatch(getAllPlants(username));
     }
   }, [JSON.stringify(plants)]);
@@ -113,6 +111,7 @@ export default function HomeScreen(props: Props) {
               value={searchQuery}
             />
           )}
+          {plantSearchError && plantSearchError.length > 0 ? <Text style={styles.searchErrorText}>{plantSearchError}</Text> : null}
           <FlatList
             numColumns={2}
             columnWrapperStyle={styles.displayWrapper}
@@ -218,4 +217,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingTop: 50,
   },
+  searchErrorText: {
+    textAlign: 'center',
+    paddingVertical: 10,
+    fontSize: 14,
+  }
 });

@@ -14,14 +14,15 @@ import {
   GET_MATCHING_PLANTS_SUCCESS,
   SET_WATER_NOTIF,
   SET_REPOT_NOTIF,
-  SET_FERTILIZE_NOTIF
+  SET_FERTILIZE_NOTIF,
 } from './types';
 
 const initialState: PlantGroupState = {
   editedPlant: false,
   createdPlant: false,
   deletedPlant: false,
-  editedEntry: false, 
+  editedEntry: false,
+  plantSearchError: '',
   plants: [],
   plant_name: null,
   plant_id: null,
@@ -42,6 +43,8 @@ const initialState: PlantGroupState = {
   user: null,
 };
 
+import {Alert} from 'react-native';
+
 export function plantgroupReducer(
   state = initialState,
   action: PlantGroupActionTypes
@@ -51,12 +54,28 @@ export function plantgroupReducer(
       return {
         ...state,
         plants: action.payload.data,
+        plantSearchError: '',
       };
     case GET_MATCHING_PLANTS_SUCCESS:
-      return {
-        ...state,
-        plants: action.payload.data,
-      };
+      const matchingPlants = action.payload.data;
+      if (matchingPlants) {
+        if (matchingPlants.length != 0) {
+          return {
+            ...state,
+            plantSearchError: '',
+            plants: matchingPlants,
+          };
+        } else {
+          return {
+            ...state,
+            plantSearchError: 'Oops! We didn\'t find any plants with that name.',
+          };
+        }
+      } else {
+        return {
+          ...state,
+        };
+      }
     case GET_INDIVIDUAL_PLANT_SUCCESS:
       return {
         ...state,
@@ -128,22 +147,22 @@ export function plantgroupReducer(
         ...state,
         editedEntry: action.editedEntry,
       };
-    case SET_WATER_NOTIF: 
+    case SET_WATER_NOTIF:
       return {
-        ...state, 
+        ...state,
         water_history: action.payload.waterArray,
-      }
-    case SET_REPOT_NOTIF: 
+      };
+    case SET_REPOT_NOTIF:
       return {
-        ...state, 
+        ...state,
         repot_history: action.payload.repotArray,
-        repot_frequency: action.payload.frequency
-      }
-    case SET_FERTILIZE_NOTIF: 
+        repot_frequency: action.payload.frequency,
+      };
+    case SET_FERTILIZE_NOTIF:
       return {
-        ...state, 
-        fertilize_history: action.payload.fertilizeArray
-      }
+        ...state,
+        fertilize_history: action.payload.fertilizeArray,
+      };
     case DELETE_PLANT_SUCCESS:
       return {
         ...state,
