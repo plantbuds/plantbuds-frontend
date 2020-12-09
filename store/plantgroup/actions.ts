@@ -36,7 +36,7 @@ import {
   UPDATE_REPOT_NOTIF_SUCCESS,
   SET_WATER_NOTIF,
   SET_FERTILIZE_NOTIF,
-  SET_REPOT_NOTIF
+  SET_REPOT_NOTIF,
 } from './types';
 
 import {API_ROOT, BASIC_TOKEN} from '../../src/constants/index';
@@ -84,19 +84,6 @@ export const getMatchingPlants = (searchterm: string, username: string) => {
           Authorization: 'Basic ' + BASIC_TOKEN,
         },
         method: 'GET',
-      },
-      options: {
-        onError({getState, dispatch, error}) {
-          try {
-            if (error) {
-              throw error;
-            }
-          } catch (e) {
-            if (e.response.data.msg != null) {
-              console.log('Error: ' + e.response.data.msg);
-            }
-          }
-        },
       },
     },
   };
@@ -203,7 +190,11 @@ export const updateTaskHistory = (history: string[], plantID: number) => {
   };
 };
 
-export const updateWaterNotifHistory = (waterHistory: string[], frequency: number,  plantID: number) => {
+export const updateWaterNotifHistory = (
+  waterHistory: string[],
+  frequency: number,
+  plantID: number
+) => {
   return {
     type: [UPDATE_WATER_NOTIF, UPDATE_WATER_NOTIF_SUCCESS, UPDATE_WATER_NOTIF_FAIL],
     payload: {
@@ -216,21 +207,25 @@ export const updateWaterNotifHistory = (waterHistory: string[], frequency: numbe
         method: 'PATCH',
         data: {
           water_history: waterHistory,
-          water_frequency: frequency
+          water_frequency: frequency,
         },
       },
       options: {
-        onSuccess ({dispatch}){
+        onSuccess({dispatch}) {
           dispatch(setWaterNotif(waterHistory, frequency));
-        }
-      }
+        },
+      },
     },
   };
 };
 
-export const updateRepotNotifHistory = (repotHistory: string[], frequency: number, plantID: number) => {
+export const updateRepotNotifHistory = (
+  repotHistory: string[],
+  frequency: number,
+  plantID: number
+) => {
   return {
-    type: [UPDATE_WATER_NOTIF, UPDATE_WATER_NOTIF_SUCCESS, UPDATE_WATER_NOTIF_FAIL],
+    type: [UPDATE_REPOT_NOTIF, UPDATE_REPOT_NOTIF_SUCCESS, UPDATE_REPOT_NOTIF_FAIL],
     payload: {
       client: 'default',
       request: {
@@ -241,21 +236,25 @@ export const updateRepotNotifHistory = (repotHistory: string[], frequency: numbe
         method: 'PATCH',
         data: {
           repot_history: repotHistory,
-          repot_frequency: frequency
+          repot_frequency: frequency,
         },
       },
       options: {
-        onSuccess ({dispatch}){
+        onSuccess({dispatch}) {
           dispatch(setRepotNotif(repotHistory, frequency));
-        }
-      }
+        },
+      },
     },
   };
 };
 
-export const updateFertilizeNotifHistory = (fertilizeHistory: string[], frequency: number, plantID: number) => {
+export const updateFertilizeNotifHistory = (
+  fertilizeHistory: string[],
+  frequency: number,
+  plantID: number
+) => {
   return {
-    type: [UPDATE_WATER_NOTIF, UPDATE_WATER_NOTIF_SUCCESS, UPDATE_WATER_NOTIF_FAIL],
+    type: [UPDATE_FERTILIZE_NOTIF, UPDATE_FERTILIZE_NOTIF_SUCCESS, UPDATE_FERTILIZE_NOTIF_FAIL],
     payload: {
       client: 'default',
       request: {
@@ -266,14 +265,14 @@ export const updateFertilizeNotifHistory = (fertilizeHistory: string[], frequenc
         method: 'PATCH',
         data: {
           fertilize_history: fertilizeHistory,
-          fertilize_frequency: frequency
+          fertilize_frequency: frequency,
         },
       },
       options: {
-        onSuccess ({dispatch}){
+        onSuccess({dispatch}) {
           dispatch(setWaterNotif(fertilizeHistory, frequency));
-        }
-      }
+        },
+      },
     },
   };
 };
@@ -311,8 +310,8 @@ export const setWaterNotif = (waterArray: string[], frequency: number) => {
     type: SET_WATER_NOTIF,
     payload: {
       waterArray,
-      frequency
-    }
+      frequency,
+    },
   };
 };
 
@@ -321,8 +320,8 @@ export const setFertilizeNotif = (fertilizeArray: string[], frequency: number) =
     type: SET_FERTILIZE_NOTIF,
     payload: {
       fertilizeArray,
-      frequency
-    }
+      frequency,
+    },
   };
 };
 
@@ -331,8 +330,8 @@ export const setRepotNotif = (repotArray: string[], frequency: number) => {
     type: SET_REPOT_NOTIF,
     payload: {
       repotArray,
-      frequency
-    }
+      frequency,
+    },
   };
 };
 
