@@ -9,6 +9,7 @@ import {Image} from 'react-native';
 import Sidebar from '../components/Sidebar';
 import HomeScreen from '../screens/HomeScreen';
 import SettingsScreen from '../screens/SettingsScreen';
+import TestScreen from "../screens/TestScreen";
 import LandingScreen from '../screens/LandingScreen';
 import EditSettingsScreen from '../screens/EditSettingsScreen';
 import EditPlantProfileScreen from '../screens/EditPlantProfileScreen';
@@ -82,6 +83,7 @@ const DrawerNavigator = () => {
       />
       <Drawer.Screen name="Encyclopedia" component={EncyclopediaSearchScreen} />
       <Drawer.Screen options={{title: 'My Profile'}} name="Profile" component={SettingsScreen} />
+      <Drawer.Screen name="TestScreen" component={TestScreen} />
     </Drawer.Navigator>
   );
 };

@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, TextInput, Keyboard} from 'react-native';
+import * as Notifications from 'expo-notifications';
 import {Button} from 'react-native-paper';
 
 // declare types for your props here
@@ -10,18 +11,26 @@ interface Props {
 export default function TestScreen(props: Props) {
   const {navigation} = props;
 
+  const onSubmit = async (e: any) => {
+    Keyboard.dismiss();
+
+    const trigger = (new Date().getTime() + Number(e.nativeEvent.text));
+
+    // Notifications show only when app is not active.
+    // (ie. another app being used or device's screen is locked)
+    Notifications.scheduleNotificationAsync({
+      content: {
+        title: "test notification", 
+        body: "this is a test notification",
+      }, trigger,
+      });
+    const response = await Notifications.getAllScheduledNotificationsAsync()
+    console.log(response);
+  };
+
   return (
     <View style={styles.container}>
-      <Text>Test screen to test out React Native Paper library</Text>
-      <Button
-        mode="contained"
-        color="green"
-        labelStyle={styles.buttonText}
-        contentStyle={styles.innerButton}
-        style={styles.button}
-      >
-        Test Button
-      </Button>
+      <TextInput onSubmitEditing={onSubmit} placeholder={'time in ms'} />
     </View>
   );
 }
