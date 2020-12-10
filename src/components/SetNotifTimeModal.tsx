@@ -15,41 +15,19 @@ export default function SetNotifTimeModal(props: Props) {
   const {displayModal, setShow} = props;
   const notif_time = useSelector((state: RootState) => state.session.notif_time);
   const userID = useSelector((state: RootState) => state.session.userID);
-  const [datetime, setDateTime] = useState(notif_time ? new Date(notif_time) : new Date());
+  const [datetime, setDateTime] = useState(notif_time ? new Date(notif_time) : new Date(Date.now()));
 
   const dispatch = useDispatch();
+
+  const onSubmit = () => {
+    dispatch(editNotifTime(datetime.toISOString(), userID));
+    setShow(false);
+  };
 
   const onChange = (event, selectedDateTime) => {
     const currentDateTime = selectedDateTime || datetime;
     setDateTime(currentDateTime);
   };
-
-  // Date.prototype.toISOString = function() {
-  //   var tzo = this.getTimezoneOffset(),
-  //     dif = tzo >= 0 ? "+" : "-",
-  //     pad = function(num) {
-  //       var norm = Math.floor(Math.abs(num));
-  //       return (norm < 10 ? "0" : "") + norm;
-  //     };
-  //   return (
-  //     this.getFullYear() +
-  //     "-" +
-  //     pad(this.getMonth() + 1) +
-  //     "-" +
-  //     pad(this.getDate()) +
-  //     "T" +
-  //     pad(this.getHours()) +
-  //     ":" +
-  //     pad(this.getDays()) +
-  //     pad(this.getMinutes()) +
-  //     ":" +
-  //     pad(this.getSeconds()) +
-  //     dif +
-  //     pad(tzo / 60) +
-  //     ":" +
-  //     pad(tzo % 60)
-  //   );
-  // };
 
   return (
     <Modal animationType="slide" transparent={true} visible={displayModal}>
@@ -57,20 +35,7 @@ export default function SetNotifTimeModal(props: Props) {
         <View style={styles.modalView}>
           <View style={styles.header}>
             <Button onPress={() => setShow(false)}>Cancel</Button>
-            <Button
-              onPress={() => {
-                //get timezone offset
-                let offset = datetime.getTimezoneOffset();
-                // Adds the offset in milliseconds
-                let date = new Date(datetime.getTime() + offset * 60 * 1000);
-                const timestring = date.toLocaleTimeString();
-                console.log(timestring);
-                //dispatch(editNotifTime(timestring, userID));
-                setShow(false);
-              }}
-            >
-              Done
-            </Button>
+            <Button onPress={onSubmit}>Done</Button>
           </View>
           <DateTimePicker value={datetime} mode="time" display="default" onChange={onChange} />
         </View>

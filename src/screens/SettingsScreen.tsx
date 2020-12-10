@@ -1,6 +1,16 @@
 import React, {useEffect, useState} from 'react';
 import {Platform, StyleSheet, View, Image, Dimensions, PixelRatio, Switch} from 'react-native';
-import {Text, Colors, IconButton, Button, TextInput, Headline, Title, Divider, Subheading} from 'react-native-paper';
+import {
+  Text,
+  Colors,
+  IconButton,
+  Button,
+  TextInput,
+  Headline,
+  Title,
+  Divider,
+  Subheading,
+} from 'react-native-paper';
 import {useSelector, useDispatch} from 'react-redux';
 import {RootState} from '../../store/store';
 import SetNotifTimeModal from '../components/SetNotifTimeModal';
@@ -133,18 +143,6 @@ export default function SettingsScreen(props: Props) {
           <Divider />
         </View>
       </View>
-      <Title style={styles.notificationSettingStyle}>Settings</Title>
-      <View style={styles.row}>
-        <Subheading style={styles.optionsStyle}>Notification Time</Subheading>
-        <Text>{notif_time ? new Date(notif_time).toISOString().split('T')[1] : 'N/A'}</Text>
-        <IconButton
-          icon="pencil"
-          onPress={showTimepicker}
-          //style={{alignSelf: 'flex-end'}}
-        />
-      </View>
-      {/*<Button onPress={showTimepicker}>Select a notification time</Button>*/}
-      <SetNotifTimeModal displayModal={show} setShow={setShow} />
     </View>
   );
 }
@@ -155,14 +153,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     alignSelf: 'center',
-    // borderWidth: 1, 
+    // borderWidth: 1,
     // borderStyle: "solid",
     width: windowWidth * 0.85,
     height: windowHeight * 0.047,
@@ -206,15 +204,6 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
     borderRadius: 100,
-  },
-
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    justifyContent: 'space-between',
-    width: '100%',
-    height: windowHeight * 0.06,
   },
 
   textTitle: {

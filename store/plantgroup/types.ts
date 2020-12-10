@@ -3,6 +3,7 @@ export interface PlantGroupState {
   createdPlant: boolean;
   deletedPlant: boolean;
   editedEntry: boolean;
+  plantSearchError: string;
   plants: any[];
   plant_name: string;
   plant_id: number;

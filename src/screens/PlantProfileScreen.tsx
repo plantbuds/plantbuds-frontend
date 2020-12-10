@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import { Text, Colors, IconButton, Button, FAB, Headline, Subheading, Title, Paragraph, Caption, Divider } from 'react-native-paper';
 import { HeaderBackButton } from '@react-navigation/stack';
-import { updateTaskHistory, setEditedEntry, resetPlantState, setEditedNotif } from '../../store/plantgroup/actions';
+import { updateTaskHistory, setEditedEntry, resetPlantState } from '../../store/plantgroup/actions';
 import { RootState } from '../../store/store';
 import { useDispatch, useSelector } from 'react-redux';
 import SetWaterReminderModal from '../components/SetWaterReminderModal';
@@ -133,7 +133,6 @@ export default function PlantProfileScreen(props: Props) {
   const repot_history = useSelector((state: RootState) => state.plantgroup.repot_history);
   const fertilize_history = useSelector((state: RootState) => state.plantgroup.fertilize_history);
   const editedEntry = useSelector((state: RootState) => state.plantgroup.editedEntry);
-  const editedNotif = useSelector((state: RootState) => state.plantgroup.editedNotif);
 
   const dispatch = useDispatch();
   let token = '';
@@ -216,7 +215,7 @@ export default function PlantProfileScreen(props: Props) {
   useEffect(() => {
     loadEntries();
     updateCalendarMarkings();
-  }, [plant_id, JSON.stringify(history), JSON.stringify(water_history)]);
+  }, [plant_id, JSON.stringify(history), JSON.stringify(water_history), JSON.stringify(fertilize_history), JSON.stringify(repot_history)]);
 
   // Listener for updating calendar markings *note this hook will run every time since we are creating a new Date object
   useEffect(() => {

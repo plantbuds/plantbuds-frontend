@@ -87,8 +87,6 @@ export const createUser = (idToken: string, accessToken: string) => {
               e.response.data.error != null &&
               e.response.data.error === 'user already exists in user profile table'
             ) {
-              Alert.alert('Error: ' + e.response.data.error);
-            } else {
               dispatch(loginUser(accessToken));
             }
           }
