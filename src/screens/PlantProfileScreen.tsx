@@ -354,7 +354,18 @@ export default function PlantProfileScreen(props: Props) {
                 }
                 updateCalendarMarkings();
               }}
-              onDayLongPress={() => setDisplayAddEntryModal(true)}
+              onDayLongPress={day => { setSelectedDate(day.dateString);
+                if (entries[selectedDate] != null) {
+                  setWaterStatus(entries[selectedDate][0]);
+                  setRepotStatus(entries[selectedDate][1]);
+                  setFertilizeStatus(entries[selectedDate][2]);
+                } else {
+                  setWaterStatus(false);
+                  setRepotStatus(false);
+                  setFertilizeStatus(false);
+                }
+                updateCalendarMarkings();
+                setDisplayAddEntryModal(true);}}
               markedDates={markings}
               maxDate={new Date()}
               markingType={'custom'}
