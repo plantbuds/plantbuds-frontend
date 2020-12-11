@@ -223,9 +223,23 @@ export const setUserProfile = (username: string, zone: string, imageURI: string)
   };
 };
 
-export const setNotifTime = (time: string) => {
+export const setWaterNotif = (receive_water_notif: boolean) => {
   return {
-    type: EDIT_NOTIF_TIME_SUCCESS,
-    time,
-  };
-};
+    type: EDIT_WATER_NOTIF_SUCCESS,
+    receive_water_notif
+  }
+}
+
+export const setRepotNotif = (receive_repot_notif: boolean) => {
+  return {
+    type: EDIT_WATER_NOTIF_SUCCESS,
+    receive_repot_notif
+  }
+}
+
+export const setFertilizeNotif = (receive_fertilizing_notif: boolean) => {
+  return {
+    type: EDIT_WATER_NOTIF_SUCCESS,
+    receive_fertilizing_notif
+  }
+}

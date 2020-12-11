@@ -29,7 +29,6 @@ import {
 } from 'react-native';
 import CreatePlantModal from '../components/CreatePlantModal';
 import {RootState} from '../../store/store';
-import { getFertilizeNotifID, getRepotNotifID, getWaterNotifID } from '../utils/AsyncStorage';
 
 // declare types for your props here
 interface Props {

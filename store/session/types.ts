@@ -71,15 +71,15 @@ interface EditNotifTimeSuccessAction {
 }
 interface EditWaterNotifSuccessAction {
   type: typeof EDIT_WATER_NOTIF_SUCCESS;
-  payload: any;
+  receive_water_notif: boolean;
 }
 interface EditRepotNotifSuccessAction {
   type: typeof EDIT_REPOT_NOTIF_SUCCESS;
-  payload: any; 
+  receive_repot_notif: boolean; 
 }
 interface EditFertilizeNotifSuccessAction {
   type: typeof EDIT_FERTILIZE_NOTIF_SUCCESS;
-  payload: any; 
+  receive_fertilizing_notif: boolean; 
 }
 export type SessionActionTypes =
   | LoginRequestAction

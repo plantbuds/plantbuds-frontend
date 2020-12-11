@@ -1,30 +1,37 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {
-  Platform,
   StyleSheet,
   ScrollView,
   View,
   Image,
-  Vibration,
   Dimensions,
-  TouchableWithoutFeedback,
-  Keyboard,
-  KeyboardAvoidingView,
-  PixelRatio,
-  Switch,
 } from 'react-native';
 import * as Notifications from 'expo-notifications';
-import { Text, Colors, IconButton, Button, FAB, Headline, Subheading, Title, Paragraph, Caption, Divider } from 'react-native-paper';
-import { HeaderBackButton } from '@react-navigation/stack';
-import { updateTaskHistory, setEditedEntry, resetPlantState, updateWaterNotif } from '../../store/plantgroup/actions';
-import { RootState } from '../../store/store';
-import { useDispatch, useSelector } from 'react-redux';
+import {
+  Colors,
+  IconButton,
+  Headline,
+  Subheading,
+  Title,
+  Paragraph,
+  Divider,
+} from 'react-native-paper';
+import {HeaderBackButton} from '@react-navigation/stack';
+import {
+  updateTaskHistory,
+  setEditedEntry,
+  resetPlantState,
+  updateWaterNotif,
+  updateRepotNotif,
+} from '../../store/plantgroup/actions';
+import {RootState} from '../../store/store';
+import {useDispatch, useSelector} from 'react-redux';
 import SetWaterReminderModal from '../components/SetWaterReminderModal';
 import SetRepotReminderModal from '../components/SetRepotReminderModal';
 import SetFertilizeReminderModal from '../components/SetFertilizeReminderModal';
 import AddEntryModal from '../components/AddEntryModal';
 import moment from 'moment';
-import { Calendar as ReactCalendar } from 'react-native-calendars';
+import {Calendar as ReactCalendar} from 'react-native-calendars';
 
 // declare types for your props here
 interface Props {
@@ -113,7 +120,7 @@ const greenBrown = {
 };
 
 export default function PlantProfileScreen(props: Props) {
-  const { navigation, route } = props;
+  const {navigation, route} = props;
   const [selectedDate, setSelectedDate] = useState(new Date().toDateString());
   const [markings, setMarkings] = useState({});
   const [waterStatus, setWaterStatus] = useState(false);
@@ -130,14 +137,24 @@ export default function PlantProfileScreen(props: Props) {
   const nickname = useSelector((state: RootState) => state.plantgroup.nickname);
   const photo = useSelector((state: RootState) => state.plantgroup.photo);
   const notes = useSelector((state: RootState) => state.plantgroup.notes);
+ 
   const history = useSelector((state: RootState) => state.plantgroup.history);
   const water_history = useSelector((state: RootState) => state.plantgroup.water_history);
   const repot_history = useSelector((state: RootState) => state.plantgroup.repot_history);
   const fertilize_history = useSelector((state: RootState) => state.plantgroup.fertilize_history);
+  
+  const receive_water_notif = useSelector((state: RootState) => state.session.receive_water_notif);
+  
   const water_frequency = useSelector((state: RootState) => state.plantgroup.water_frequency);
   const water_next_notif = useSelector((state: RootState) => state.plantgroup.water_next_notif);
   const water_notif_id = useSelector((state: RootState) => state.plantgroup.water_notif_id);
+  
+  const repot_frequency = useSelector((state: RootState) => state.plantgroup.repot_frequency);
+  const repot_next_notif = useSelector((state: RootState) => state.plantgroup.repot_next_notif);
   const repot_notif_id = useSelector((state: RootState) => state.plantgroup.repot_notif_id);
+
+  const fertilize_frequency = useSelector((state: RootState) => state.plantgroup.fertilize_frequency);
+  const fertilize_next_notif = useSelector((state: RootState) => state.plantgroup.fertilize_next_notif);
   const fertilize_notif_id = useSelector((state: RootState) => state.plantgroup.fertilize_notif_id);
   const editedEntry = useSelector((state: RootState) => state.plantgroup.editedEntry);
 
@@ -214,69 +231,175 @@ export default function PlantProfileScreen(props: Props) {
       markings[date] = entry;
     }
     if (!selected) {
-      markings[selectedDate] = { selected: true };
+      markings[selectedDate] = {selected: true};
     }
     setMarkings(markings);
   };
 
   // Load all the date entries in history into entries array upon initial load
   useEffect(() => {
-
-    // Vibrate and pop first element of water/repot/ fertilize history array when receiving incoming notifications 
-    notificationListener.current = Notifications.addNotificationReceivedListener( async (notif) => {
-      let newNotifTime = null; 
+  
+    // Notification listener when app is running
+    notificationListener.current = Notifications.addNotificationReceivedListener(async notif => {
+      
+      let newNotifTime = null;
       if (notif.request.identifier === water_notif_id) {
-        
         // get water notif array history and pop the first entry, then add a new entry
-        let waterCopy = water_history 
-        waterCopy.shift(); 
+        let waterCopy = water_history;
+        waterCopy.shift();
 
         // set the next notif date to be the top entry
         if (waterCopy.length != 0) {
-           // extract the time from the previous notif date
-           const notifTime = new Date(water_next_notif).toLocaleTimeString()
+          // extract the time from the previous notif date
+          const notifTime = new Date(water_next_notif).toLocaleTimeString();
 
-          // push a new date to the end of the array 
-          waterCopy.push(moment().set({
-            'date': parseInt(waterCopy[3].split("-")[2]),
-            'month': parseInt(waterCopy[3].split("-")[1]),
-            'year': parseInt(waterCopy[3].split("-")[0]),  
-            'hours':0,
-            'minutes': 0,
-            'seconds': 0
-          }).add(1, "days").format("YYYY-MM-DD"));
+          // push a new date to the end of the array
+          waterCopy.push(
+            moment()
+              .set({
+                date: parseInt(waterCopy[3].split('-')[2]),
+                month: parseInt(waterCopy[3].split('-')[1]) - 1,
+                year: parseInt(waterCopy[3].split('-')[0]),
+                hours: 0,
+                minutes: 0,
+                seconds: 0,
+                millisecond: 0,
+              })
+              .add(1, 'days')
+              .format('YYYY-MM-DD')
+          );
 
-          // update the water notif time to have the upcoming date and time 
+          // update the water notif time to have the upcoming date and time
           newNotifTime = moment().set({
-            'date': parseInt(waterCopy[0].split("-")[2]),
-            'month': parseInt(waterCopy[0].split("-")[1]),
-            'year': parseInt(waterCopy[0].split("-")[0]),  
-            'hours': parseInt(notifTime.split(":")[0]),
-            'minutes': parseInt(notifTime.split(":")[1]),
-            'seconds': 0
-          })
+            date: parseInt(waterCopy[0].split('-')[2]),
+            month: parseInt(waterCopy[0].split('-')[1]) - 1,
+            year: parseInt(waterCopy[0].split('-')[0]),
+            hours: parseInt(notifTime.split(':')[0]),
+            minutes: parseInt(notifTime.split(':')[1]),
+            seconds: 0,
+            millisecond: 0,
+          });
 
-          dispatch(updateWaterNotif(waterCopy, water_frequency, newNotifTime, water_notif_id, plant_id));
-        }
-        else {
+          dispatch(
+            updateWaterNotif(waterCopy, water_frequency, newNotifTime, water_notif_id, plant_id)
+          );
+        } else {
           dispatch(updateWaterNotif([], 0, null, null, plant_id));
         }
-      }
-      else if (notif.request.identifier === repot_notif_id) {
+      } else if (notif.request.identifier === repot_notif_id) {
+          // get water notif array history and pop the first entry, then add a new entry
+          let repotCopy = repot_history;
+          repotCopy.shift();
+  
+          // set the next notif date to be the top entry
+          if (repotCopy.length != 0) {
+            // extract the time from the previous notif date
+            const notifTime = new Date(repot_next_notif).toLocaleTimeString();
+  
+            // push a new date to the end of the array
+            repotCopy.push(
+              moment()
+                .set({
+                  date: parseInt(repotCopy[3].split('-')[2]),
+                  month: parseInt(repotCopy[3].split('-')[1]) - 1,
+                  year: parseInt(repotCopy[3].split('-')[0]),
+                  hours: 0,
+                  minutes: 0,
+                  seconds: 0,
+                  millisecond: 0,
+                })
+                .add(1, 'days')
+                .format('YYYY-MM-DD')
+            );
+  
+            // update the repot notif time to have the upcoming date and time
+            newNotifTime = moment().set({
+              date: parseInt(repotCopy[0].split('-')[2]),
+              month: parseInt(repotCopy[0].split('-')[1]) - 1,
+              year: parseInt(repotCopy[0].split('-')[0]),
+              hours: parseInt(notifTime.split(':')[0]),
+              minutes: parseInt(notifTime.split(':')[1]),
+              seconds: 0,
+              millisecond: 0,
+            });
+  
+            dispatch(
+              updateRepotNotif(repotCopy, repot_frequency, newNotifTime, repot_notif_id, plant_id)
+            );
+          } else {
+            dispatch(updateRepotNotif([], 0, null, null, plant_id));
+          }
+      } else if (notif.request.identifier === fertilize_notif_id) {
         //TODO
+      } else {
+        return;
       }
-      else if (notif.request.identifier === fertilize_notif_id) {
-        //TODO
-      }
-      else {
-        return; 
-      }
-      Vibration.vibrate();
     });
+
+    // Notification listener when user is not in the app
+    notificationListener.current = Notifications.addNotificationResponseReceivedListener(
+      async response => {
+        let newNotifTime = null;
+        if (response.notification.request.identifier === water_notif_id) {
+          // get water notif array history and pop the first entry, then add a new entry
+          let waterCopy = water_history;
+          waterCopy.shift();
+
+          // set the next notif date to be the top entry
+          if (waterCopy.length != 0) {
+            // extract the time from the previous notif date
+            const notifTime = new Date(water_next_notif).toLocaleTimeString();
+
+            // push a new date to the end of the array
+            waterCopy.push(
+              moment()
+                .set({
+                  date: parseInt(waterCopy[3].split('-')[2]),
+                  month: parseInt(waterCopy[3].split('-')[1]),
+                  year: parseInt(waterCopy[3].split('-')[0]),
+                  hours: 0,
+                  minutes: 0,
+                  seconds: 0,
+                })
+                .add(1, 'days')
+                .format('YYYY-MM-DD')
+            );
+
+            // update the water notif time to have the upcoming date and time
+            newNotifTime = moment().set({
+              date: parseInt(waterCopy[0].split('-')[2]),
+              month: parseInt(waterCopy[0].split('-')[1]),
+              year: parseInt(waterCopy[0].split('-')[0]),
+              hours: parseInt(notifTime.split(':')[0]),
+              minutes: parseInt(notifTime.split(':')[1]),
+              seconds: 0,
+            });
+
+            dispatch(
+              updateWaterNotif(waterCopy, water_frequency, newNotifTime, water_notif_id, plant_id)
+            );
+          } else {
+            dispatch(updateWaterNotif([], 0, null, null, plant_id));
+          }
+        } else if (response.notification.request.identifier === repot_notif_id) {
+          //TODO
+        } else if (response.notification.request.identifier === fertilize_notif_id) {
+          //TODO
+        } else {
+          return;
+        }
+      }
+    );
 
     loadEntries();
     updateCalendarMarkings();
-  }, [plant_id, JSON.stringify(history), JSON.stringify(water_history), JSON.stringify(fertilize_history), JSON.stringify(repot_history)]);
+  }, [
+    plant_id,
+    JSON.stringify(history),
+    JSON.stringify(water_history),
+    JSON.stringify(fertilize_history),
+    JSON.stringify(repot_history),
+  ]);
 
   // Listener for updating calendar markings *note this hook will run every time since we are creating a new Date object
   useEffect(() => {
@@ -316,34 +439,32 @@ export default function PlantProfileScreen(props: Props) {
   return (
     <View style={styles.container}>
       <ScrollView>
-
-        <View style={{ marginLeft: 20, flexDirection: 'row' }}>
+        <View style={{marginLeft: 20, flexDirection: 'row'}}>
           <View style={styles.containerPicture}>
-            <Image
-              style={styles.profilePicture}
-              source={{ uri: photo }}
-            />
+            <Image style={styles.profilePicture} source={{uri: photo}} />
           </View>
           <View style={{marginLeft: 10, justifyContent: 'center', flexDirection: 'column'}}>
             <Headline>
-              {nickname ? nickname
-                /*? nickname.length > 13
+              {nickname
+                ? nickname
+                : /*? nickname.length > 13
                   ? nickname.substring(0, 12) + '...'
                   : nickname*/
-                : 'My Plant'}
+                  'My Plant'}
             </Headline>
             <Title>
-              {plant_name ? plant_name
-                /*? plant_name.length > 20
+              {plant_name
+                ? plant_name
+                : /*? plant_name.length > 20
                   ? plant_name.substring(0, 19) + '...'
                   : plant_name*/
-                : 'Species'}
+                  'Species'}
             </Title>
           </View>
         </View>
 
         <View style={{}}>
-          <View style={{ paddingTop: 10 }}>
+          <View style={{paddingTop: 10}}>
             <Title style={styles.NRTParentStyle}> Notes </Title>
             <Paragraph style={styles.randomStyling}>{notes ? notes : 'No notes yet'}</Paragraph>
           </View>
@@ -355,7 +476,9 @@ export default function PlantProfileScreen(props: Props) {
           <View style={styles.row}>
             <Subheading style={styles.NRTChildStyle}>Water</Subheading>
             <Paragraph>
-              {water_history && water_history.length > 0 ? new Date(water_next_notif).toLocaleString() : 'No Reminders'}
+              {water_history && water_history.length > 0
+                ? new Date(water_next_notif).toLocaleString()
+                : 'No Reminders'}
             </Paragraph>
             <IconButton
               icon="pencil"
@@ -369,7 +492,9 @@ export default function PlantProfileScreen(props: Props) {
           <View style={styles.row}>
             <Subheading style={styles.NRTChildStyle}>Repot</Subheading>
             <Paragraph>
-              {repot_history && repot_history.length > 0 ? new Date(repot_history[0]).toLocaleString()  : 'No Reminders'}
+              {repot_history && repot_history.length > 0
+                ? new Date(repot_history[0]).toLocaleString()
+                : 'No Reminders'}
             </Paragraph>
             <IconButton
               icon="pencil"
@@ -384,7 +509,7 @@ export default function PlantProfileScreen(props: Props) {
             <Subheading style={styles.NRTChildStyle}>Fertilize</Subheading>
             <Paragraph>
               {fertilize_history && fertilize_history.length > 0
-                ? new Date(fertilize_history[0]).toLocaleString() 
+                ? new Date(fertilize_history[0]).toLocaleString()
                 : 'No Reminders'}
             </Paragraph>
             <IconButton
@@ -395,7 +520,7 @@ export default function PlantProfileScreen(props: Props) {
             />
           </View>
 
-          <View style={{ paddingTop: 10 }}>
+          <View style={{paddingTop: 10}}>
             <Title style={styles.NRTParentStyle}> Task History </Title>
             <Paragraph style={styles.randomStyling}>
               Select a date, then tap and hold to edit the care entries for that date.
@@ -415,7 +540,8 @@ export default function PlantProfileScreen(props: Props) {
                 }
                 updateCalendarMarkings();
               }}
-              onDayLongPress={day => { setSelectedDate(day.dateString);
+              onDayLongPress={day => {
+                setSelectedDate(day.dateString);
                 if (entries[selectedDate] != null) {
                   setWaterStatus(entries[selectedDate][0]);
                   setRepotStatus(entries[selectedDate][1]);
@@ -426,7 +552,8 @@ export default function PlantProfileScreen(props: Props) {
                   setFertilizeStatus(false);
                 }
                 updateCalendarMarkings();
-                setDisplayAddEntryModal(true);}}
+                setDisplayAddEntryModal(true);
+              }}
               markedDates={markings}
               maxDate={new Date()}
               markingType={'custom'}
@@ -487,14 +614,14 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignSelf: 'center',
     width: windowWidth * 0.51,
-    marginLeft: 10
+    marginLeft: 10,
   },
 
   contentContainer: {
     flexDirection: 'column',
     width: windowWidth * 0.95,
     alignItems: 'flex-start',
-    paddingLeft: 20
+    paddingLeft: 20,
   },
 
   row: {
@@ -502,13 +629,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     alignSelf: 'center',
-    // borderWidth: 1, 
+    // borderWidth: 1,
     // borderStyle: "solid",
     width: windowWidth * 0.85,
     height: windowHeight * 0.047,
   },
   paragraphContent: {
-    paddingLeft: 10
+    paddingLeft: 10,
   },
 
   buttonStyle: {
@@ -581,10 +708,10 @@ const styles = StyleSheet.create({
 
   smallerPhoneStyling: {
     flexDirection: 'row',
-    alignItems: "center",
+    alignItems: 'center',
     justifyContent: 'space-between',
     alignSelf: 'center',
-    // borderWidth: 1, 
+    // borderWidth: 1,
     // borderStyle: "solid",
     width: windowWidth * 0.78,
     height: windowHeight * 0.047,
@@ -608,7 +735,7 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   editButton: {
-    alignSelf: "flex-start",
+    alignSelf: 'flex-start',
     right: windowWidth * 0.03,
     width: 35,
     height: 24,
@@ -616,5 +743,5 @@ const styles = StyleSheet.create({
   },
   fertilizeText: {
     right: windowWidth * 0.02,
-  }
+  },
 });

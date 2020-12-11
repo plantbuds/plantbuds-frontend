@@ -69,17 +69,17 @@ export function sessionReducer(state = initialState, action: SessionActionTypes)
     case EDIT_WATER_NOTIF_SUCCESS: 
       return {
         ...state, 
-        receive_water_notif: action.payload.data.receive_water_notif
+        receive_water_notif: action.receive_water_notif
       }
     case EDIT_REPOT_NOTIF_SUCCESS:
       return {
         ...state, 
-        receive_repot_notif: action.payload.data.receive_repot_notif
+        receive_repot_notif: action.receive_repot_notif
       }
     case EDIT_FERTILIZE_NOTIF_SUCCESS: 
     return {
       ...state, 
-      receive_fertilizing_notif: action.payload.data.receive_fertilizing_notif
+      receive_fertilizing_notif: action.receive_fertilizing_notif
     }
     default:
       return state;

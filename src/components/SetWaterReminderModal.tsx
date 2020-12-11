@@ -42,19 +42,16 @@ export default function SetWaterReminderModal(props: Props) {
   const dispatch = useDispatch();
 
   function addDays(date: Date, days: number) {
-  
-    return new Date(
-      moment()
-        .set({
-          date: date.getDate(),
-          month: date.getMonth(),
-          year: date.getFullYear(),
-          hour: date.getHours(),
-          minute: date.getMinutes(),
-        })
-        .add(days, 'days')
-        .format("YYYY-MM-DD")
-    );
+    return moment()
+      .set({
+        date: date.getDate(),
+        month: date.getMonth(),
+        year: date.getFullYear(),
+        hour: date.getHours(),
+        minute: date.getMinutes(),
+      })
+      .add(days, 'days')
+      .format('YYYY-MM-DD');
   }
 
   const onTimeChange = (event, selectedDateTime: Date) => {
@@ -78,6 +75,7 @@ export default function SetWaterReminderModal(props: Props) {
           hour: selectedTime.getHours(),
           minute: selectedTime.getMinutes(),
           seconds: 0,
+          millisecond: 0,
         })
         .format()
     );
@@ -111,6 +109,7 @@ export default function SetWaterReminderModal(props: Props) {
       waterArray.push(addDays(date, 0));
     }
 
+    console.log(waterArray);
     // schedule notification based on frequency
     switch (watFreq) {
       case 0: {
@@ -142,7 +141,8 @@ export default function SetWaterReminderModal(props: Props) {
             minute: selectedTime.getMinutes(),
           },
         });
-        console.log(waterID);
+
+        dispatch(updateWaterNotif(waterArray, watFreq, date, waterID, plant_id));
         onExit();
         return;
       }
@@ -157,7 +157,8 @@ export default function SetWaterReminderModal(props: Props) {
             weekday: moment().day(),
           },
         });
-        console.log(waterID);
+
+        dispatch(updateWaterNotif(waterArray, watFreq, date, waterID, plant_id));
         onExit();
         return;
       }

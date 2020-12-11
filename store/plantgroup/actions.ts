@@ -211,7 +211,7 @@ export const updateWaterNotif = (
           water_history: waterHistory,
           water_frequency: frequency,
           water_next_notif: notifDate,
-          water_notif_id: stringID, 
+          water_notif_id: stringID,
         },
       },
       options: {
@@ -226,6 +226,8 @@ export const updateWaterNotif = (
 export const updateRepotNotif = (
   repotHistory: string[],
   frequency: number,
+  notifDate: Date,
+  stringID: string,
   plantID: number
 ) => {
   return {
@@ -245,7 +247,7 @@ export const updateRepotNotif = (
       },
       options: {
         onSuccess({dispatch}) {
-          dispatch(setRepotNotif(repotHistory, frequency));
+          dispatch(setRepotNotif(repotHistory, frequency, notifDate, stringID));
         },
       },
     },
@@ -255,6 +257,8 @@ export const updateRepotNotif = (
 export const updateFertilizeNotif = (
   fertilizeHistory: string[],
   frequency: number,
+  notifDate: Date,
+  stringID: string,
   plantID: number
 ) => {
   return {
@@ -274,13 +278,12 @@ export const updateFertilizeNotif = (
       },
       options: {
         onSuccess({dispatch}) {
-          dispatch(setFertilizeNotif(fertilizeHistory, frequency));
+          dispatch(setFertilizeNotif(fertilizeHistory, frequency, notifDate, stringID));
         },
       },
     },
   };
 };
-
 
 export const setEditedPlant = (editedPlant: boolean) => {
   return {
@@ -310,19 +313,29 @@ export const setEditedEntry = (editedEntry: boolean) => {
   };
 };
 
-export const setWaterNotif = (waterArray: string[], frequency: number, notifDate: Date, stringID: string) => {
+export const setWaterNotif = (
+  waterArray: string[],
+  frequency: number,
+  notifDate: Date,
+  stringID: string
+) => {
   return {
     type: SET_WATER_NOTIF,
     payload: {
       waterArray,
       frequency,
-      notifDate, 
-      stringID
+      notifDate,
+      stringID,
     },
   };
 };
 
-export const setFertilizeNotif = (fertilizeArray: string[], frequency: number) => {
+export const setFertilizeNotif = (
+  fertilizeArray: string[],
+  frequency: number,
+  notifDate: Date,
+  stringID: string
+) => {
   return {
     type: SET_FERTILIZE_NOTIF,
     payload: {
@@ -332,12 +345,19 @@ export const setFertilizeNotif = (fertilizeArray: string[], frequency: number) =
   };
 };
 
-export const setRepotNotif = (repotArray: string[], frequency: number) => {
+export const setRepotNotif = (
+  repotArray: string[],
+  frequency: number,
+  notifDate: Date,
+  stringID: string
+) => {
   return {
     type: SET_REPOT_NOTIF,
     payload: {
       repotArray,
       frequency,
+      notifDate,
+      stringID,
     },
   };
 };
