@@ -83,7 +83,6 @@ const DrawerNavigator = () => {
       />
       <Drawer.Screen name="Encyclopedia" component={EncyclopediaSearchScreen} />
       <Drawer.Screen options={{title: 'My Profile'}} name="Profile" component={SettingsScreen} />
-      <Drawer.Screen name="TestScreen" component={TestScreen} />
     </Drawer.Navigator>
   );
 };
