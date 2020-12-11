@@ -34,7 +34,7 @@ export default function SetRepotReminderModal(props: Props) {
     repot_history && repot_history.length > 0 ? repot_history[0] : setStartDateString()
   );
   const [selectedTime, setSelectedTime] = useState(
-    repot_next_notif ? new Date(repot_next_notif) : new Date(Date.now())
+    repot_next_notif ? new Date(repot_next_notif) : new Date(moment().add(5, "minutes").format())
   );
   const [showRepotModal, setShowRepotModal] = useState(false);
   const [repFreq, setRepFreq] = useState(repot_frequency ? repot_frequency : 0);

@@ -40,7 +40,7 @@ export default function SetFertilizeReminderModal(props: Props) {
     fertilize_history && fertilize_history.length > 0 ? fertilize_history[0] : setStartDateString()
   );
   const [selectedTime, setSelectedTime] = useState(
-    fertilize_next_notif ? new Date(fertilize_next_notif) : new Date(Date.now())
+    fertilize_next_notif ? new Date(fertilize_next_notif) : new Date(moment().add(5, "minutes").format())
   );
   const [showFertilizeModal, setShowFertilizeModal] = useState(false);
   const [fertFreq, setFertFreq] = useState(fertilize_frequency ? fertilize_frequency : 0);
