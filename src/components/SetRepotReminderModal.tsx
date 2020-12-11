@@ -8,7 +8,8 @@ import {useState} from 'react';
 import {RootState} from '../../store/store';
 import {useSelector, useDispatch} from 'react-redux';
 import SetRepotFreqModal from './SetRepotFreqModal';
-import { updateRepotNotif}  from '../../store/plantgroup/actions';
+import {updateRepotNotif} from '../../store/plantgroup/actions';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 interface Props {
   displayModal: boolean;
@@ -19,9 +20,9 @@ export default function SetRepotReminderModal(props: Props) {
   const {displayModal, onExit} = props;
 
   function setStartDateString() {
-    var tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
-    var localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, -1);
-        return localISOTime.split("T")[0];
+    var tzoffset = new Date().getTimezoneOffset() * 60000; //offset in milliseconds
+    var localISOTime = new Date(Date.now() - tzoffset).toISOString().slice(0, -1);
+    return localISOTime.split('T')[0];
   }
 
   const repot_history = useSelector((state: RootState) => state.plantgroup.repot_history);
@@ -36,7 +37,7 @@ export default function SetRepotReminderModal(props: Props) {
     repot_next_notif ? new Date(repot_next_notif) : new Date(Date.now())
   );
   const [showRepotModal, setShowRepotModal] = useState(false);
-  const [repFreq, setRepFreq] = useState(repot_frequency);
+  const [repFreq, setRepFreq] = useState(repot_frequency ? repot_frequency : 0);
   const plant_id = useSelector((state: RootState) => state.plantgroup.plant_id);
   const dispatch = useDispatch();
 
@@ -218,6 +219,16 @@ export default function SetRepotReminderModal(props: Props) {
               textDisabledColor: '#979797',
             }}
           />
+          <View style={styles.textContainer}>
+            <Text style={styles.reminderText}>Time:</Text>
+            <DateTimePicker
+              value={selectedTime}
+              mode="time"
+              display="default"
+              style={{width: windowWidth * 0.24}}
+              onChange={onTimeChange}
+            />
+          </View>
           <View style={styles.frequencyContainer}>
             <Text style={styles.frequencyText}>Frequency:</Text>
             <Button
@@ -287,6 +298,19 @@ const styles = StyleSheet.create({
   reminderTitle: {
     fontSize: 22,
     alignSelf: 'center',
+  },
+  reminderText: {
+    fontSize: 18,
+  },
+  textContainer: {
+    marginTop: 5,
+    marginBottom: 5,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignSelf: 'flex-start',
+    alignItems: 'center',
+    left: windowWidth * 0.11,
+    width: windowWidth * 0.6,
   },
   frequencyText: {
     fontSize: 18,

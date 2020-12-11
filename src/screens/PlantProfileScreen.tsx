@@ -493,7 +493,7 @@ export default function PlantProfileScreen(props: Props) {
             <Subheading style={styles.NRTChildStyle}>Repot</Subheading>
             <Paragraph>
               {repot_history && repot_history.length > 0
-                ? new Date(repot_history[0]).toLocaleString()
+                ? new Date(repot_next_notif).toLocaleString()
                 : 'No Reminders'}
             </Paragraph>
             <IconButton
@@ -509,7 +509,7 @@ export default function PlantProfileScreen(props: Props) {
             <Subheading style={styles.NRTChildStyle}>Fertilize</Subheading>
             <Paragraph>
               {fertilize_history && fertilize_history.length > 0
-                ? new Date(fertilize_history[0]).toLocaleString()
+                ? new Date(fertilize_next_notif).toLocaleString()
                 : 'No Reminders'}
             </Paragraph>
             <IconButton

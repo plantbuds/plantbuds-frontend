@@ -243,6 +243,8 @@ export const updateRepotNotif = (
         data: {
           repot_history: repotHistory,
           repot_frequency: frequency,
+          repot_next_notif: notifDate,
+          repot_notif_id: stringID,
         },
       },
       options: {
@@ -274,6 +276,8 @@ export const updateFertilizeNotif = (
         data: {
           fertilize_history: fertilizeHistory,
           fertilize_frequency: frequency,
+          fertilize_next_notif: notifDate,
+          fertilize_notif_id: stringID,
         },
       },
       options: {

@@ -163,12 +163,16 @@ export function plantgroupReducer(
         ...state,
         repot_history: action.payload.repotArray,
         repot_frequency: action.payload.frequency,
+        repot_next_notif: action.payload.notifDate,
+        repot_notif_id: action.payload.stringID
       };
     case SET_FERTILIZE_NOTIF:
       return {
         ...state,
         fertilize_history: action.payload.fertilizeArray,
-        fertilize_frequency: action.payload.frequency
+        fertilize_frequency: action.payload.frequency,
+        fertilize_next_notif: action.payload.notifDate,
+        fertilize_notif_id: action.payload.stringID
       };
     case DELETE_PLANT_SUCCESS:
       return {
