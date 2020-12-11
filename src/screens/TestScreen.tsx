@@ -58,7 +58,8 @@ export default function TestScreen(props: Props) {
         <Text>{notif_time ? new Date(notif_time).toLocaleTimeString() : 'N/A'}</Text>
         <IconButton icon="pencil" onPress={showTimepicker} />
       </View>
-      <Button onPress={onSubmit}>Test Delta</Button>
+      <Button onPress={onSubmit}>check all notifications</Button>
+      <Button onPress={() => Notifications.cancelAllScheduledNotificationsAsync()}>Remove all notifications</Button>
       <SetNotifTimeModal displayModal={show} setShow={setShow} />
     </View>
   );

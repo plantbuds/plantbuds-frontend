@@ -16,13 +16,14 @@ import {
 import * as Notifications from 'expo-notifications';
 import { Text, Colors, IconButton, Button, FAB, Headline, Subheading, Title, Paragraph, Caption, Divider } from 'react-native-paper';
 import { HeaderBackButton } from '@react-navigation/stack';
-import { updateTaskHistory, setEditedEntry, resetPlantState } from '../../store/plantgroup/actions';
+import { updateTaskHistory, setEditedEntry, resetPlantState, updateWaterNotif } from '../../store/plantgroup/actions';
 import { RootState } from '../../store/store';
 import { useDispatch, useSelector } from 'react-redux';
 import SetWaterReminderModal from '../components/SetWaterReminderModal';
 import SetRepotReminderModal from '../components/SetRepotReminderModal';
 import SetFertilizeReminderModal from '../components/SetFertilizeReminderModal';
 import AddEntryModal from '../components/AddEntryModal';
+import moment from 'moment';
 import { Calendar as ReactCalendar } from 'react-native-calendars';
 
 // declare types for your props here
@@ -133,11 +134,15 @@ export default function PlantProfileScreen(props: Props) {
   const water_history = useSelector((state: RootState) => state.plantgroup.water_history);
   const repot_history = useSelector((state: RootState) => state.plantgroup.repot_history);
   const fertilize_history = useSelector((state: RootState) => state.plantgroup.fertilize_history);
+  const water_frequency = useSelector((state: RootState) => state.plantgroup.water_frequency);
+  const water_next_notif = useSelector((state: RootState) => state.plantgroup.water_next_notif);
+  const water_notif_id = useSelector((state: RootState) => state.plantgroup.water_notif_id);
+  const repot_notif_id = useSelector((state: RootState) => state.plantgroup.repot_notif_id);
+  const fertilize_notif_id = useSelector((state: RootState) => state.plantgroup.fertilize_notif_id);
   const editedEntry = useSelector((state: RootState) => state.plantgroup.editedEntry);
 
   const dispatch = useDispatch();
   const notificationListener = useRef(null);
-
 
   const parseEntries = () => {
     let localHistory = [];
@@ -219,6 +224,53 @@ export default function PlantProfileScreen(props: Props) {
 
     // Vibrate and pop first element of water/repot/ fertilize history array when receiving incoming notifications 
     notificationListener.current = Notifications.addNotificationReceivedListener( async (notif) => {
+      let newNotifTime = null; 
+      if (notif.request.identifier === water_notif_id) {
+        
+        // get water notif array history and pop the first entry, then add a new entry
+        let waterCopy = water_history 
+        waterCopy.shift(); 
+
+        // set the next notif date to be the top entry
+        if (waterCopy.length != 0) {
+           // extract the time from the previous notif date
+           const notifTime = new Date(water_next_notif).toLocaleTimeString()
+
+          // push a new date to the end of the array 
+          waterCopy.push(moment().set({
+            'date': parseInt(waterCopy[3].split("-")[2]),
+            'month': parseInt(waterCopy[3].split("-")[1]),
+            'year': parseInt(waterCopy[3].split("-")[0]),  
+            'hours':0,
+            'minutes': 0,
+            'seconds': 0
+          }).add(1, "days").format("YYYY-MM-DD"));
+
+          // update the water notif time to have the upcoming date and time 
+          newNotifTime = moment().set({
+            'date': parseInt(waterCopy[0].split("-")[2]),
+            'month': parseInt(waterCopy[0].split("-")[1]),
+            'year': parseInt(waterCopy[0].split("-")[0]),  
+            'hours': parseInt(notifTime.split(":")[0]),
+            'minutes': parseInt(notifTime.split(":")[1]),
+            'seconds': 0
+          })
+
+          dispatch(updateWaterNotif(waterCopy, water_frequency, newNotifTime, water_notif_id, plant_id));
+        }
+        else {
+          dispatch(updateWaterNotif([], 0, null, null, plant_id));
+        }
+      }
+      else if (notif.request.identifier === repot_notif_id) {
+        //TODO
+      }
+      else if (notif.request.identifier === fertilize_notif_id) {
+        //TODO
+      }
+      else {
+        return; 
+      }
       Vibration.vibrate();
     });
 
@@ -303,7 +355,7 @@ export default function PlantProfileScreen(props: Props) {
           <View style={styles.row}>
             <Subheading style={styles.NRTChildStyle}>Water</Subheading>
             <Paragraph>
-              {water_history && water_history.length > 0 ? new Date(water_history[0]).toLocaleString() : 'No Reminders'}
+              {water_history && water_history.length > 0 ? new Date(water_next_notif).toLocaleString() : 'No Reminders'}
             </Paragraph>
             <IconButton
               icon="pencil"

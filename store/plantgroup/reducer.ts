@@ -39,6 +39,8 @@ const initialState: PlantGroupState = {
   repot_next_notif: null,
   fertilize_next_notif: null,
   water_notif_id: null,
+  repot_notif_id: null, 
+  fertilize_notif_id: null, 
   notes: '',
   encyclopedia: null,
   user: null,

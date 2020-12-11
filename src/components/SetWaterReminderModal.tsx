@@ -42,22 +42,19 @@ export default function SetWaterReminderModal(props: Props) {
   const dispatch = useDispatch();
 
   function addDays(date: Date, days: number) {
-    const selectedDateObj = new Date(selectedDate + 'T00:00:00');
-    const copy = new Date(
+  
+    return new Date(
       moment()
         .set({
-          date: selectedDateObj.getDate(),
-          month: selectedDateObj.getMonth(),
-          year: selectedDateObj.getFullYear(),
-          hour: selectedTime.getHours(),
-          minute: selectedTime.getMinutes(),
+          date: date.getDate(),
+          month: date.getMonth(),
+          year: date.getFullYear(),
+          hour: date.getHours(),
+          minute: date.getMinutes(),
         })
-        .format()
+        .add(days, 'days')
+        .format("YYYY-MM-DD")
     );
-    let datestring = '';
-    copy.setDate(date.getDate() + days);
-    datestring = copy.toISOString().split('T')[0];
-    return datestring;
   }
 
   const onTimeChange = (event, selectedDateTime: Date) => {
@@ -71,7 +68,8 @@ export default function SetWaterReminderModal(props: Props) {
     let waterArray = [];
     const selectedDateObj = new Date(selectedDate + 'T00:00:00');
 
-    const date = new Date(
+    // check to see if delta between reminder date and current date is negative
+    let date = new Date(
       moment()
         .set({
           date: selectedDateObj.getDate(),
@@ -79,17 +77,44 @@ export default function SetWaterReminderModal(props: Props) {
           year: selectedDateObj.getFullYear(),
           hour: selectedTime.getHours(),
           minute: selectedTime.getMinutes(),
+          seconds: 0,
         })
         .format()
     );
 
-    for (let i = 0; i < 5; i++) {
-      waterArray.push(addDays(date, watFreq * i));
+    const currTime = new Date(Date.now()).getTime();
+    const reminderTime = date.getTime();
+    const delta = reminderTime - currTime;
+
+    // set reminder to the next day if delta is negative
+    if (delta <= 0) {
+      date = new Date(
+        moment()
+          .set({
+            date: selectedDateObj.getDate(),
+            month: selectedDateObj.getMonth(),
+            year: selectedDateObj.getFullYear(),
+            hour: selectedTime.getHours(),
+            minute: selectedTime.getMinutes(),
+          })
+          .add(1, 'days')
+          .format()
+      );
+    }
+
+    // initialize push notification history array for every day and every week frequencies
+    if (watFreq === 1 || watFreq === 7) {
+      for (let i = 0; i < 5; i++) {
+        waterArray.push(addDays(date, watFreq * i));
+      }
+    } else {
+      waterArray.push(addDays(date, 0));
     }
 
     // schedule notification based on frequency
     switch (watFreq) {
       case 0: {
+        console.log('case 0');
         const waterID = await Notifications.scheduleNotificationAsync({
           content: {
             title: 'Time to water!',
@@ -103,8 +128,10 @@ export default function SetWaterReminderModal(props: Props) {
         // update backend with water notification array
         dispatch(updateWaterNotif(waterArray, watFreq, date, waterID, plant_id));
         onExit();
+        return;
       }
       case 1: {
+        console.log('case 1');
         const waterID = await Notifications.scheduleNotificationAsync({
           content: {
             title: 'Time to water!',
@@ -117,8 +144,10 @@ export default function SetWaterReminderModal(props: Props) {
         });
         console.log(waterID);
         onExit();
+        return;
       }
       case 7: {
+        console.log('case 7');
         const waterID = await Notifications.scheduleNotificationAsync({
           content: {
             title: 'Time to water!',
@@ -130,6 +159,7 @@ export default function SetWaterReminderModal(props: Props) {
         });
         console.log(waterID);
         onExit();
+        return;
       }
       default: {
         onExit();
@@ -150,7 +180,9 @@ export default function SetWaterReminderModal(props: Props) {
     clearNotif();
 
     if (!receive_water_notif) {
-     Alert.alert('Wait!', 'Please turn on water notifications for this reminder to go through', [{text: "OK", onPress: onExit}]);
+      Alert.alert('Wait!', 'Please turn on water notifications for this reminder to go through', [
+        {text: 'OK', onPress: onExit},
+      ]);
     } else {
       console.log('watFreq value' + watFreq.toString());
       pushNotif();

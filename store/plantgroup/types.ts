@@ -21,6 +21,8 @@ export interface PlantGroupState {
   repot_next_notif: string;
   notes: string;
   water_notif_id: string; 
+  repot_notif_id: string; 
+  fertilize_notif_id: string; 
   encyclopedia: string;
   user: string;
 }
