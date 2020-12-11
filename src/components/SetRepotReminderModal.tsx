@@ -171,14 +171,14 @@ export default function SetRepotReminderModal(props: Props) {
   const clearNotif = async () => {
     if (repot_notif_id) {
       console.log('clearing repot id');
-      Notifications.cancelScheduledNotificationAsync(repot_notif_id);
+      await Notifications.cancelScheduledNotificationAsync(repot_notif_id);
     }
     console.log('clearing notif history');
     dispatch(updateRepotNotif([], 0, null, null, plant_id));
   };
 
   const onSubmitSave = async () => {
-    clearNotif();
+    await clearNotif();
 
     if (!receive_repot_notif) {
       Alert.alert('Wait!', 'Please turn on repot notifications for this reminder to go through', [
@@ -190,8 +190,8 @@ export default function SetRepotReminderModal(props: Props) {
     }
   };
 
-  const onSubmitClear = () => {
-    clearNotif();
+  const onSubmitClear = async () => {
+    await clearNotif();
     onExit();
   };
 

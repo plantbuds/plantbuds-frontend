@@ -8,8 +8,7 @@ export interface SessionState {
   receive_water_notif: boolean;
   receive_repot_notif: boolean;
   receive_fertilizing_notif: boolean;
-  notif_time: string;
-  //TODO add more fields for session reducer state
+ 
 }
 
 export interface JSONObject {
@@ -33,15 +32,10 @@ export const EDIT_USER_FAIL = 'EDIT_USER_FAIL';
 export const EDIT_NOTIF_TIME = 'EDIT_NOTIF_TIME';
 export const EDIT_NOTIF_TIME_SUCCESS = 'EDIT_NOTIF_TIME_SUCCESS';
 export const EDIT_NOTIF_TIME_FAIL = 'EDIT_NOTIF_TIME_FAIL';
-export const EDIT_WATER_NOTIF = 'EDIT_WATER_NOTIF';
-export const EDIT_REPOT_NOTIF = 'EDIT_REPOT_NOTIF';
-export const EDIT_FERTILIZING_NOTIF = 'EDIT_FERTILIZING_NOTIF';
-export const EDIT_WATER_NOTIF_SUCCESS = 'EDIT_WATER_NOTIF_SUCCESS';
-export const EDIT_WATER_NOTIF_FAIL = 'EDIT_WATER_NOTIF_FAIL';
-export const EDIT_REPOT_NOTIF_SUCCESS = 'EDIT_REPOT_NOTIF_SUCCESS';
-export const EDIT_REPOT_NOTIF_FAIL = 'EDIT_REPOT_NOTIF_FAIL';
-export const EDIT_FERTILIZE_NOTIF_FAIL = 'EDIT_FERTILIZE_NOTIF_FAIL'; 
-export const EDIT_FERTILIZE_NOTIF_SUCCESS = 'EDIT_FERTILIZE_NOTIF_SUCCESS'
+export const EDIT_NOTIF = 'EDIT_NOTIF';
+export const EDIT_NOTIF_SUCCESS = 'EDIT_NOTIF_SUCCESS';
+export const EDIT_NOTIF_FAIL = 'EDIT_NOTIF_FAIL';
+
 
 interface LoginRequestAction {
   type: typeof LOGIN_REQUEST;
@@ -77,9 +71,9 @@ interface EditRepotNotifSuccessAction {
   type: typeof EDIT_REPOT_NOTIF_SUCCESS;
   receive_repot_notif: boolean; 
 }
-interface EditFertilizeNotifSuccessAction {
-  type: typeof EDIT_FERTILIZE_NOTIF_SUCCESS;
-  receive_fertilizing_notif: boolean; 
+interface EditNotifSuccessAction {
+  type: typeof EDIT_NOTIF_SUCCESS;
+  payload: any; 
 }
 export type SessionActionTypes =
   | LoginRequestAction

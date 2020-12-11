@@ -13,9 +13,7 @@ import {
 } from 'react-native-paper';
 import {useSelector, useDispatch} from 'react-redux';
 import {RootState} from '../../store/store';
-import SetNotifTimeModal from '../components/SetNotifTimeModal';
-import {editWaterNotif, editRepotNotif, editFertilizingNotif} from '../../store/session/actions';
-import {CardStyleInterpolators} from '@react-navigation/stack';
+import {editNotif} from '../../store/session/actions';
 
 // declare types for your props here
 interface Props {
@@ -39,20 +37,21 @@ export default function SettingsScreen(props: Props) {
   const [repotNotif, setRepotNotif] = useState(receive_repot_notif);
   const [fertilizeNotif, setFertilizeNotif] = useState(receive_fertilizing_notif);
 
-  useEffect(() => {}, [waterNotif, repotNotif, fertilizeNotif]);
+  useEffect(() => {
+    dispatch(editNotif(waterNotif, repotNotif, fertilizeNotif, userID));
+  }, [waterNotif, repotNotif, fertilizeNotif]);
 
   function toggleWater() {
     setWaterNotif(toggled => !toggled);
-    dispatch(editWaterNotif(!waterNotif, userID));
+    
   }
   function toggleRepot() {
     setRepotNotif(toggled => !toggled);
-    dispatch(editRepotNotif(!repotNotif, userID));
+   
   }
   function toggleFertilize() {
     setFertilizeNotif(toggled => !toggled);
     console.log(!fertilizeNotif);
-    dispatch(editFertilizingNotif(!fertilizeNotif, userID));
   }
 
   React.useLayoutEffect(() => {

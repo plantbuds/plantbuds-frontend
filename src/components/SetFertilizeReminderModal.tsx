@@ -43,7 +43,7 @@ export default function SetFertilizeReminderModal(props: Props) {
     fertilize_next_notif ? new Date(fertilize_next_notif) : new Date(Date.now())
   );
   const [showFertilizeModal, setShowFertilizeModal] = useState(false);
-  const [fertFreq, setFertFreq] = useState(fertilize_frequency);
+  const [fertFreq, setFertFreq] = useState(fertilize_frequency ? fertilize_frequency : 0);
   const plant_id = useSelector((state: RootState) => state.plantgroup.plant_id);
   const dispatch = useDispatch();
 
@@ -175,15 +175,15 @@ export default function SetFertilizeReminderModal(props: Props) {
   const clearNotif = async () => {
     if (fertilize_notif_id) {
       console.log('clearing fertilize id');
-      Notifications.cancelScheduledNotificationAsync(fertilize_notif_id);
+      await Notifications.cancelScheduledNotificationAsync(fertilize_notif_id);
     }
     console.log('clearing notif history');
     dispatch(updateFertilizeNotif([], 0, null, null, plant_id));
   };
 
   const onSubmitSave = async () => {
-    clearNotif();
-
+    await clearNotif();
+    console.log(" receive notif in on submit: " + receive_fertilize_notif)
     if (!receive_fertilize_notif) {
       Alert.alert(
         'Wait!',
@@ -191,13 +191,13 @@ export default function SetFertilizeReminderModal(props: Props) {
         [{text: 'OK', onPress: onExit}]
       );
     } else {
-      console.log('fertFreq value' + fertFreq.toString());
+      
       pushNotif();
     }
   };
 
-  const onSubmitClear = () => {
-    clearNotif();
+  const onSubmitClear = async () => {
+    await clearNotif();
     onExit();
   };
   return (

@@ -171,14 +171,14 @@ export default function SetWaterReminderModal(props: Props) {
   const clearNotif = async () => {
     if (water_notif_id) {
       console.log('clearing water id');
-      Notifications.cancelScheduledNotificationAsync(water_notif_id);
+      await Notifications.cancelScheduledNotificationAsync(water_notif_id);
     }
     console.log('clearing notif history');
     dispatch(updateWaterNotif([], 0, null, null, plant_id));
   };
 
   const onSubmitSave = async () => {
-    clearNotif();
+    await clearNotif();
 
     if (!receive_water_notif) {
       Alert.alert('Wait!', 'Please turn on water notifications for this reminder to go through', [
@@ -190,8 +190,8 @@ export default function SetWaterReminderModal(props: Props) {
     }
   };
 
-  const onSubmitClear = () => {
-    clearNotif();
+  const onSubmitClear = async () => {
+    await clearNotif();
     onExit();
   };
 
@@ -225,7 +225,7 @@ export default function SetWaterReminderModal(props: Props) {
               value={selectedTime}
               mode="time"
               display="default"
-              style={{width: windowWidth * 0.24}}
+              style={{width: windowWidth * 0.26}}
               onChange={onTimeChange}
             />
           </View>

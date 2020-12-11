@@ -9,18 +9,10 @@ import {
   EDIT_USER,
   EDIT_USER_SUCCESS,
   EDIT_USER_FAIL,
-  EDIT_NOTIF_TIME,
-  EDIT_NOTIF_TIME_SUCCESS,
-  EDIT_NOTIF_TIME_FAIL,
-  EDIT_FERTILIZING_NOTIF,
-  EDIT_REPOT_NOTIF,
-  EDIT_WATER_NOTIF,
-  EDIT_WATER_NOTIF_SUCCESS,
-  EDIT_WATER_NOTIF_FAIL,
-  EDIT_REPOT_NOTIF_SUCCESS,
-  EDIT_REPOT_NOTIF_FAIL,
-  EDIT_FERTILIZE_NOTIF_SUCCESS,
-  EDIT_FERTILIZE_NOTIF_FAIL,
+  EDIT_NOTIF,
+  EDIT_NOTIF_SUCCESS,
+  EDIT_NOTIF_FAIL,
+  
 } from './types';
 
 import {API_ROOT, BASIC_TOKEN} from '../../src/constants/index';
@@ -133,9 +125,9 @@ export const editUserProfile = (
   };
 };
 
-export const editWaterNotif = (val: boolean, userID: number) => {
+export const editNotif = (waterVal: boolean, repotVal: boolean, fertilizeVal: boolean, userID: number) => {
   return {
-    type: [EDIT_WATER_NOTIF, EDIT_WATER_NOTIF_SUCCESS, EDIT_WATER_NOTIF_FAIL],
+    type: [EDIT_NOTIF, EDIT_NOTIF_SUCCESS, EDIT_NOTIF_FAIL],
     payload: {
       client: 'default',
       request: {
@@ -145,60 +137,14 @@ export const editWaterNotif = (val: boolean, userID: number) => {
         },
         method: 'PATCH',
         data: {
-          receive_water_notif: val,
+          receive_water_notif: waterVal,
+          receive_repot_notif: repotVal,
+          receive_fertilizing_notif: fertilizeVal,
         },
       },
       options: {
         onSuccess: ({dispatch}) => {
-          dispatch(setWaterNotif(val));
-        },
-      },
-    },
-  };
-};
-
-export const editRepotNotif = (val: boolean, userID: number) => {
-  return {
-    type: [EDIT_REPOT_NOTIF, EDIT_REPOT_NOTIF_SUCCESS, EDIT_REPOT_NOTIF_FAIL],
-    payload: {
-      client: 'default',
-      request: {
-        url: `${API_ROOT}/api/users/${userID}/`,
-        headers: {
-          Authorization: `Basic ${BASIC_TOKEN}`,
-        },
-        method: 'PATCH',
-        data: {
-          receive_repot_notif: val,
-        },
-      },
-      options: {
-        onSuccess: ({dispatch}) => {
-          dispatch(setRepotNotif(val));
-        },
-      },
-    },
-  };
-};
-
-export const editFertilizingNotif = (val: boolean, userID: number) => {
-  return {
-    type: [EDIT_FERTILIZING_NOTIF, EDIT_FERTILIZE_NOTIF_SUCCESS, EDIT_FERTILIZE_NOTIF_FAIL],
-    payload: {
-      client: 'default',
-      request: {
-        url: `${API_ROOT}/api/users/${userID}/`,
-        headers: {
-          Authorization: `Basic ${BASIC_TOKEN}`,
-        },
-        method: 'PATCH',
-        data: {
-          receive_fertilizing_notif: val,
-        },
-      },
-      options: {
-        onSuccess: ({dispatch}) => {
-          dispatch(setFertilizeNotif(val));
+          dispatch(setNotif(waterVal, repotVal, fertilizeVal));
         },
       },
     },
@@ -216,23 +162,14 @@ export const setUserProfile = (username: string, zone: string, imageURI: string)
   };
 };
 
-export const setWaterNotif = (receive_water_notif: boolean) => {
+export const setNotif = ( receive_water_notif: boolean,
+  receive_repot_notif: boolean, receive_fertilizing_notif: boolean) => {
   return {
-    type: EDIT_WATER_NOTIF_SUCCESS,
-    receive_water_notif,
-  };
-};
-
-export const setRepotNotif = (receive_repot_notif: boolean) => {
-  return {
-    type: EDIT_WATER_NOTIF_SUCCESS,
-    receive_repot_notif,
-  };
-};
-
-export const setFertilizeNotif = (receive_fertilizing_notif: boolean) => {
-  return {
-    type: EDIT_WATER_NOTIF_SUCCESS,
-    receive_fertilizing_notif,
+    type: EDIT_NOTIF_SUCCESS,
+    payload: {
+      receive_water_notif,
+      receive_repot_notif,
+      receive_fertilizing_notif
+    }
   };
 };
