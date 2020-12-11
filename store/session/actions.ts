@@ -15,6 +15,12 @@ import {
   EDIT_FERTILIZING_NOTIF,
   EDIT_REPOT_NOTIF,
   EDIT_WATER_NOTIF,
+  EDIT_WATER_NOTIF_SUCCESS,
+  EDIT_WATER_NOTIF_FAIL,
+  EDIT_REPOT_NOTIF_SUCCESS,
+  EDIT_REPOT_NOTIF_FAIL,
+  EDIT_FERTILIZE_NOTIF_SUCCESS,
+  EDIT_FERTILIZE_NOTIF_FAIL,
 } from './types';
 
 import {API_ROOT, BASIC_TOKEN} from '../../src/constants/index';
@@ -151,7 +157,7 @@ export const editNotifTime = (time: string, userID: number) => {
 
 export const editWaterNotif = (val: boolean, userID: number) => {
   return {
-    type: EDIT_WATER_NOTIF,
+    type: [EDIT_WATER_NOTIF, EDIT_WATER_NOTIF_SUCCESS, EDIT_WATER_NOTIF_FAIL],
     payload: {
       client: 'default',
       request: {
@@ -170,7 +176,7 @@ export const editWaterNotif = (val: boolean, userID: number) => {
 
 export const editRepotNotif = (val: boolean, userID: number) => {
   return {
-    type: EDIT_REPOT_NOTIF,
+    type: [EDIT_REPOT_NOTIF, EDIT_REPOT_NOTIF_SUCCESS, EDIT_REPOT_NOTIF_FAIL],
     payload: {
       client: 'default',
       request: {
@@ -189,7 +195,7 @@ export const editRepotNotif = (val: boolean, userID: number) => {
 
 export const editFertilizingNotif = (val: boolean, userID: number) => {
   return {
-    type: EDIT_FERTILIZING_NOTIF,
+    type: [EDIT_FERTILIZING_NOTIF, EDIT_FERTILIZE_NOTIF_SUCCESS, EDIT_FERTILIZE_NOTIF_FAIL],
     payload: {
       client: 'default',
       request: {

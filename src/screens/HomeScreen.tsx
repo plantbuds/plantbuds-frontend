@@ -29,6 +29,7 @@ import {
 } from 'react-native';
 import CreatePlantModal from '../components/CreatePlantModal';
 import {RootState} from '../../store/store';
+import { getFertilizeNotifID, getRepotNotifID, getWaterNotifID } from '../utils/AsyncStorage';
 
 // declare types for your props here
 interface Props {
@@ -76,11 +77,6 @@ export default function HomeScreen(props: Props) {
     (async () => {
       // Get the expo token that identifies this device for notifs
       await registerForPushNotificationsAsync();
-
-      // Vibrate when receiving incoming notifications
-      notificationListener.current = Notifications.addNotificationReceivedListener(notif => {
-        Vibration.vibrate();
-      });
 
       dispatch(getAllPlants(username));
     })();

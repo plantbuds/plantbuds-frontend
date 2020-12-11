@@ -20,6 +20,7 @@ export default function SetNotifTimeModal(props: Props) {
   const dispatch = useDispatch();
 
   const onSubmit = () => {
+    console.log(datetime.toISOString());
     dispatch(editNotifTime(datetime.toISOString(), userID));
     setShow(false);
   };

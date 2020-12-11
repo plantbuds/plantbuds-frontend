@@ -18,28 +18,34 @@ export default function TestScreen(props: Props) {
   const notif_time = useSelector((state: RootState) => state.session.notif_time);
 
   const onSubmit = async () => {
-    Keyboard.dismiss();
+    // Keyboard.dismiss();
 
-    // cool math stuff
-    const currentTime = new Date().getTime();
+    // // cool math stuff
+    // const currentTime = new Date();
 
-    const notifTime = new Date(notif_time).getTime();
+    // const notifTime = new Date(notif_time);
 
-    const delta = notifTime - currentTime;
+    // //const delta = notifTime - currentTime;
 
-    console.log(delta);
+    // //console.log(delta);
 
-    Notifications.scheduleNotificationAsync({
-      content: {
-        title: 'test notification',
-        body: 'this is a test notification',
-      },
-      trigger: delta,
-    });
+    // Notifications.scheduleNotificationAsync({
+    //   content: {
+    //     title: 'test notification',
+    //     body: 'this is a test notification',
+    //   },
+    //   trigger: {
+    //     date: notifTime
+    //   }
+    // });
+    // const response = await Notifications.getAllScheduledNotificationsAsync();
+    // console.log(response);
+    // //storeWaterNotifID(response);
+
     const response = await Notifications.getAllScheduledNotificationsAsync();
     console.log(response);
-    //storeWaterNotifID(response);
   };
+  
 
   const showTimepicker = () => {
     setShow(true);

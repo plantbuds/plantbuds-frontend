@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   Platform,
   StyleSheet,
   ScrollView,
   View,
   Image,
+  Vibration,
   Dimensions,
   TouchableWithoutFeedback,
   Keyboard,
@@ -12,6 +13,7 @@ import {
   PixelRatio,
   Switch,
 } from 'react-native';
+import * as Notifications from 'expo-notifications';
 import { Text, Colors, IconButton, Button, FAB, Headline, Subheading, Title, Paragraph, Caption, Divider } from 'react-native-paper';
 import { HeaderBackButton } from '@react-navigation/stack';
 import { updateTaskHistory, setEditedEntry, resetPlantState } from '../../store/plantgroup/actions';
@@ -22,7 +24,6 @@ import SetRepotReminderModal from '../components/SetRepotReminderModal';
 import SetFertilizeReminderModal from '../components/SetFertilizeReminderModal';
 import AddEntryModal from '../components/AddEntryModal';
 import { Calendar as ReactCalendar } from 'react-native-calendars';
-import { State } from 'react-native-gesture-handler';
 
 // declare types for your props here
 interface Props {
@@ -135,7 +136,9 @@ export default function PlantProfileScreen(props: Props) {
   const editedEntry = useSelector((state: RootState) => state.plantgroup.editedEntry);
 
   const dispatch = useDispatch();
-  let token = '';
+  const notificationListener = useRef(null);
+
+
   const parseEntries = () => {
     let localHistory = [];
     for (const date in entries) {
@@ -213,6 +216,12 @@ export default function PlantProfileScreen(props: Props) {
 
   // Load all the date entries in history into entries array upon initial load
   useEffect(() => {
+
+    // Vibrate and pop first element of water/repot/ fertilize history array when receiving incoming notifications 
+    notificationListener.current = Notifications.addNotificationReceivedListener( async (notif) => {
+      Vibration.vibrate();
+    });
+
     loadEntries();
     updateCalendarMarkings();
   }, [plant_id, JSON.stringify(history), JSON.stringify(water_history), JSON.stringify(fertilize_history), JSON.stringify(repot_history)]);
@@ -294,7 +303,7 @@ export default function PlantProfileScreen(props: Props) {
           <View style={styles.row}>
             <Subheading style={styles.NRTChildStyle}>Water</Subheading>
             <Paragraph>
-              {water_history && water_history.length > 0 ? water_history[0] : 'No Reminders'}
+              {water_history && water_history.length > 0 ? new Date(water_history[0]).toLocaleString() : 'No Reminders'}
             </Paragraph>
             <IconButton
               icon="pencil"
@@ -308,7 +317,7 @@ export default function PlantProfileScreen(props: Props) {
           <View style={styles.row}>
             <Subheading style={styles.NRTChildStyle}>Repot</Subheading>
             <Paragraph>
-              {repot_history && repot_history.length > 0 ? repot_history[0] : 'No Reminders'}
+              {repot_history && repot_history.length > 0 ? new Date(repot_history[0]).toLocaleString()  : 'No Reminders'}
             </Paragraph>
             <IconButton
               icon="pencil"
@@ -323,7 +332,7 @@ export default function PlantProfileScreen(props: Props) {
             <Subheading style={styles.NRTChildStyle}>Fertilize</Subheading>
             <Paragraph>
               {fertilize_history && fertilize_history.length > 0
-                ? fertilize_history[0]
+                ? new Date(fertilize_history[0]).toLocaleString() 
                 : 'No Reminders'}
             </Paragraph>
             <IconButton

@@ -111,9 +111,9 @@ export const createPlant = (
           photo: imageURI,
           nickname: nickname,
           history: [],
-          water_frequency: '0',
-          repot_frequency: '0',
-          fertilize_frequency: '0',
+          water_frequency: 0,
+          repot_frequency: 0,
+          fertilize_frequency: 0,
           notes: notes,
           user: `${API_ROOT}/api/users/${userID}/`,
         },
@@ -190,9 +190,11 @@ export const updateTaskHistory = (history: string[], plantID: number) => {
   };
 };
 
-export const updateWaterNotifHistory = (
+export const updateWaterNotif = (
   waterHistory: string[],
   frequency: number,
+  notifDate: Date,
+  stringID: string,
   plantID: number
 ) => {
   return {
@@ -208,18 +210,20 @@ export const updateWaterNotifHistory = (
         data: {
           water_history: waterHistory,
           water_frequency: frequency,
+          water_next_notif: notifDate,
+          water_notif_id: stringID, 
         },
       },
       options: {
         onSuccess({dispatch}) {
-          dispatch(setWaterNotif(waterHistory, frequency));
+          dispatch(setWaterNotif(waterHistory, frequency, notifDate, stringID));
         },
       },
     },
   };
 };
 
-export const updateRepotNotifHistory = (
+export const updateRepotNotif = (
   repotHistory: string[],
   frequency: number,
   plantID: number
@@ -248,7 +252,7 @@ export const updateRepotNotifHistory = (
   };
 };
 
-export const updateFertilizeNotifHistory = (
+export const updateFertilizeNotif = (
   fertilizeHistory: string[],
   frequency: number,
   plantID: number
@@ -276,6 +280,7 @@ export const updateFertilizeNotifHistory = (
     },
   };
 };
+
 
 export const setEditedPlant = (editedPlant: boolean) => {
   return {
@@ -305,12 +310,14 @@ export const setEditedEntry = (editedEntry: boolean) => {
   };
 };
 
-export const setWaterNotif = (waterArray: string[], frequency: number) => {
+export const setWaterNotif = (waterArray: string[], frequency: number, notifDate: Date, stringID: string) => {
   return {
     type: SET_WATER_NOTIF,
     payload: {
       waterArray,
       frequency,
+      notifDate, 
+      stringID
     },
   };
 };

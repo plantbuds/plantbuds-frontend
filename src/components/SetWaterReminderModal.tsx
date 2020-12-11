@@ -1,13 +1,15 @@
 import React from 'react';
 import * as Notifications from 'expo-notifications';
-import {View, StyleSheet, Text, Modal, Dimensions} from 'react-native';
+import moment from 'moment';
+import {View, StyleSheet, Text, Modal, Dimensions, Alert} from 'react-native';
 import {Colors, Button} from 'react-native-paper';
 import {Calendar as ReactCalendar} from 'react-native-calendars';
 import {useState} from 'react';
 import {RootState} from '../../store/store';
 import {useSelector, useDispatch} from 'react-redux';
 import SetWaterFreqModal from './SetWaterFreqModal';
-import {updateWaterNotifHistory} from '../../store/plantgroup/actions';
+import {updateWaterNotif} from '../../store/plantgroup/actions';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 interface Props {
   displayModal: boolean;
@@ -25,37 +27,140 @@ export default function SetWaterReminderModal(props: Props) {
 
   const water_history = useSelector((state: RootState) => state.plantgroup.water_history);
   const water_frequency = useSelector((state: RootState) => state.plantgroup.water_frequency);
+  const water_next_notif = useSelector((state: RootState) => state.plantgroup.water_next_notif);
+  const receive_water_notif = useSelector((state: RootState) => state.session.receive_water_notif);
+  const water_notif_id = useSelector((state: RootState) => state.plantgroup.water_notif_id);
   const [selectedDate, setSelectedDate] = useState(
     water_history && water_history.length > 0 ? water_history[0] : setStartDateString()
   );
+  const [selectedTime, setSelectedTime] = useState(
+    water_next_notif ? new Date(water_next_notif) : new Date(Date.now())
+  );
   const [showWaterModal, setShowWaterModal] = useState(false);
-  const [watFreq, setWatFreq] = useState(water_frequency);
+  const [watFreq, setWatFreq] = useState(water_frequency ? water_frequency : 0);
   const plant_id = useSelector((state: RootState) => state.plantgroup.plant_id);
   const dispatch = useDispatch();
 
-  function addDays(date, days) {
-    const copy = new Date(Number(date));
+  function addDays(date: Date, days: number) {
+    const selectedDateObj = new Date(selectedDate + 'T00:00:00');
+    const copy = new Date(
+      moment()
+        .set({
+          date: selectedDateObj.getDate(),
+          month: selectedDateObj.getMonth(),
+          year: selectedDateObj.getFullYear(),
+          hour: selectedTime.getHours(),
+          minute: selectedTime.getMinutes(),
+        })
+        .format()
+    );
     let datestring = '';
     copy.setDate(date.getDate() + days);
     datestring = copy.toISOString().split('T')[0];
     return datestring;
   }
 
-  function pushNotifHistory() {
+  const onTimeChange = (event, selectedDateTime: Date) => {
+    const currentDateTime = selectedDateTime || selectedTime;
+    console.log('onTimeChange' + currentDateTime);
+    setSelectedTime(currentDateTime);
+  };
+
+  const pushNotif = async () => {
     // setup new water history array
     let waterArray = [];
-    let currDate = new Date(selectedDate);
+    const selectedDateObj = new Date(selectedDate + 'T00:00:00');
+
+    const date = new Date(
+      moment()
+        .set({
+          date: selectedDateObj.getDate(),
+          month: selectedDateObj.getMonth(),
+          year: selectedDateObj.getFullYear(),
+          hour: selectedTime.getHours(),
+          minute: selectedTime.getMinutes(),
+        })
+        .format()
+    );
+
     for (let i = 0; i < 5; i++) {
-      waterArray.push(addDays(currDate, watFreq * i));
+      waterArray.push(addDays(date, watFreq * i));
     }
 
-    // update backend with water notification array
-    dispatch(updateWaterNotifHistory(waterArray, watFreq, plant_id));
-  }
+    // schedule notification based on frequency
+    switch (watFreq) {
+      case 0: {
+        const waterID = await Notifications.scheduleNotificationAsync({
+          content: {
+            title: 'Time to water!',
+            body: 'Your plant needs watering',
+          },
+          trigger: {
+            date: date,
+          },
+        });
 
-  function clearNotifHistory() {
-    dispatch(updateWaterNotifHistory([], 0, plant_id));
-  }
+        // update backend with water notification array
+        dispatch(updateWaterNotif(waterArray, watFreq, date, waterID, plant_id));
+        onExit();
+      }
+      case 1: {
+        const waterID = await Notifications.scheduleNotificationAsync({
+          content: {
+            title: 'Time to water!',
+            body: 'Your plant needs watering',
+          },
+          trigger: {
+            hour: selectedTime.getHours(),
+            minute: selectedTime.getMinutes(),
+          },
+        });
+        console.log(waterID);
+        onExit();
+      }
+      case 7: {
+        const waterID = await Notifications.scheduleNotificationAsync({
+          content: {
+            title: 'Time to water!',
+            body: 'Your plant needs watering',
+          },
+          trigger: {
+            weekday: moment().day(),
+          },
+        });
+        console.log(waterID);
+        onExit();
+      }
+      default: {
+        onExit();
+      }
+    }
+  };
+
+  const clearNotif = async () => {
+    if (water_notif_id) {
+      console.log('clearing water id');
+      Notifications.cancelScheduledNotificationAsync(water_notif_id);
+    }
+    console.log('clearing notif history');
+    dispatch(updateWaterNotif([], 0, null, null, plant_id));
+  };
+
+  const onSubmitSave = async () => {
+    clearNotif();
+
+    if (!receive_water_notif) {
+     Alert.alert('Wait!', 'Please turn on water notifications for this reminder to go through', [{text: "OK", onPress: onExit}]);
+    } else {
+      console.log('watFreq value' + watFreq.toString());
+      pushNotif();
+    }
+  };
+
+  const onSubmitClear = () => {
+    clearNotif();
+    onExit();
+  };
 
   return (
     <Modal animationType="slide" transparent={true} visible={displayModal}>
@@ -81,8 +186,19 @@ export default function SetWaterReminderModal(props: Props) {
               textDisabledColor: '#979797',
             }}
           />
-          <View style={styles.frequencyContainer}>
-            <Text style={styles.frequencyText}>Frequency:</Text>
+          <View style={styles.textContainer}>
+            <Text style={styles.reminderText}>Time:</Text>
+            <DateTimePicker
+              value={selectedTime}
+              mode="time"
+              display="default"
+              style={{width: windowWidth * 0.24}}
+              onChange={onTimeChange}
+            />
+          </View>
+
+          <View style={styles.textContainer}>
+            <Text style={styles.reminderText}>Frequency:</Text>
             <Button
               icon={showWaterModal ? 'chevron-up' : 'chevron-down'}
               mode="contained"
@@ -91,11 +207,7 @@ export default function SetWaterReminderModal(props: Props) {
               style={styles.freqButton}
               onPress={() => setShowWaterModal(true)}
             >
-              {!watFreq || watFreq === 0
-                ? 'Only once'
-                : watFreq === 1
-                ? 'Every day'
-                : 'Every ' + watFreq.toString() + ' days'}
+              {!watFreq || watFreq === 0 ? 'Only once' : watFreq === 1 ? 'Every day' : 'Every week'}
             </Button>
             <SetWaterFreqModal
               displayModal={showWaterModal}
@@ -108,10 +220,7 @@ export default function SetWaterReminderModal(props: Props) {
           <Button
             mode="contained"
             color={Colors.green400}
-            onPress={() => {
-              pushNotifHistory();
-              onExit();
-            }}
+            onPress={onSubmitSave}
             style={styles.roundToggle}
           >
             <Text style={{color: Colors.white}}>Save</Text>
@@ -119,10 +228,7 @@ export default function SetWaterReminderModal(props: Props) {
           <Button
             mode="contained"
             color={Colors.red300}
-            onPress={() => {
-              clearNotifHistory();
-              onExit();
-            }}
+            onPress={onSubmitClear}
             style={styles.roundToggle}
           >
             <Text style={{color: Colors.white}}>Clear Reminder</Text>
@@ -157,10 +263,10 @@ const styles = StyleSheet.create({
     fontSize: 22,
     alignSelf: 'center',
   },
-  frequencyText: {
+  reminderText: {
     fontSize: 18,
   },
-  frequencyContainer: {
+  textContainer: {
     marginTop: 5,
     marginBottom: 5,
     flexDirection: 'row',

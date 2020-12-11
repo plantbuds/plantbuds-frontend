@@ -6,6 +6,9 @@ import {
   LOGIN_FAIL,
   EDIT_NOTIF_TIME_SUCCESS,
   EDIT_USER_SUCCESS,
+  EDIT_WATER_NOTIF_SUCCESS,
+  EDIT_REPOT_NOTIF_SUCCESS,
+  EDIT_FERTILIZE_NOTIF_SUCCESS
 } from './types';
 
 const initialState: SessionState = {
@@ -63,11 +66,21 @@ export function sessionReducer(state = initialState, action: SessionActionTypes)
         USDA_zone: action.payload.zone,
         profileURI: action.payload.imageURI,
       };
-    case EDIT_NOTIF_TIME_SUCCESS:
+    case EDIT_WATER_NOTIF_SUCCESS: 
       return {
-        ...state,
-        notif_time: action.time,
-      };
+        ...state, 
+        receive_water_notif: action.payload.data.receive_water_notif
+      }
+    case EDIT_REPOT_NOTIF_SUCCESS:
+      return {
+        ...state, 
+        receive_repot_notif: action.payload.data.receive_repot_notif
+      }
+    case EDIT_FERTILIZE_NOTIF_SUCCESS: 
+    return {
+      ...state, 
+      receive_fertilizing_notif: action.payload.data.receive_fertilizing_notif
+    }
     default:
       return state;
   }

@@ -28,7 +28,7 @@ export default function Sidebar(props: any) {
 const windowHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
   signoutBtn: {
-    top: windowHeight * 0.63,
+    top: windowHeight * 0.50, //0.63
   },
   fontStyle: {
     color: Colors.lightGreen900,

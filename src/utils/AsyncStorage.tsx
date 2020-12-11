@@ -23,60 +23,6 @@ export async function getExpoToken() {
   }
 }
 
-export async function storeWaterNotifID(data) {
-  try {
-    await AsyncStorage.setItem(WATERNOTIFID, data);
-    return Value;
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-export async function getWaterNotifID() {
-  try {
-    let value = await AsyncStorage.getItem(WATERNOTIFID);
-    return value;
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-export async function storeRepotNotifID(data) {
-  try {
-    await AsyncStorage.setItem(REPOTNOTIFID, data);
-    return Value;
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-export async function getRepotNotifID() {
-  try {
-    let value = await AsyncStorage.getItem(REPOTNOTIFID);
-    return value;
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-export async function storeFertilizeNotifID(data) {
-  try {
-    await AsyncStorage.setItem(FERTILIZENOTIFID, data);
-    return Value;
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-export async function getFertilizeNotifID() {
-  try {
-    let value = await AsyncStorage.getItem(FERTILIZENOTIFID);
-    return value;
-  } catch (error) {
-    console.error(error);
-  }
-}
-
 export async function clearData() {
   try {
     await AsyncStorage.clear();

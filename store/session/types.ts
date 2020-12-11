@@ -36,6 +36,12 @@ export const EDIT_NOTIF_TIME_FAIL = 'EDIT_NOTIF_TIME_FAIL';
 export const EDIT_WATER_NOTIF = 'EDIT_WATER_NOTIF';
 export const EDIT_REPOT_NOTIF = 'EDIT_REPOT_NOTIF';
 export const EDIT_FERTILIZING_NOTIF = 'EDIT_FERTILIZING_NOTIF';
+export const EDIT_WATER_NOTIF_SUCCESS = 'EDIT_WATER_NOTIF_SUCCESS';
+export const EDIT_WATER_NOTIF_FAIL = 'EDIT_WATER_NOTIF_FAIL';
+export const EDIT_REPOT_NOTIF_SUCCESS = 'EDIT_REPOT_NOTIF_SUCCESS';
+export const EDIT_REPOT_NOTIF_FAIL = 'EDIT_REPOT_NOTIF_FAIL';
+export const EDIT_FERTILIZE_NOTIF_FAIL = 'EDIT_FERTILIZE_NOTIF_FAIL'; 
+export const EDIT_FERTILIZE_NOTIF_SUCCESS = 'EDIT_FERTILIZE_NOTIF_SUCCESS'
 
 interface LoginRequestAction {
   type: typeof LOGIN_REQUEST;
@@ -63,10 +69,25 @@ interface EditNotifTimeSuccessAction {
   type: typeof EDIT_NOTIF_TIME_SUCCESS;
   time: string;
 }
+interface EditWaterNotifSuccessAction {
+  type: typeof EDIT_WATER_NOTIF_SUCCESS;
+  payload: any;
+}
+interface EditRepotNotifSuccessAction {
+  type: typeof EDIT_REPOT_NOTIF_SUCCESS;
+  payload: any; 
+}
+interface EditFertilizeNotifSuccessAction {
+  type: typeof EDIT_FERTILIZE_NOTIF_SUCCESS;
+  payload: any; 
+}
 export type SessionActionTypes =
   | LoginRequestAction
   | LoginSuccessAction
   | LogoutAction
   | LoginFailAction
   | EditUserSuccessAction
-  | EditNotifTimeSuccessAction;
+  | EditNotifTimeSuccessAction
+  | EditFertilizeNotifSuccessAction
+  | EditWaterNotifSuccessAction
+  | EditRepotNotifSuccessAction;
