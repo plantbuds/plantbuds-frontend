@@ -1,11 +1,5 @@
 import React, {useEffect, useState, useRef} from 'react';
-import {
-  StyleSheet,
-  ScrollView,
-  View,
-  Image,
-  Dimensions,
-} from 'react-native';
+import {StyleSheet, ScrollView, View, Image, Dimensions, Vibration} from 'react-native';
 import * as Notifications from 'expo-notifications';
 import {
   Colors,
@@ -23,6 +17,7 @@ import {
   resetPlantState,
   updateWaterNotif,
   updateRepotNotif,
+  updateFertilizeNotif,
 } from '../../store/plantgroup/actions';
 import {RootState} from '../../store/store';
 import {useDispatch, useSelector} from 'react-redux';
@@ -137,24 +132,28 @@ export default function PlantProfileScreen(props: Props) {
   const nickname = useSelector((state: RootState) => state.plantgroup.nickname);
   const photo = useSelector((state: RootState) => state.plantgroup.photo);
   const notes = useSelector((state: RootState) => state.plantgroup.notes);
- 
+
   const history = useSelector((state: RootState) => state.plantgroup.history);
   const water_history = useSelector((state: RootState) => state.plantgroup.water_history);
   const repot_history = useSelector((state: RootState) => state.plantgroup.repot_history);
   const fertilize_history = useSelector((state: RootState) => state.plantgroup.fertilize_history);
-  
+
   const receive_water_notif = useSelector((state: RootState) => state.session.receive_water_notif);
-  
+
   const water_frequency = useSelector((state: RootState) => state.plantgroup.water_frequency);
   const water_next_notif = useSelector((state: RootState) => state.plantgroup.water_next_notif);
   const water_notif_id = useSelector((state: RootState) => state.plantgroup.water_notif_id);
-  
+
   const repot_frequency = useSelector((state: RootState) => state.plantgroup.repot_frequency);
   const repot_next_notif = useSelector((state: RootState) => state.plantgroup.repot_next_notif);
   const repot_notif_id = useSelector((state: RootState) => state.plantgroup.repot_notif_id);
 
-  const fertilize_frequency = useSelector((state: RootState) => state.plantgroup.fertilize_frequency);
-  const fertilize_next_notif = useSelector((state: RootState) => state.plantgroup.fertilize_next_notif);
+  const fertilize_frequency = useSelector(
+    (state: RootState) => state.plantgroup.fertilize_frequency
+  );
+  const fertilize_next_notif = useSelector(
+    (state: RootState) => state.plantgroup.fertilize_next_notif
+  );
   const fertilize_notif_id = useSelector((state: RootState) => state.plantgroup.fertilize_notif_id);
   const editedEntry = useSelector((state: RootState) => state.plantgroup.editedEntry);
 
@@ -238,11 +237,10 @@ export default function PlantProfileScreen(props: Props) {
 
   // Load all the date entries in history into entries array upon initial load
   useEffect(() => {
-  
     // Notification listener when app is running
     notificationListener.current = Notifications.addNotificationReceivedListener(async notif => {
-      
       let newNotifTime = null;
+      Vibration.vibrate();
       if (notif.request.identifier === water_notif_id) {
         // get water notif array history and pop the first entry, then add a new entry
         let waterCopy = water_history;
@@ -287,50 +285,97 @@ export default function PlantProfileScreen(props: Props) {
           dispatch(updateWaterNotif([], 0, null, null, plant_id));
         }
       } else if (notif.request.identifier === repot_notif_id) {
-          // get water notif array history and pop the first entry, then add a new entry
-          let repotCopy = repot_history;
-          repotCopy.shift();
-  
-          // set the next notif date to be the top entry
-          if (repotCopy.length != 0) {
-            // extract the time from the previous notif date
-            const notifTime = new Date(repot_next_notif).toLocaleTimeString();
-  
-            // push a new date to the end of the array
-            repotCopy.push(
-              moment()
-                .set({
-                  date: parseInt(repotCopy[3].split('-')[2]),
-                  month: parseInt(repotCopy[3].split('-')[1]) - 1,
-                  year: parseInt(repotCopy[3].split('-')[0]),
-                  hours: 0,
-                  minutes: 0,
-                  seconds: 0,
-                  millisecond: 0,
-                })
-                .add(1, 'days')
-                .format('YYYY-MM-DD')
-            );
-  
-            // update the repot notif time to have the upcoming date and time
-            newNotifTime = moment().set({
-              date: parseInt(repotCopy[0].split('-')[2]),
-              month: parseInt(repotCopy[0].split('-')[1]) - 1,
-              year: parseInt(repotCopy[0].split('-')[0]),
-              hours: parseInt(notifTime.split(':')[0]),
-              minutes: parseInt(notifTime.split(':')[1]),
-              seconds: 0,
-              millisecond: 0,
-            });
-  
-            dispatch(
-              updateRepotNotif(repotCopy, repot_frequency, newNotifTime, repot_notif_id, plant_id)
-            );
-          } else {
-            dispatch(updateRepotNotif([], 0, null, null, plant_id));
-          }
+        // get repot notif array history and pop the first entry, then add a new entry
+        let repotCopy = repot_history;
+        repotCopy.shift();
+
+        // set the next notif date to be the top entry
+        if (repotCopy.length != 0) {
+          // extract the time from the previous notif date
+          const notifTime = new Date(repot_next_notif).toLocaleTimeString();
+
+          // push a new date to the end of the array
+          repotCopy.push(
+            moment()
+              .set({
+                date: parseInt(repotCopy[3].split('-')[2]),
+                month: parseInt(repotCopy[3].split('-')[1]) - 1,
+                year: parseInt(repotCopy[3].split('-')[0]),
+                hours: 0,
+                minutes: 0,
+                seconds: 0,
+                millisecond: 0,
+              })
+              .add(1, 'days')
+              .format('YYYY-MM-DD')
+          );
+
+          // update the repot notif time to have the upcoming date and time
+          newNotifTime = moment().set({
+            date: parseInt(repotCopy[0].split('-')[2]),
+            month: parseInt(repotCopy[0].split('-')[1]) - 1,
+            year: parseInt(repotCopy[0].split('-')[0]),
+            hours: parseInt(notifTime.split(':')[0]),
+            minutes: parseInt(notifTime.split(':')[1]),
+            seconds: 0,
+            millisecond: 0,
+          });
+
+          dispatch(
+            updateRepotNotif(repotCopy, repot_frequency, newNotifTime, repot_notif_id, plant_id)
+          );
+        } else {
+          dispatch(updateRepotNotif([], 0, null, null, plant_id));
+        }
       } else if (notif.request.identifier === fertilize_notif_id) {
-        //TODO
+        // get fertilize notif array history and pop the first entry, then add a new entry
+        let fertilizeCopy = fertilize_history;
+        fertilizeCopy.shift();
+
+        // set the next notif date to be the top entry
+        if (fertilizeCopy.length != 0) {
+          // extract the time from the previous notif date
+          const notifTime = new Date(fertilize_next_notif).toLocaleTimeString();
+
+          // push a new date to the end of the array
+          fertilizeCopy.push(
+            moment()
+              .set({
+                date: parseInt(fertilizeCopy[3].split('-')[2]),
+                month: parseInt(fertilizeCopy[3].split('-')[1]) - 1,
+                year: parseInt(fertilizeCopy[3].split('-')[0]),
+                hours: 0,
+                minutes: 0,
+                seconds: 0,
+                millisecond: 0,
+              })
+              .add(1, 'days')
+              .format('YYYY-MM-DD')
+          );
+
+          // update the fertilize notif time to have the upcoming date and time
+          newNotifTime = moment().set({
+            date: parseInt(fertilizeCopy[0].split('-')[2]),
+            month: parseInt(fertilizeCopy[0].split('-')[1]) - 1,
+            year: parseInt(fertilizeCopy[0].split('-')[0]),
+            hours: parseInt(notifTime.split(':')[0]),
+            minutes: parseInt(notifTime.split(':')[1]),
+            seconds: 0,
+            millisecond: 0,
+          });
+
+          dispatch(
+            updateFertilizeNotif(
+              fertilizeCopy,
+              fertilize_frequency,
+              newNotifTime,
+              fertilize_notif_id,
+              plant_id
+            )
+          );
+        } else {
+          dispatch(updateFertilizeNotif([], 0, null, null, plant_id));
+        }
       } else {
         return;
       }
@@ -340,6 +385,7 @@ export default function PlantProfileScreen(props: Props) {
     notificationListener.current = Notifications.addNotificationResponseReceivedListener(
       async response => {
         let newNotifTime = null;
+        Vibration.vibrate();
         if (response.notification.request.identifier === water_notif_id) {
           // get water notif array history and pop the first entry, then add a new entry
           let waterCopy = water_history;
@@ -355,11 +401,12 @@ export default function PlantProfileScreen(props: Props) {
               moment()
                 .set({
                   date: parseInt(waterCopy[3].split('-')[2]),
-                  month: parseInt(waterCopy[3].split('-')[1]),
+                  month: parseInt(waterCopy[3].split('-')[1]) - 1,
                   year: parseInt(waterCopy[3].split('-')[0]),
                   hours: 0,
                   minutes: 0,
                   seconds: 0,
+                  millisecond: 0,
                 })
                 .add(1, 'days')
                 .format('YYYY-MM-DD')
@@ -368,11 +415,12 @@ export default function PlantProfileScreen(props: Props) {
             // update the water notif time to have the upcoming date and time
             newNotifTime = moment().set({
               date: parseInt(waterCopy[0].split('-')[2]),
-              month: parseInt(waterCopy[0].split('-')[1]),
+              month: parseInt(waterCopy[0].split('-')[1]) - 1,
               year: parseInt(waterCopy[0].split('-')[0]),
               hours: parseInt(notifTime.split(':')[0]),
               minutes: parseInt(notifTime.split(':')[1]),
               seconds: 0,
+              millisecond: 0,
             });
 
             dispatch(
@@ -382,9 +430,97 @@ export default function PlantProfileScreen(props: Props) {
             dispatch(updateWaterNotif([], 0, null, null, plant_id));
           }
         } else if (response.notification.request.identifier === repot_notif_id) {
-          //TODO
+          // get repot notif array history and pop the first entry, then add a new entry
+          let repotCopy = repot_history;
+          repotCopy.shift();
+
+          // set the next notif date to be the top entry
+          if (repotCopy.length != 0) {
+            // extract the time from the previous notif date
+            const notifTime = new Date(repot_next_notif).toLocaleTimeString();
+
+            // push a new date to the end of the array
+            repotCopy.push(
+              moment()
+                .set({
+                  date: parseInt(repotCopy[3].split('-')[2]),
+                  month: parseInt(repotCopy[3].split('-')[1]) - 1,
+                  year: parseInt(repotCopy[3].split('-')[0]),
+                  hours: 0,
+                  minutes: 0,
+                  seconds: 0,
+                  millisecond: 0,
+                })
+                .add(1, 'days')
+                .format('YYYY-MM-DD')
+            );
+
+            // update the repot notif time to have the upcoming date and time
+            newNotifTime = moment().set({
+              date: parseInt(repotCopy[0].split('-')[2]),
+              month: parseInt(repotCopy[0].split('-')[1]) - 1,
+              year: parseInt(repotCopy[0].split('-')[0]),
+              hours: parseInt(notifTime.split(':')[0]),
+              minutes: parseInt(notifTime.split(':')[1]),
+              seconds: 0,
+              millisecond: 0,
+            });
+
+            dispatch(
+              updateRepotNotif(repotCopy, repot_frequency, newNotifTime, repot_notif_id, plant_id)
+            );
+          } else {
+            dispatch(updateRepotNotif([], 0, null, null, plant_id));
+          }
         } else if (response.notification.request.identifier === fertilize_notif_id) {
-          //TODO
+          // get fertilize notif array history and pop the first entry, then add a new entry
+          let fertilizeCopy = fertilize_history;
+          fertilizeCopy.shift();
+
+          // set the next notif date to be the top entry
+          if (fertilizeCopy.length != 0) {
+            // extract the time from the previous notif date
+            const notifTime = new Date(fertilize_next_notif).toLocaleTimeString();
+
+            // push a new date to the end of the array
+            fertilizeCopy.push(
+              moment()
+                .set({
+                  date: parseInt(fertilizeCopy[3].split('-')[2]),
+                  month: parseInt(fertilizeCopy[3].split('-')[1]) - 1,
+                  year: parseInt(fertilizeCopy[3].split('-')[0]),
+                  hours: 0,
+                  minutes: 0,
+                  seconds: 0,
+                  millisecond: 0,
+                })
+                .add(1, 'days')
+                .format('YYYY-MM-DD')
+            );
+
+            // update the fertilize notif time to have the upcoming date and time
+            newNotifTime = moment().set({
+              date: parseInt(fertilizeCopy[0].split('-')[2]),
+              month: parseInt(fertilizeCopy[0].split('-')[1]) - 1,
+              year: parseInt(fertilizeCopy[0].split('-')[0]),
+              hours: parseInt(notifTime.split(':')[0]),
+              minutes: parseInt(notifTime.split(':')[1]),
+              seconds: 0,
+              millisecond: 0,
+            });
+
+            dispatch(
+              updateFertilizeNotif(
+                fertilizeCopy,
+                fertilize_frequency,
+                newNotifTime,
+                fertilize_notif_id,
+                plant_id
+              )
+            );
+          } else {
+            dispatch(updateFertilizeNotif([], 0, null, null, plant_id));
+          }
         } else {
           return;
         }

@@ -345,6 +345,8 @@ export const setFertilizeNotif = (
     payload: {
       fertilizeArray,
       frequency,
+      notifDate,
+      stringID,
     },
   };
 };

@@ -15,7 +15,7 @@ interface Props {
 }
 
 export default function SetFertilizeFreqModal(props: Props) {
-  const {displayModal, onExit, fertFreq, setFertFreq, setShowModal} = props;
+  const {displayModal, onExit, setFertFreq, setShowModal} = props;
   const fertilize_frequency = useSelector(
     (state: RootState) => state.plantgroup.fertilize_frequency
   );
@@ -42,12 +42,8 @@ export default function SetFertilizeFreqModal(props: Props) {
               onValueChange={(itemValue: number) => setModalText(itemValue)}
             >
               <Picker.Item label="Only once" value={0} />
-              <Picker.Item label="1 Hour" value={1} />
-              <Picker.Item label="2 Hours" value={2} />
-              <Picker.Item label="3 Hours" value={3} />
-              <Picker.Item label="4 Hours" value={4} />
-              <Picker.Item label="5 Hours" value={5} />
-              <Picker.Item label="6 Hours" value={6} />
+              <Picker.Item label="Daily" value={1} />
+              <Picker.Item label="Weekly" value={7} />
             </Picker>
           </View>
         </View>

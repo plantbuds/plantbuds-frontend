@@ -33,30 +33,27 @@ export default function SettingsScreen(props: Props) {
     (state: RootState) => state.session.receive_fertilizing_notif
   );
   const receive_repot_notif = useSelector((state: RootState) => state.session.receive_repot_notif);
-  const notif_time = useSelector((state: RootState) => state.session.notif_time);
   const dispatch = useDispatch();
+
   const [waterNotif, setWaterNotif] = useState(receive_water_notif);
   const [repotNotif, setRepotNotif] = useState(receive_repot_notif);
   const [fertilizeNotif, setFertilizeNotif] = useState(receive_fertilizing_notif);
-  const [show, setShow] = useState(false);
 
-  const toggleWater = () => {
-    setWaterNotif(previousState => !previousState);
+  useEffect(() => {}, [waterNotif, repotNotif, fertilizeNotif]);
 
-    // previous state has not gone through yet, so need to manually flip boolean
+  function toggleWater() {
+    setWaterNotif(toggled => !toggled);
     dispatch(editWaterNotif(!waterNotif, userID));
-  };
-  const toggleRepot = () => {
-    setRepotNotif(previousState => !previousState);
+  }
+  function toggleRepot() {
+    setRepotNotif(toggled => !toggled);
     dispatch(editRepotNotif(!repotNotif, userID));
-  };
-  const toggleFertilize = () => {
-    setFertilizeNotif(previousState => !previousState);
+  }
+  function toggleFertilize() {
+    setFertilizeNotif(toggled => !toggled);
+    console.log(!fertilizeNotif);
     dispatch(editFertilizingNotif(!fertilizeNotif, userID));
-  };
-  const showTimepicker = () => {
-    setShow(true);
-  };
+  }
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
