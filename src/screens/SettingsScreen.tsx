@@ -51,7 +51,6 @@ export default function SettingsScreen(props: Props) {
   }
   function toggleFertilize() {
     setFertilizeNotif(toggled => !toggled);
-    console.log(!fertilizeNotif);
   }
 
   React.useLayoutEffect(() => {

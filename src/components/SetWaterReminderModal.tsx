@@ -63,7 +63,6 @@ export default function SetWaterReminderModal(props: Props) {
 
   const onTimeChange = (event, selectedDateTime: Date) => {
     const currentDateTime = selectedDateTime || selectedTime;
-    console.log('onTimeChange' + currentDateTime);
     setSelectedTime(currentDateTime);
   };
 
@@ -115,12 +114,9 @@ export default function SetWaterReminderModal(props: Props) {
     } else {
       waterArray.push(addDays(date, 0));
     }
-
-    console.log(waterArray);
     // schedule notification based on frequency
     switch (watFreq) {
       case 0: {
-        console.log('case 0');
         const waterID = await Notifications.scheduleNotificationAsync({
           content: {
             title: 'Time to water!',
@@ -138,7 +134,6 @@ export default function SetWaterReminderModal(props: Props) {
         return;
       }
       case 1: {
-        console.log('case 1');
         const waterID = await Notifications.scheduleNotificationAsync({
           content: {
             title: 'Time to water!',
@@ -156,7 +151,6 @@ export default function SetWaterReminderModal(props: Props) {
         return;
       }
       case 7: {
-        console.log('case 7');
         const waterID = await Notifications.scheduleNotificationAsync({
           content: {
             title: 'Time to water!',
@@ -180,10 +174,8 @@ export default function SetWaterReminderModal(props: Props) {
 
   const clearNotif = async () => {
     if (water_notif_id) {
-      console.log('clearing water id');
       await Notifications.cancelScheduledNotificationAsync(water_notif_id);
     }
-    console.log('clearing notif history');
     dispatch(updateWaterNotif([], 0, null, null, plant_id));
   };
 
@@ -195,7 +187,6 @@ export default function SetWaterReminderModal(props: Props) {
         {text: 'OK', onPress: onExit},
       ]);
     } else {
-      console.log('watFreq value' + watFreq.toString());
       await pushNotif();
     }
   };

@@ -70,7 +70,6 @@ export default function SetFertilizeReminderModal(props: Props) {
 
   const onTimeChange = (event, selectedDateTime: Date) => {
     const currentDateTime = selectedDateTime || selectedTime;
-    console.log('onTimeChange' + currentDateTime);
     setSelectedTime(currentDateTime);
   };
 
@@ -123,11 +122,9 @@ export default function SetFertilizeReminderModal(props: Props) {
       fertilizeArray.push(addDays(date, 0));
     }
 
-    console.log(fertilizeArray);
     // schedule notification based on frequency
     switch (fertFreq) {
       case 0: {
-        console.log('case 0');
         const fertilizeID = await Notifications.scheduleNotificationAsync({
           content: {
             title: 'Time to fertilize!',
@@ -185,16 +182,13 @@ export default function SetFertilizeReminderModal(props: Props) {
 
   const clearNotif = async () => {
     if (fertilize_notif_id) {
-      console.log('clearing fertilize id');
       await Notifications.cancelScheduledNotificationAsync(fertilize_notif_id);
     }
-    console.log('clearing notif history');
     dispatch(updateFertilizeNotif([], 0, null, null, plant_id));
   };
 
   const onSubmitSave = async () => {
     await clearNotif();
-    console.log(' receive notif in on submit: ' + receive_fertilize_notif);
     if (!receive_fertilize_notif) {
       Alert.alert(
         'Wait!',

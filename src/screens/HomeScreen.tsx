@@ -100,20 +100,17 @@ export default function HomeScreen(props: Props) {
   }, []);
 
   const _keyboardDidShow = () => {
-    console.log("keyboard showing")
     setDisplayFAB(false); 
     setDisableFAB(true);
   };
 
   const _keyboardDidHide = () => {
-    console.log("keyboard not showing")
     setDisplayFAB(true); 
     setDisableFAB(false);
   };
 
   useEffect(() => {
     if (!submit) {
-      console.log('use effect that listens to changes to plants array');
       dispatch(getAllPlants(username));
     }
   }, [JSON.stringify(plants)]);
