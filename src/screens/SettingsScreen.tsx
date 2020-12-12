@@ -1,11 +1,19 @@
 import React, {useEffect, useState} from 'react';
 import {Platform, StyleSheet, View, Image, Dimensions, PixelRatio, Switch} from 'react-native';
-import {Text, Colors, IconButton, Button, TextInput, Headline, Title, Divider, Subheading} from 'react-native-paper';
+import {
+  Text,
+  Colors,
+  IconButton,
+  Button,
+  TextInput,
+  Headline,
+  Title,
+  Divider,
+  Subheading,
+} from 'react-native-paper';
 import {useSelector, useDispatch} from 'react-redux';
 import {RootState} from '../../store/store';
-import SetNotifTimeModal from '../components/SetNotifTimeModal';
-import {editWaterNotif, editRepotNotif, editFertilizingNotif} from '../../store/session/actions';
-import {CardStyleInterpolators} from '@react-navigation/stack';
+import {editNotif} from '../../store/session/actions';
 
 // declare types for your props here
 interface Props {
@@ -23,30 +31,27 @@ export default function SettingsScreen(props: Props) {
     (state: RootState) => state.session.receive_fertilizing_notif
   );
   const receive_repot_notif = useSelector((state: RootState) => state.session.receive_repot_notif);
-  const notif_time = useSelector((state: RootState) => state.session.notif_time);
   const dispatch = useDispatch();
+
   const [waterNotif, setWaterNotif] = useState(receive_water_notif);
   const [repotNotif, setRepotNotif] = useState(receive_repot_notif);
   const [fertilizeNotif, setFertilizeNotif] = useState(receive_fertilizing_notif);
-  const [show, setShow] = useState(false);
 
-  const toggleWater = () => {
-    setWaterNotif(previousState => !previousState);
+  useEffect(() => {
+    dispatch(editNotif(waterNotif, repotNotif, fertilizeNotif, userID));
+  }, [waterNotif, repotNotif, fertilizeNotif]);
 
-    // previous state has not gone through yet, so need to manually flip boolean
-    dispatch(editWaterNotif(!waterNotif, userID));
-  };
-  const toggleRepot = () => {
-    setRepotNotif(previousState => !previousState);
-    dispatch(editRepotNotif(!repotNotif, userID));
-  };
-  const toggleFertilize = () => {
-    setFertilizeNotif(previousState => !previousState);
-    dispatch(editFertilizingNotif(!fertilizeNotif, userID));
-  };
-  const showTimepicker = () => {
-    setShow(true);
-  };
+  function toggleWater() {
+    setWaterNotif(toggled => !toggled);
+    
+  }
+  function toggleRepot() {
+    setRepotNotif(toggled => !toggled);
+   
+  }
+  function toggleFertilize() {
+    setFertilizeNotif(toggled => !toggled);
+  }
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -133,18 +138,6 @@ export default function SettingsScreen(props: Props) {
           <Divider />
         </View>
       </View>
-      <Title style={styles.notificationSettingStyle}>Settings</Title>
-      <View style={styles.row}>
-        <Subheading style={styles.optionsStyle}>Notification Time</Subheading>
-        <Text>{notif_time ? new Date(notif_time).toISOString().split('T')[1] : 'N/A'}</Text>
-        <IconButton
-          icon="pencil"
-          onPress={showTimepicker}
-          //style={{alignSelf: 'flex-end'}}
-        />
-      </View>
-      {/*<Button onPress={showTimepicker}>Select a notification time</Button>*/}
-      <SetNotifTimeModal displayModal={show} setShow={setShow} />
     </View>
   );
 }
@@ -155,14 +148,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     alignSelf: 'center',
-    // borderWidth: 1, 
+    // borderWidth: 1,
     // borderStyle: "solid",
     width: windowWidth * 0.85,
     height: windowHeight * 0.047,
@@ -206,15 +199,6 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
     borderRadius: 100,
-  },
-
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    justifyContent: 'space-between',
-    width: '100%',
-    height: windowHeight * 0.06,
   },
 
   textTitle: {

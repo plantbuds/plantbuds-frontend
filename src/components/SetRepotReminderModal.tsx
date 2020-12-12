@@ -1,13 +1,15 @@
 import React from 'react';
 import * as Notifications from 'expo-notifications';
-import {View, StyleSheet, Text, Modal, Dimensions} from 'react-native';
+import moment from 'moment';
+import {View, StyleSheet, Text, Modal, Dimensions, Alert} from 'react-native';
 import {Colors, Button} from 'react-native-paper';
 import {Calendar as ReactCalendar} from 'react-native-calendars';
 import {useState} from 'react';
 import {RootState} from '../../store/store';
 import {useSelector, useDispatch} from 'react-redux';
 import SetRepotFreqModal from './SetRepotFreqModal';
-import {updateRepotNotifHistory} from '../../store/plantgroup/actions';
+import {updateRepotNotif} from '../../store/plantgroup/actions';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 interface Props {
   displayModal: boolean;
@@ -18,46 +20,182 @@ export default function SetRepotReminderModal(props: Props) {
   const {displayModal, onExit} = props;
 
   function setStartDateString() {
-    var tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
-    var localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, -1);
-        return localISOTime.split("T")[0];
+    var tzoffset = new Date().getTimezoneOffset() * 60000; //offset in milliseconds
+    var localISOTime = new Date(Date.now() - tzoffset).toISOString().slice(0, -1);
+    return localISOTime.split('T')[0];
   }
 
   const repot_history = useSelector((state: RootState) => state.plantgroup.repot_history);
   const repot_frequency = useSelector((state: RootState) => state.plantgroup.repot_frequency);
+  const repot_next_notif = useSelector((state: RootState) => state.plantgroup.repot_next_notif);
+  const receive_repot_notif = useSelector((state: RootState) => state.session.receive_repot_notif);
+  const repot_notif_id = useSelector((state: RootState) => state.plantgroup.repot_notif_id);
   const [selectedDate, setSelectedDate] = useState(
     repot_history && repot_history.length > 0 ? repot_history[0] : setStartDateString()
   );
+  const [selectedTime, setSelectedTime] = useState(
+    repot_next_notif
+      ? new Date(repot_next_notif)
+      : new Date(
+          moment()
+            .add(5, 'minutes')
+            .format()
+        )
+  );
   const [showRepotModal, setShowRepotModal] = useState(false);
-  const [repFreq, setRepFreq] = useState(repot_frequency);
+  const [repFreq, setRepFreq] = useState(repot_frequency ? repot_frequency : 0);
   const plant_id = useSelector((state: RootState) => state.plantgroup.plant_id);
+  const plant_name = useSelector((state: RootState) => state.plantgroup.plant_name);
   const dispatch = useDispatch();
 
-  function addDays(date, days) {
-    const copy = new Date(Number(date));
-    let datestring = '';
-    copy.setDate(date.getDate() + days);
-    datestring = copy.toISOString().split('T')[0];
-    return datestring;
+  function addDays(date: Date, days: number) {
+    return moment()
+      .set({
+        date: date.getDate(),
+        month: date.getMonth(),
+        year: date.getFullYear(),
+        hour: date.getHours(),
+        minute: date.getMinutes(),
+      })
+      .add(days, 'days')
+      .format('YYYY-MM-DD');
   }
 
-  function pushNotifHistory() {
-    // setup new water history array
+  const onTimeChange = (event, selectedDateTime: Date) => {
+    const currentDateTime = selectedDateTime || selectedTime;
+    setSelectedTime(currentDateTime);
+  };
+
+  const pushNotif = async () => {
+    // setup new repot history array
     let repotArray = [];
-    let currDate = new Date(selectedDate);
-    for (let i = 0; i < 5; i++) {
-      repotArray.push(addDays(currDate, repFreq * i));
+    const selectedDateObj = new Date(selectedDate + 'T00:00:00');
+
+    // check to see if delta between reminder date and current date is negative
+    let date = new Date(
+      moment()
+        .set({
+          date: selectedDateObj.getDate(),
+          month: selectedDateObj.getMonth(),
+          year: selectedDateObj.getFullYear(),
+          hour: selectedTime.getHours(),
+          minute: selectedTime.getMinutes(),
+          seconds: 0,
+          millisecond: 0,
+        })
+        .format()
+    );
+
+    const currTime = new Date(Date.now()).getTime();
+    const reminderTime = date.getTime();
+    const delta = reminderTime - currTime;
+
+    // set reminder to the next day if delta is negative
+    if (delta <= 0) {
+      date = new Date(
+        moment()
+          .set({
+            date: selectedDateObj.getDate(),
+            month: selectedDateObj.getMonth(),
+            year: selectedDateObj.getFullYear(),
+            hour: selectedTime.getHours(),
+            minute: selectedTime.getMinutes(),
+          })
+          .add(1, 'days')
+          .format()
+      );
     }
 
-    // update backend with water notification array
-    dispatch(updateRepotNotifHistory(repotArray, repFreq, plant_id));
+    // initialize push notification history array for every day and every week frequencies
+    if (repFreq === 1 || repFreq === 7) {
+      for (let i = 0; i < 5; i++) {
+        repotArray.push(addDays(date, repFreq * i));
+      }
+    } else {
+      repotArray.push(addDays(date, 0));
+    }
+    // schedule notification based on frequency
+    switch (repFreq) {
+      case 0: {
+        const repotID = await Notifications.scheduleNotificationAsync({
+          content: {
+            title: 'Time to repot!',
+            sound: 'default',
+            body: `Your ${plant_name ? plant_name : 'plant'} needs repotting`,
+          },
+          trigger: {
+            date: date,
+          },
+        });
 
-    //TODO initialize Notification
-  }
+        // update backend with repot notification array
+        dispatch(updateRepotNotif(repotArray, repFreq, date, repotID, plant_id));
+        onExit();
+        return;
+      }
+      case 1: {
+        const repotID = await Notifications.scheduleNotificationAsync({
+          content: {
+            title: 'Time to repot!',
+            sound: 'default',
+            body: `Your ${plant_name ? plant_name : 'plant'} needs repotting`,
+          },
+          trigger: {
+            hour: selectedTime.getHours(),
+            minute: selectedTime.getMinutes(),
+          },
+        });
 
-  function clearNotifHistory() {
-    dispatch(updateRepotNotifHistory([], 0, plant_id));
-  }
+        dispatch(updateRepotNotif(repotArray, repFreq, date, repotID, plant_id));
+        onExit();
+        return;
+      }
+      case 7: {
+        const repotID = await Notifications.scheduleNotificationAsync({
+          content: {
+            title: 'Time to repot!',
+            sound: 'default',
+            body: `Your ${plant_name ? plant_name : 'plant'} needs repotting`,
+          },
+          trigger: {
+            weekday: moment().day(),
+          },
+        });
+
+        dispatch(updateRepotNotif(repotArray, repFreq, date, repotID, plant_id));
+        onExit();
+        return;
+      }
+      default: {
+        onExit();
+      }
+    }
+  };
+
+  const clearNotif = async () => {
+    if (repot_notif_id) {
+      await Notifications.cancelScheduledNotificationAsync(repot_notif_id);
+    }
+
+    dispatch(updateRepotNotif([], 0, null, null, plant_id));
+  };
+
+  const onSubmitSave = async () => {
+    await clearNotif();
+
+    if (!receive_repot_notif) {
+      Alert.alert('Wait!', 'Please turn on repot notifications for this reminder to go through', [
+        {text: 'OK', onPress: onExit},
+      ]);
+    } else {
+      await pushNotif();
+    }
+  };
+
+  const onSubmitClear = async () => {
+    await clearNotif();
+    onExit();
+  };
 
   return (
     <Modal animationType="slide" transparent={true} visible={displayModal}>
@@ -83,6 +221,16 @@ export default function SetRepotReminderModal(props: Props) {
               textDisabledColor: '#979797',
             }}
           />
+          <View style={styles.textContainer}>
+            <Text style={styles.reminderText}>Time:</Text>
+            <DateTimePicker
+              value={selectedTime}
+              mode="time"
+              display="default"
+              style={{width: windowWidth * 0.24}}
+              onChange={onTimeChange}
+            />
+          </View>
           <View style={styles.frequencyContainer}>
             <Text style={styles.frequencyText}>Frequency:</Text>
             <Button
@@ -110,10 +258,7 @@ export default function SetRepotReminderModal(props: Props) {
           <Button
             mode="contained"
             color={Colors.green400}
-            onPress={() => {
-              pushNotifHistory();
-              onExit();
-            }}
+            onPress={onSubmitSave}
             style={styles.roundToggle}
           >
             <Text style={{color: Colors.white}}>Save</Text>
@@ -121,10 +266,7 @@ export default function SetRepotReminderModal(props: Props) {
           <Button
             mode="contained"
             color={Colors.red300}
-            onPress={() => {
-              clearNotifHistory();
-              onExit();
-            }}
+            onPress={onSubmitClear}
             style={styles.roundToggle}
           >
             <Text style={{color: Colors.white}}>Clear Reminder</Text>
@@ -158,6 +300,19 @@ const styles = StyleSheet.create({
   reminderTitle: {
     fontSize: 22,
     alignSelf: 'center',
+  },
+  reminderText: {
+    fontSize: 18,
+  },
+  textContainer: {
+    marginTop: 5,
+    marginBottom: 5,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignSelf: 'flex-start',
+    alignItems: 'center',
+    left: windowWidth * 0.11,
+    width: windowWidth * 0.6,
   },
   frequencyText: {
     fontSize: 18,

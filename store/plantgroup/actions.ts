@@ -111,9 +111,9 @@ export const createPlant = (
           photo: imageURI,
           nickname: nickname,
           history: [],
-          water_frequency: '0',
-          repot_frequency: '0',
-          fertilize_frequency: '0',
+          water_frequency: 0,
+          repot_frequency: 0,
+          fertilize_frequency: 0,
           notes: notes,
           user: `${API_ROOT}/api/users/${userID}/`,
         },
@@ -190,9 +190,11 @@ export const updateTaskHistory = (history: string[], plantID: number) => {
   };
 };
 
-export const updateWaterNotifHistory = (
+export const updateWaterNotif = (
   waterHistory: string[],
   frequency: number,
+  notifDate: Date,
+  stringID: string,
   plantID: number
 ) => {
   return {
@@ -208,20 +210,24 @@ export const updateWaterNotifHistory = (
         data: {
           water_history: waterHistory,
           water_frequency: frequency,
+          water_next_notif: notifDate,
+          water_notif_id: stringID,
         },
       },
       options: {
         onSuccess({dispatch}) {
-          dispatch(setWaterNotif(waterHistory, frequency));
+          dispatch(setWaterNotif(waterHistory, frequency, notifDate, stringID));
         },
       },
     },
   };
 };
 
-export const updateRepotNotifHistory = (
+export const updateRepotNotif = (
   repotHistory: string[],
   frequency: number,
+  notifDate: Date,
+  stringID: string,
   plantID: number
 ) => {
   return {
@@ -237,20 +243,24 @@ export const updateRepotNotifHistory = (
         data: {
           repot_history: repotHistory,
           repot_frequency: frequency,
+          repot_next_notif: notifDate,
+          repot_notif_id: stringID,
         },
       },
       options: {
         onSuccess({dispatch}) {
-          dispatch(setRepotNotif(repotHistory, frequency));
+          dispatch(setRepotNotif(repotHistory, frequency, notifDate, stringID));
         },
       },
     },
   };
 };
 
-export const updateFertilizeNotifHistory = (
+export const updateFertilizeNotif = (
   fertilizeHistory: string[],
   frequency: number,
+  notifDate: Date,
+  stringID: string,
   plantID: number
 ) => {
   return {
@@ -266,11 +276,13 @@ export const updateFertilizeNotifHistory = (
         data: {
           fertilize_history: fertilizeHistory,
           fertilize_frequency: frequency,
+          fertilize_next_notif: notifDate,
+          fertilize_notif_id: stringID,
         },
       },
       options: {
         onSuccess({dispatch}) {
-          dispatch(setWaterNotif(fertilizeHistory, frequency));
+          dispatch(setFertilizeNotif(fertilizeHistory, frequency, notifDate, stringID));
         },
       },
     },
@@ -305,32 +317,53 @@ export const setEditedEntry = (editedEntry: boolean) => {
   };
 };
 
-export const setWaterNotif = (waterArray: string[], frequency: number) => {
+export const setWaterNotif = (
+  waterArray: string[],
+  frequency: number,
+  notifDate: Date,
+  stringID: string
+) => {
   return {
     type: SET_WATER_NOTIF,
     payload: {
       waterArray,
       frequency,
+      notifDate,
+      stringID,
     },
   };
 };
 
-export const setFertilizeNotif = (fertilizeArray: string[], frequency: number) => {
+export const setFertilizeNotif = (
+  fertilizeArray: string[],
+  frequency: number,
+  notifDate: Date,
+  stringID: string
+) => {
   return {
     type: SET_FERTILIZE_NOTIF,
     payload: {
       fertilizeArray,
       frequency,
+      notifDate,
+      stringID,
     },
   };
 };
 
-export const setRepotNotif = (repotArray: string[], frequency: number) => {
+export const setRepotNotif = (
+  repotArray: string[],
+  frequency: number,
+  notifDate: Date,
+  stringID: string
+) => {
   return {
     type: SET_REPOT_NOTIF,
     payload: {
       repotArray,
       frequency,
+      notifDate,
+      stringID,
     },
   };
 };

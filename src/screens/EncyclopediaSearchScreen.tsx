@@ -84,7 +84,6 @@ export default function EncyclopediaSearchScreen(props: Props) {
                     activeOpacity={0.6}
                     underlayColor={Colors.grey100}
                     onPress={() => {
-                      console.log(item.url.split('/')[6]);
                       navigation.navigate('EncyclopediaProfile', item);
                     }}
                   >

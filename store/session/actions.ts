@@ -9,12 +9,10 @@ import {
   EDIT_USER,
   EDIT_USER_SUCCESS,
   EDIT_USER_FAIL,
-  EDIT_NOTIF_TIME,
-  EDIT_NOTIF_TIME_SUCCESS,
-  EDIT_NOTIF_TIME_FAIL,
-  EDIT_FERTILIZING_NOTIF,
-  EDIT_REPOT_NOTIF,
-  EDIT_WATER_NOTIF,
+  EDIT_NOTIF,
+  EDIT_NOTIF_SUCCESS,
+  EDIT_NOTIF_FAIL,
+  
 } from './types';
 
 import {API_ROOT, BASIC_TOKEN} from '../../src/constants/index';
@@ -28,7 +26,7 @@ export const loginUser = (accessToken: string) => {
       request: {
         url: `${API_ROOT}/api/users/login/`,
         headers: {
-          "Authorization": `Basic ${BASIC_TOKEN}`
+          Authorization: `Basic ${BASIC_TOKEN}`,
         },
         method: 'POST',
         data: {
@@ -66,7 +64,7 @@ export const createUser = (idToken: string, accessToken: string) => {
       request: {
         url: `${API_ROOT}/api/users/`,
         headers: {
-          "Authorization": `Basic ${BASIC_TOKEN}`
+          Authorization: `Basic ${BASIC_TOKEN}`,
         },
         method: 'POST',
         data: {
@@ -87,8 +85,6 @@ export const createUser = (idToken: string, accessToken: string) => {
               e.response.data.error != null &&
               e.response.data.error === 'user already exists in user profile table'
             ) {
-              Alert.alert('Error: ' + e.response.data.error);
-            } else {
               dispatch(loginUser(accessToken));
             }
           }
@@ -111,7 +107,7 @@ export const editUserProfile = (
       request: {
         url: `${API_ROOT}/api/users/${userID}/`,
         headers: {
-          "Authorization": `Basic ${BASIC_TOKEN}`
+          Authorization: `Basic ${BASIC_TOKEN}`,
         },
         method: 'PATCH',
         data: {
@@ -129,79 +125,26 @@ export const editUserProfile = (
   };
 };
 
-export const editNotifTime = (time: string, userID: number) => {
+export const editNotif = (waterVal: boolean, repotVal: boolean, fertilizeVal: boolean, userID: number) => {
   return {
-    type: [EDIT_NOTIF_TIME, EDIT_NOTIF_TIME_SUCCESS, EDIT_NOTIF_TIME_FAIL],
+    type: [EDIT_NOTIF, EDIT_NOTIF_SUCCESS, EDIT_NOTIF_FAIL],
     payload: {
       client: 'default',
       request: {
         url: `${API_ROOT}/api/users/${userID}/`,
         headers: {
-          "Authorization": `Basic ${BASIC_TOKEN}`
+          Authorization: `Basic ${BASIC_TOKEN}`,
         },
         method: 'PATCH',
         data: {
-          notif_time: time,
+          receive_water_notif: waterVal,
+          receive_repot_notif: repotVal,
+          receive_fertilizing_notif: fertilizeVal,
         },
       },
       options: {
-        onSuccess: ({dispatch}) => dispatch(setNotifTime(time)),
-      },
-    },
-  };
-};
-
-export const editWaterNotif = (val: boolean, userID: number) => {
-  return {
-    type: EDIT_WATER_NOTIF,
-    payload: {
-      client: 'default',
-      request: {
-        url: `${API_ROOT}/api/users/${userID}/`,
-        headers: {
-          "Authorization": `Basic ${BASIC_TOKEN}`
-        },
-        method: 'PATCH',
-        data: {
-          receive_water_notif: val,
-        },
-      },
-    },
-  };
-};
-
-export const editRepotNotif = (val: boolean, userID: number) => {
-  return {
-    type: EDIT_REPOT_NOTIF,
-    payload: {
-      client: 'default',
-      request: {
-        url: `${API_ROOT}/api/users/${userID}/`,
-        headers: {
-          "Authorization": `Basic ${BASIC_TOKEN}`
-        },
-        method: 'PATCH',
-        data: {
-          receive_repot_notif: val,
-        },
-      },
-    },
-  };
-};
-
-export const editFertilizingNotif = (val: boolean, userID: number) => {
-  return {
-    type: EDIT_FERTILIZING_NOTIF,
-    payload: {
-      client: 'default',
-      request: {
-        url: `${API_ROOT}/api/users/${userID}/`,
-        headers: {
-          "Authorization": `Basic ${BASIC_TOKEN}`
-        },
-        method: 'PATCH',
-        data: {
-          receive_fertilizing_notif: val,
+        onSuccess: ({dispatch}) => {
+          dispatch(setNotif(waterVal, repotVal, fertilizeVal));
         },
       },
     },
@@ -219,9 +162,14 @@ export const setUserProfile = (username: string, zone: string, imageURI: string)
   };
 };
 
-export const setNotifTime = (time: string) => {
+export const setNotif = ( receive_water_notif: boolean,
+  receive_repot_notif: boolean, receive_fertilizing_notif: boolean) => {
   return {
-    type: EDIT_NOTIF_TIME_SUCCESS,
-    time,
+    type: EDIT_NOTIF_SUCCESS,
+    payload: {
+      receive_water_notif,
+      receive_repot_notif,
+      receive_fertilizing_notif
+    }
   };
 };

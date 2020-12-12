@@ -38,6 +38,9 @@ const initialState: PlantGroupState = {
   water_next_notif: null,
   repot_next_notif: null,
   fertilize_next_notif: null,
+  water_notif_id: null,
+  repot_notif_id: null, 
+  fertilize_notif_id: null, 
   notes: '',
   encyclopedia: null,
   user: null,
@@ -151,17 +154,25 @@ export function plantgroupReducer(
       return {
         ...state,
         water_history: action.payload.waterArray,
+        water_frequency: action.payload.frequency,
+        water_next_notif: action.payload.notifDate,
+        water_notif_id: action.payload.stringID
       };
     case SET_REPOT_NOTIF:
       return {
         ...state,
         repot_history: action.payload.repotArray,
         repot_frequency: action.payload.frequency,
+        repot_next_notif: action.payload.notifDate,
+        repot_notif_id: action.payload.stringID
       };
     case SET_FERTILIZE_NOTIF:
       return {
         ...state,
         fertilize_history: action.payload.fertilizeArray,
+        fertilize_frequency: action.payload.frequency,
+        fertilize_next_notif: action.payload.notifDate,
+        fertilize_notif_id: action.payload.stringID
       };
     case DELETE_PLANT_SUCCESS:
       return {

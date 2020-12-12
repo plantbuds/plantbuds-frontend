@@ -1,6 +1,10 @@
 import AsyncStorage from '@react-native-community/async-storage';
+import {Value} from 'react-native-reanimated';
 
 const EXPOTOKEN = '@EXPOTOKEN';
+const WATERNOTIFID = '@WATERNOTIFID';
+const REPOTNOTIFID = '@REPOTNOTIFID';
+const FERTILIZENOTIFID = '@FERTILIZENOTIFID';
 
 export async function storeExpoToken(data) {
   try {

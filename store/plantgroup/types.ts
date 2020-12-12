@@ -20,6 +20,9 @@ export interface PlantGroupState {
   fertilize_next_notif: string;
   repot_next_notif: string;
   notes: string;
+  water_notif_id: string; 
+  repot_notif_id: string; 
+  fertilize_notif_id: string; 
   encyclopedia: string;
   user: string;
 }
@@ -50,7 +53,9 @@ export const SET_EDITED_ENTRY = 'SET_EDITED_ENTRY';
 export const UPDATE_TASK_HISTORY = 'UPDATE_TASK_HISTORY';
 export const UPDATE_TASK_HISTORY_SUCCESS = 'UPDATE_TASK_HISTORY_SUCCESS';
 export const UPDATE_TASK_HISTORY_FAIL = 'UPDATE_TASK_HISTORY_FAIL';
-export const SEND_WATER_NOTIF = 'SEND_WATER_NOTIF';
+export const EDIT_WATER_NOTIF = 'EDIT_WATER_NOTIF';
+export const EDIT_REPOT_NOTIF = 'EDIT_REPOT_NOTIF';
+export const EDIT_FERTILIZING_NOTIF = 'EDIT_FERTILIZING_NOTIF';
 export const UPDATE_WATER_NOTIF = 'UPDATE_WATER_NOTIF';
 export const UPDATE_WATER_NOTIF_SUCCESS = 'UPDATE_WATER_NOTIF_SUCCESS';
 export const UPDATE_WATER_NOTIF_FAIL = 'UPDATE_WATER_NOTIF_FAIL';

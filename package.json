@@ -24,6 +24,7 @@
     "expo-image-picker": "^9.1.1",
     "expo-notifications": "^0.7.2",
     "expo-permissions": "^9.3.0",
+    "moment": "^2.29.1",
     "prettier": "^1.19.1",
     "react": "16.13.1",
     "react-dom": "16.13.1",

@@ -19,24 +19,10 @@ export const getMatchingEntries = (searchterm: string) => {
         },
         method: 'GET',
       },
-      options: {
-        onError({getState, dispatch, error}) {
-          try {
-            if (error) {
-              throw error;
-            }
-          } catch (e) {
-            if (e.response.data.msg != null) {
-              console.log('Error: ' + e.response.data.msg);
-            }
-          }
-        },
-      },
     },
   };
 };
 export const setUpdate = (update: boolean) => {
-  console.log('Call setupdate: ' + update);
   return {
     type: SET_UPDATE_SUCCESS,
     updatedList: update,

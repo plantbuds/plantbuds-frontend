@@ -15,8 +15,10 @@ interface Props {
 }
 
 export default function SetFertilizeFreqModal(props: Props) {
-  const {displayModal, onExit, fertFreq, setFertFreq, setShowModal} = props;
-  const fertilize_frequency = useSelector((state: RootState) => state.plantgroup.fertilize_frequency);
+  const {displayModal, onExit, setFertFreq, setShowModal} = props;
+  const fertilize_frequency = useSelector(
+    (state: RootState) => state.plantgroup.fertilize_frequency
+  );
   const [modalText, setModalText] = useState(fertilize_frequency);
   return (
     <Modal animationType="slide" transparent={true} visible={displayModal}>
@@ -40,16 +42,8 @@ export default function SetFertilizeFreqModal(props: Props) {
               onValueChange={(itemValue: number) => setModalText(itemValue)}
             >
               <Picker.Item label="Only once" value={0} />
-              <Picker.Item label="1 Day" value={1} />
-              <Picker.Item label="2 Days" value={2} />
-              <Picker.Item label="3 Days" value={3} />
-              <Picker.Item label="4 Days" value={4} />
-              <Picker.Item label="5 Days" value={5} />
-              <Picker.Item label="6 Days" value={6} />
-              <Picker.Item label="7 Days" value={7} />
-              <Picker.Item label="8 Days" value={8} />
-              <Picker.Item label="9 Days" value={9} />
-              <Picker.Item label="10 Days" value={10} />
+              <Picker.Item label="Daily" value={1} />
+              <Picker.Item label="Weekly" value={7} />
             </Picker>
           </View>
         </View>

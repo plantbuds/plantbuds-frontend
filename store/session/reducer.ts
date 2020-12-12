@@ -4,8 +4,8 @@ import {
   LOGOUT,
   LOGIN_SUCCESS,
   LOGIN_FAIL,
-  EDIT_NOTIF_TIME_SUCCESS,
   EDIT_USER_SUCCESS,
+  EDIT_NOTIF_SUCCESS,
 } from './types';
 
 const initialState: SessionState = {
@@ -15,10 +15,9 @@ const initialState: SessionState = {
   username: null,
   email: null,
   USDA_zone: null,
-  receive_water_notif: null,
-  receive_repot_notif: null,
-  receive_fertilizing_notif: null,
-  notif_time: null,
+  receive_water_notif: false,
+  receive_repot_notif: false,
+  receive_fertilizing_notif: false,
 };
 
 export function sessionReducer(state = initialState, action: SessionActionTypes): SessionState {
@@ -35,7 +34,6 @@ export function sessionReducer(state = initialState, action: SessionActionTypes)
         receive_water_notif: action.payload.data.receive_water_notif,
         receive_repot_notif: action.payload.data.receive_water_notif,
         receive_fertilizing_notif: action.payload.data.receive_fertilizing_notif,
-        notif_time: action.payload.data.notif_time,
       };
     case LOGIN_FAIL:
       return {
@@ -51,10 +49,9 @@ export function sessionReducer(state = initialState, action: SessionActionTypes)
         USDA_zone: null,
         profileURI: null,
         email: null,
-        notif_time: null,
-        receive_fertilizing_notif: null,
-        receive_water_notif: null,
-        receive_repot_notif: null,
+        receive_fertilizing_notif: false,
+        receive_water_notif: false,
+        receive_repot_notif: false,
       };
     case EDIT_USER_SUCCESS:
       return {
@@ -63,11 +60,13 @@ export function sessionReducer(state = initialState, action: SessionActionTypes)
         USDA_zone: action.payload.zone,
         profileURI: action.payload.imageURI,
       };
-    case EDIT_NOTIF_TIME_SUCCESS:
+    case EDIT_NOTIF_SUCCESS: 
       return {
-        ...state,
-        notif_time: action.time,
-      };
+        ...state, 
+        receive_water_notif: action.payload.receive_water_notif,
+        receive_repot_notif: action.payload.receive_repot_notif,
+        receive_fertilizing_notif: action.payload.receive_fertilizing_notif
+      }
     default:
       return state;
   }

@@ -15,7 +15,7 @@ interface Props {
 }
 
 export default function SetRepotFreqModal(props: Props) {
-  const {displayModal, onExit, repFreq, setRepFreq, setShowModal} = props;
+  const {displayModal, onExit, setRepFreq, setShowModal} = props;
   const repot_frequency = useSelector((state: RootState) => state.plantgroup.water_frequency);
   const [modalText, setModalText] = useState(repot_frequency);
 
@@ -40,17 +40,9 @@ export default function SetRepotFreqModal(props: Props) {
               style={{height: 40, width: 150, bottom: 50}}
               onValueChange={(itemValue: number) => setModalText(itemValue)}
             >
-               <Picker.Item label="Only once" value={0} />
-              <Picker.Item label="1 Day" value={1} />
-              <Picker.Item label="2 Days" value={2} />
-              <Picker.Item label="3 Days" value={3} />
-              <Picker.Item label="4 Days" value={4} />
-              <Picker.Item label="5 Days" value={5} />
-              <Picker.Item label="6 Days" value={6} />
-              <Picker.Item label="7 Days" value={7} />
-              <Picker.Item label="8 Days" value={8} />
-              <Picker.Item label="9 Days" value={9} />
-              <Picker.Item label="10 Days" value={10} />
+              <Picker.Item label="Only once" value={0} />
+              <Picker.Item label="Daily" value={1} />
+              <Picker.Item label="Weekly" value={7} />
             </Picker>
           </View>
         </View>
