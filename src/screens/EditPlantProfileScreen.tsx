@@ -95,24 +95,32 @@ export default function EditPlantProfileScreen(props: Props) {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerBackTitle: 'Cancel',
+      headerLeft: displayDeletePlantModal ? null : undefined,
       headerRight: () => (
-        <IconButton icon="check-bold" color={Colors.lightGreen900} onPress={onSubmit} />
+        <IconButton
+          icon="check-bold"
+          color={Colors.lightGreen900}
+          onPress={onSubmit}
+          disabled={displayDeletePlantModal}
+        />
       ),
     });
-  }, [navigation, textSciName, textNickname, image, textNotes]);
+  }, [navigation, textSciName, textNickname, image, textNotes, displayDeletePlantModal]);
 
   return (
     <Portal.Host>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
-          <KeyboardAvoidingView
-            behavior="position"
-            style={{flex: 1}}
-          >
+          <KeyboardAvoidingView behavior="position" style={{flex: 1}}>
             <View style={styles.photoContainer}>
               {(image && <Image style={styles.photo} source={{uri: image}} />) ||
                 (!image && <Image style={styles.photo} source={{uri: photo}} />)}
-              <Button icon="camera" color={Colors.lightGreen300} onPress={pickImage}>
+              <Button
+                icon="camera"
+                color={Colors.lightGreen300}
+                disabled={displayDeletePlantModal ? true : false}
+                onPress={pickImage}
+              >
                 Change Photo
               </Button>
             </View>

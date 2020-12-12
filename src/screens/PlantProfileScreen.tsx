@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useRef} from 'react';
-import {StyleSheet, ScrollView, View, Image, Dimensions, Vibration} from 'react-native';
+import {StyleSheet, ScrollView, View, Image, Dimensions} from 'react-native';
 import * as Notifications from 'expo-notifications';
 import {
   Colors,
@@ -138,8 +138,6 @@ export default function PlantProfileScreen(props: Props) {
   const repot_history = useSelector((state: RootState) => state.plantgroup.repot_history);
   const fertilize_history = useSelector((state: RootState) => state.plantgroup.fertilize_history);
 
-  const receive_water_notif = useSelector((state: RootState) => state.session.receive_water_notif);
-
   const water_frequency = useSelector((state: RootState) => state.plantgroup.water_frequency);
   const water_next_notif = useSelector((state: RootState) => state.plantgroup.water_next_notif);
   const water_notif_id = useSelector((state: RootState) => state.plantgroup.water_notif_id);
@@ -240,7 +238,6 @@ export default function PlantProfileScreen(props: Props) {
     // Notification listener when app is running
     notificationListener.current = Notifications.addNotificationReceivedListener(async notif => {
       let newNotifTime = null;
-      Vibration.vibrate();
       if (notif.request.identifier === water_notif_id) {
         // get water notif array history and pop the first entry, then add a new entry
         let waterCopy = water_history;
@@ -385,7 +382,6 @@ export default function PlantProfileScreen(props: Props) {
     notificationListener.current = Notifications.addNotificationResponseReceivedListener(
       async response => {
         let newNotifTime = null;
-        Vibration.vibrate();
         if (response.notification.request.identifier === water_notif_id) {
           // get water notif array history and pop the first entry, then add a new entry
           let waterCopy = water_history;

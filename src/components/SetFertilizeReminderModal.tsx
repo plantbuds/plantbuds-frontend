@@ -40,11 +40,19 @@ export default function SetFertilizeReminderModal(props: Props) {
     fertilize_history && fertilize_history.length > 0 ? fertilize_history[0] : setStartDateString()
   );
   const [selectedTime, setSelectedTime] = useState(
-    fertilize_next_notif ? new Date(fertilize_next_notif) : new Date(moment().add(5, "minutes").format())
+    fertilize_next_notif
+      ? new Date(fertilize_next_notif)
+      : new Date(
+          moment()
+            .add(5, 'minutes')
+            .format()
+        )
   );
   const [showFertilizeModal, setShowFertilizeModal] = useState(false);
   const [fertFreq, setFertFreq] = useState(fertilize_frequency ? fertilize_frequency : 0);
   const plant_id = useSelector((state: RootState) => state.plantgroup.plant_id);
+  const plant_name = useSelector((state: RootState) => state.plantgroup.plant_name);
+
   const dispatch = useDispatch();
 
   function addDays(date: Date, days: number) {
@@ -123,7 +131,8 @@ export default function SetFertilizeReminderModal(props: Props) {
         const fertilizeID = await Notifications.scheduleNotificationAsync({
           content: {
             title: 'Time to fertilize!',
-            body: 'Your plant needs fertilizing',
+            sound: 'default',
+            body: `Your ${plant_name ? plant_name : 'plant'} needs fertilizing`,
           },
           trigger: {
             date: date,
@@ -139,7 +148,8 @@ export default function SetFertilizeReminderModal(props: Props) {
         const fertilizeID = await Notifications.scheduleNotificationAsync({
           content: {
             title: 'Time to fertilize!',
-            body: 'Your plant needs fertilizing',
+            sound: 'default',
+            body: `Your ${plant_name ? plant_name : 'plant'} needs fertilizing`,
           },
           trigger: {
             hour: selectedTime.getHours(),
@@ -155,7 +165,8 @@ export default function SetFertilizeReminderModal(props: Props) {
         const fertilizeID = await Notifications.scheduleNotificationAsync({
           content: {
             title: 'Time to fertilize!',
-            body: 'Your plant needs fertilizing',
+            sound: 'default',
+            body: `Your ${plant_name ? plant_name : 'plant'} needs fertilizing`,
           },
           trigger: {
             weekday: moment().day(),
@@ -183,7 +194,7 @@ export default function SetFertilizeReminderModal(props: Props) {
 
   const onSubmitSave = async () => {
     await clearNotif();
-    console.log(" receive notif in on submit: " + receive_fertilize_notif)
+    console.log(' receive notif in on submit: ' + receive_fertilize_notif);
     if (!receive_fertilize_notif) {
       Alert.alert(
         'Wait!',
@@ -191,8 +202,7 @@ export default function SetFertilizeReminderModal(props: Props) {
         [{text: 'OK', onPress: onExit}]
       );
     } else {
-      
-      pushNotif();
+      await pushNotif();
     }
   };
 

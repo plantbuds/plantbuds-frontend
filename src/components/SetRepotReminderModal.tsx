@@ -39,6 +39,7 @@ export default function SetRepotReminderModal(props: Props) {
   const [showRepotModal, setShowRepotModal] = useState(false);
   const [repFreq, setRepFreq] = useState(repot_frequency ? repot_frequency : 0);
   const plant_id = useSelector((state: RootState) => state.plantgroup.plant_id);
+  const plant_name = useSelector((state: RootState) => state.plantgroup.plant_name);
   const dispatch = useDispatch();
 
   function addDays(date: Date, days: number) {
@@ -117,7 +118,8 @@ export default function SetRepotReminderModal(props: Props) {
         const repotID = await Notifications.scheduleNotificationAsync({
           content: {
             title: 'Time to repot!',
-            body: 'Your plant needs repotting',
+            sound:  'default',
+            body: `Your ${plant_name ? plant_name : "plant"} needs repotting`,
           },
           trigger: {
             date: date,
@@ -134,7 +136,8 @@ export default function SetRepotReminderModal(props: Props) {
         const repotID = await Notifications.scheduleNotificationAsync({
           content: {
             title: 'Time to repot!',
-            body: 'Your plant needs repotting',
+            sound:  'default',
+            body: `Your ${plant_name ? plant_name : "plant"} needs repotting`,
           },
           trigger: {
             hour: selectedTime.getHours(),
@@ -151,7 +154,8 @@ export default function SetRepotReminderModal(props: Props) {
         const repotID = await Notifications.scheduleNotificationAsync({
           content: {
             title: 'Time to repot!',
-            body: 'Your plant needs repotting',
+            sound:  'default',
+            body: `Your ${plant_name ? plant_name : "plant"} needs repotting`,
           },
           trigger: {
             weekday: moment().day(),
@@ -186,7 +190,7 @@ export default function SetRepotReminderModal(props: Props) {
       ]);
     } else {
       console.log('repFreq value' + repFreq.toString());
-      pushNotif();
+      await pushNotif();
     }
   };
 

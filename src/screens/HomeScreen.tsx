@@ -19,13 +19,12 @@ import {
   FlatList,
   View,
   Dimensions,
-  Vibration,
   TouchableHighlight,
   TouchableWithoutFeedback,
   Keyboard,
   Image,
   KeyboardAvoidingView,
-  Alert,
+  Vibration,
 } from 'react-native';
 import CreatePlantModal from '../components/CreatePlantModal';
 import {RootState} from '../../store/store';
@@ -35,14 +34,6 @@ interface Props {
   navigation: any;
 }
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: true,
-    shouldSetBadge: false,
-  }),
-});
-
 export default function HomeScreen(props: Props) {
   const {navigation} = props;
   const notificationListener = useRef(null);
@@ -51,11 +42,31 @@ export default function HomeScreen(props: Props) {
   const [searchQuery, setSearchQuery] = useState('');
   const [submit, setSubmit] = useState(false);
   const [displayCreatePlantModal, setDisplayCreatePlantModal] = useState(false);
+  const receive_water_notif = useSelector((state: RootState) => state.session.receive_water_notif);
+  const receive_repot_notif = useSelector((state: RootState) => state.session.receive_repot_notif);
+  const receive_fertilize_notif = useSelector(
+    (state: RootState) => state.session.receive_fertilizing_notif
+  );
   const username = useSelector((state: RootState) => state.session.username);
   const plantSearchError = useSelector((state: RootState) => state.plantgroup.plantSearchError);
   const plants = useSelector((state: RootState) => state.plantgroup.plants);
 
   const dispatch = useDispatch();
+
+  Notifications.setNotificationHandler({
+    handleNotification: async notif => {
+      if ('Time to water!' === notif.request.content.title && receive_water_notif) {
+        return {shouldShowAlert: true, shouldPlaySound: true, shouldSetBadge: false};
+      } else if ('Time to repot!' === notif.request.content.title && receive_repot_notif) {
+        return {shouldShowAlert: true, shouldPlaySound: true, shouldSetBadge: false};
+      } else if ('Time to fertilize!' === notif.request.content.title && receive_fertilize_notif) {
+        return {shouldShowAlert: true, shouldPlaySound: true, shouldSetBadge: false};
+      } else {
+        return {shouldShowAlert: false, shouldPlaySound: false, shouldSetBadge: false};
+      }
+    },
+  });
+
   const onChangeSearch = (query: string) => {
     if (query.length == 0) {
       setSubmit(false);
@@ -106,7 +117,9 @@ export default function HomeScreen(props: Props) {
               value={searchQuery}
             />
           )}
-          {plantSearchError && plantSearchError.length > 0 ? <Text style={styles.searchErrorText}>{plantSearchError}</Text> : null}
+          {plantSearchError && plantSearchError.length > 0 ? (
+            <Text style={styles.searchErrorText}>{plantSearchError}</Text>
+          ) : null}
           <FlatList
             numColumns={2}
             columnWrapperStyle={styles.displayWrapper}
@@ -216,5 +229,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingVertical: 10,
     fontSize: 14,
-  }
+  },
 });

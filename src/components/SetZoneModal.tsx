@@ -3,6 +3,8 @@ import {View, StyleSheet, Text, Modal, Dimensions} from 'react-native';
 import {Button, Colors} from 'react-native-paper';
 import {useState} from 'react';
 import {Picker} from '@react-native-picker/picker';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../store/store';
 
 interface Props {
   displayModal: boolean;
@@ -15,13 +17,19 @@ interface Props {
 export default function SetZoneModal(props: Props) {
   const {displayModal, onExit, textZone, setTextZone, setShowModal} = props;
   const [modalZone, setModalZone] = useState(textZone);
-
+  const USDAZone = useSelector((state: RootState) => state.session.USDA_zone);
+  const onClose = () => {
+    setModalZone(USDAZone);
+    onExit();
+  };
   return (
     <Modal animationType="slide" transparent={true} visible={displayModal}>
       <View style={styles.bottomView}>
         <View style={styles.modalView}>
           <View style={styles.header}>
-            <Button color={Colors.grey400} onPress={onExit}>Cancel</Button>
+            <Button color={Colors.grey400} onPress={onClose}>
+              Cancel
+            </Button>
             <Button
               color={Colors.lightGreen900}
               onPress={() => {
@@ -30,7 +38,7 @@ export default function SetZoneModal(props: Props) {
               }}
             >
               Done
-          </Button>
+            </Button>
           </View>
 
           <View style={{alignItems: 'center', justifyContent: 'flex-start'}}>
@@ -54,7 +62,6 @@ export default function SetZoneModal(props: Props) {
               <Picker.Item label="USDA Zone 13" value="13" />
             </Picker>
           </View>
-
         </View>
       </View>
     </Modal>
@@ -87,7 +94,7 @@ const styles = StyleSheet.create({
     //temporary
     borderWidth: 2,
     borderStyle: 'solid',
-    borderColor: Colors.grey300
+    borderColor: Colors.grey300,
   },
 
   doneButton: {

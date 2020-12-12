@@ -34,11 +34,18 @@ export default function SetWaterReminderModal(props: Props) {
     water_history && water_history.length > 0 ? water_history[0] : setStartDateString()
   );
   const [selectedTime, setSelectedTime] = useState(
-    water_next_notif ? new Date(water_next_notif) : new Date(moment().add(5, "minutes").format())
+    water_next_notif
+      ? new Date(water_next_notif)
+      : new Date(
+          moment()
+            .add(5, 'minutes')
+            .format()
+        )
   );
   const [showWaterModal, setShowWaterModal] = useState(false);
   const [watFreq, setWatFreq] = useState(water_frequency ? water_frequency : 0);
   const plant_id = useSelector((state: RootState) => state.plantgroup.plant_id);
+  const plant_name = useSelector((state: RootState) => state.plantgroup.plant_name);
   const dispatch = useDispatch();
 
   function addDays(date: Date, days: number) {
@@ -117,7 +124,8 @@ export default function SetWaterReminderModal(props: Props) {
         const waterID = await Notifications.scheduleNotificationAsync({
           content: {
             title: 'Time to water!',
-            body: 'Your plant needs watering',
+            sound:  'default',
+            body: `Your ${plant_name ? plant_name : 'plant'} needs watering`,
           },
           trigger: {
             date: date,
@@ -134,7 +142,8 @@ export default function SetWaterReminderModal(props: Props) {
         const waterID = await Notifications.scheduleNotificationAsync({
           content: {
             title: 'Time to water!',
-            body: 'Your plant needs watering',
+            sound:  'default',
+            body: `Your ${plant_name ? plant_name : 'plant'} needs watering`,
           },
           trigger: {
             hour: selectedTime.getHours(),
@@ -151,7 +160,8 @@ export default function SetWaterReminderModal(props: Props) {
         const waterID = await Notifications.scheduleNotificationAsync({
           content: {
             title: 'Time to water!',
-            body: 'Your plant needs watering',
+            sound:  'default',
+            body: `Your ${plant_name ? plant_name : 'plant'} needs watering`,
           },
           trigger: {
             weekday: moment().day(),
@@ -186,7 +196,7 @@ export default function SetWaterReminderModal(props: Props) {
       ]);
     } else {
       console.log('watFreq value' + watFreq.toString());
-      pushNotif();
+      await pushNotif();
     }
   };
 
