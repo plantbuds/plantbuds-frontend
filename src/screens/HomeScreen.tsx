@@ -6,9 +6,6 @@ import {
   getAllPlants,
   getIndividualPlant,
   getMatchingPlants,
-  setEditedPlant,
-  setCreatedPlant,
-  setDeletedPlant,
 } from '../../store/plantgroup/actions';
 
 import {Colors, FAB, Headline, Text, Searchbar} from 'react-native-paper';
@@ -50,7 +47,8 @@ export default function HomeScreen(props: Props) {
   const username = useSelector((state: RootState) => state.session.username);
   const plantSearchError = useSelector((state: RootState) => state.plantgroup.plantSearchError);
   const plants = useSelector((state: RootState) => state.plantgroup.plants);
-
+  const [displayFAB, setDisplayFAB] = useState(true);
+  const [disableFAB, setDisableFAB] = useState(false);
   const dispatch = useDispatch();
 
   Notifications.setNotificationHandler({
@@ -90,7 +88,28 @@ export default function HomeScreen(props: Props) {
 
       dispatch(getAllPlants(username));
     })();
+    
+    Keyboard.addListener('keyboardDidShow', _keyboardDidShow);
+    Keyboard.addListener('keyboardDidHide', _keyboardDidHide);
+
+    // cleanup function
+    return () => {
+      Keyboard.removeListener('keyboardDidShow', _keyboardDidShow);
+      Keyboard.removeListener('keyboardDidHide', _keyboardDidHide);
+    };
   }, []);
+
+  const _keyboardDidShow = () => {
+    console.log("keyboard showing")
+    setDisplayFAB(false); 
+    setDisableFAB(true);
+  };
+
+  const _keyboardDidHide = () => {
+    console.log("keyboard not showing")
+    setDisplayFAB(true); 
+    setDisableFAB(false);
+  };
 
   useEffect(() => {
     if (!submit) {
@@ -161,6 +180,8 @@ export default function HomeScreen(props: Props) {
             onPress={() => {
               setDisplayCreatePlantModal(true);
             }}
+            disabled={disableFAB}
+            visible={displayFAB}
           />
           <CreatePlantModal
             setDisplayCreatePlantModal={setDisplayCreatePlantModal}
