@@ -2,27 +2,41 @@ PlantBuds
 --
 
 # Quickstart Instruction
-## Installation 
-```
-$ npm install
-```
 
-## Running the Application
-```
-$ npm start
-```
-Expo should then open a tab in your default browser as shown below: 
+## Installation
+For installation, just download the Expo Client App on your phone. It should look something like this in the iOS App Store: 
+<img src="https://miro.medium.com/max/2400/1*0hyTqJ_7z9rvXE9qFdcAEg.png" width="400" height="250"/>
 
-![Expo localhost](https://miro.medium.com/max/4284/1*ICbUGO11EmaHoGyXKNINCg.png)
+After you have installed the Expo app, please use the provided account to login to Expo before scanning the QR code to access the app: 
 
-Make sure to switch the connection to "Tunnel" before you scan the QR Code. Expo should then open on your device once you scan the Tunnel QR Code :)
+*Note this account is strictly only for the CSE 110 TA's to access and test our app.* 
 
-## Seeing your changes in code in Expo 
-Sometimes if you save/update a file (eg: Updating styling of a button), it does not show automatically in Expo. In that case, shake your phone until the Dev Menu pictured below pops up from the bottom of the screen: 
+Username: `plantbudstest@gmail.com`  
+Password: `YoureWelcomeExclamation110`  
 
-![Expo Dev Menu](https://docs.expo.io/static/images/developer-menu.png)
+## Running the PlantBuds App
 
-Pressing "Refresh" will then refresh the app to reflect the changes you made in code. 
+Once you have installed Expo, please use your camera app to scan the QR code below using your iPhone X (or above):
+<img src="https://i.imgur.com/QaeLoMe.png" width="300" height="300"/>
 
-## Inspecting elements in Expo 
-In the Dev Menu pressing on "Show Element Inspector" will allow you to inspect your elements much like how you would inspect elements of a webpage. 
+You should see a banner that looks like this on your phone screen : 
+<img src="https://i.imgur.com/snMpuD7.jpeg" width="200" height="400"/>
+
+Click on the banner to be taken to the landing page of the application after Expo is done building and downloading the JavaScript bundle.
+
+You should then see a screen that should look like the one below afterwards: 
+<img src="https://i.imgur.com/DunqwMN.jpeg"  width="200" height="400"/>
+
+And you're ready to test! 
+
+## Troubleshooting
+1. *Sometimes theres a `Downloaded with 100%` bar below the screen that doesn't go away on the Plantbuds Landing screen. Is this a bug?*<br/>
+No, this is just Expo's Tunnel downloading the dependencies onto your phone. If the bar does not go away, just shake your phone and this menu should appear: <br/>
+<img src="https://docs.expo.io/static/images/developer-menu.png" width="300"> <br/>
+Just press refresh and the app will reload, removing the download bar on the bottom once it is done.  <br />
+
+2.  *I noticed that when I do actions like creating a plant, it takes a while for them to complete, is this normal?* <br/>
+ This is very common and normal. The reason some actions take a long time is because the app is waiting  for a sequence of HTTP requests to be completed, which might take a while. <br />
+ 
+3. *When I turn off reminders after scheduling a reminder, the reminder still goes off when I am not on the app.*<br />
+  This is a known bug, and unfortunately we are unable to solve this issue currently. The best way to not receive reminders currently is to clear the reminder by pressing clear reminder for whatever plants you do not want to receive a specific reminder for (ie watering, repotting, fertilizing). 

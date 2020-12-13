@@ -47,6 +47,7 @@ export default function CreatePlantProfileModal(props: Props) {
   const username = useSelector((state: RootState) => state.session.username);
   const userID = useSelector((state: RootState) => state.session.userID);
   let plant_id = useSelector((state: RootState) => state.plantgroup.plant_id);
+  const createdPlant = useSelector((state: RootState) => state.plantgroup.createdPlant);
   const dispatch = useDispatch();
 
   // check if user has given permission to access image gallery from phone
@@ -74,9 +75,9 @@ export default function CreatePlantProfileModal(props: Props) {
     }
   };
 
-  function onSubmit() {
-    dispatch(setCreatedPlant(true));
-    dispatch(
+  const onSubmit = async () => {
+    await dispatch(setCreatedPlant(true));
+    await dispatch(
       createPlant(
         userID,
         image,
@@ -86,7 +87,7 @@ export default function CreatePlantProfileModal(props: Props) {
       )
     );
     clearFields();
-    dispatch(getAllPlants(username));
+    await dispatch(getAllPlants(username));
     navigation.navigate('PlantProfile');
     setDisplayCreatePlantModal(false);
   }
@@ -112,6 +113,7 @@ export default function CreatePlantProfileModal(props: Props) {
                 clearFields();
                 setDisplayCreatePlantModal(false);
               }}
+              disabled={createdPlant}
             />
             <Title style={{paddingTop: 10}}>Add a Plant</Title>
             <IconButton
@@ -119,6 +121,7 @@ export default function CreatePlantProfileModal(props: Props) {
               color={Colors.lightGreen900}
               size={30}
               onPress={onSubmit}
+              disabled={createdPlant}
             />
           </View>
           <KeyboardAvoidingView behavior="position" enabled={true}>

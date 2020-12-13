@@ -107,6 +107,8 @@ export default function SetFertilizeReminderModal(props: Props) {
             year: selectedDateObj.getFullYear(),
             hour: selectedTime.getHours(),
             minute: selectedTime.getMinutes(),
+            seconds: 0, 
+            millisecond: 0
           })
           .add(1, 'days')
           .format()
@@ -251,8 +253,7 @@ export default function SetFertilizeReminderModal(props: Props) {
               {!fertFreq || fertFreq === 0
                 ? 'Only once'
                 : fertFreq === 1
-                ? 'Every day'
-                : 'Every ' + fertFreq.toString() + ' days'}
+                ? 'Daily' : 'Weekly'}
             </Button>
             <SetFertilizeFreqModal
               displayModal={showFertilizeModal}

@@ -9,7 +9,7 @@ import {Image} from 'react-native';
 import Sidebar from '../components/Sidebar';
 import HomeScreen from '../screens/HomeScreen';
 import SettingsScreen from '../screens/SettingsScreen';
-import TestScreen from "../screens/TestScreen";
+import TestScreen from '../screens/TestScreen';
 import LandingScreen from '../screens/LandingScreen';
 import EditSettingsScreen from '../screens/EditSettingsScreen';
 import EditPlantProfileScreen from '../screens/EditPlantProfileScreen';
@@ -40,7 +40,7 @@ const HomeNavigator = () => {
         component={PlantProfileScreen}
       />
       <Home.Screen
-        options={{title: 'Edit Plant Profile'}}
+        options={{gestureEnabled: false, title: 'Edit Plant Profile'}}
         name="EditPlantProfile"
         component={EditPlantProfileScreen}
       />
