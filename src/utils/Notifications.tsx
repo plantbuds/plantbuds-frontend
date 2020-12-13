@@ -20,13 +20,10 @@ export async function registerForPushNotificationsAsync() {
 
     // Check if user has stored the expo push token already in Async Storage
     const value = await getExpoToken();
-    console.log("Async Storage's expo token value = : " + value);
 
     if (value === null) {
       // Get the token that identifies this device
       token = (await Notifications.getExpoPushTokenAsync()).data;
-      console.log(status);
-      console.log(token);
 
       // POST the token to your backend server from where you can retrieve it to send push notifications.
       storeExpoToken(token);
