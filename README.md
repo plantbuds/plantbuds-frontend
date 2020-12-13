@@ -40,3 +40,6 @@ Just press refresh and the app will reload, removing the download bar on the bot
    
 3. *When I turn off reminders after scheduling a reminder, the reminder still goes off when I am not on the app.*<br />  
   This is a known bug, and unfortunately we are unable to solve this issue currently. The best way to not receive reminders currently is to clear the reminder by pressing clear reminder for whatever plants you do not want to receive a specific reminder for (ie watering, repotting, fertilizing).  
+  
+4. *I received a `Disconnected from Metro Server` message on the bottom of my screen*<br/>
+  This just means you lost connection to the Expo server. If features on the app do not seem to work when this message appears, just shake your phone and press reload to reconnect to the Expo server, and the app will reload  and take you back to the landing screen.
