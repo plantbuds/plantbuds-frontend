@@ -89,6 +89,7 @@ export default function CreatePlantProfileModal(props: Props) {
     clearFields();
     await dispatch(getAllPlants(username));
     navigation.navigate('PlantProfile');
+    await dispatch(setCreatedPlant(false));
     setDisplayCreatePlantModal(false);
   }
 
