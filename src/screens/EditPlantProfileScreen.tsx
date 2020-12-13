@@ -14,7 +14,12 @@ import * as ImagePicker from 'expo-image-picker';
 import {useSelector, useDispatch} from 'react-redux';
 import DeletePlantModal from '../components/DeletePlantModal';
 import {RootState} from '../../store/store';
-import {setDeletedPlant, deletePlant, getAllPlants, editPlantProfile} from '../../store/plantgroup/actions';
+import {
+  setDeletedPlant,
+  deletePlant,
+  getAllPlants,
+  editPlantProfile,
+} from '../../store/plantgroup/actions';
 
 // declare types for your props here
 interface Props {
@@ -166,7 +171,10 @@ export default function EditPlantProfileScreen(props: Props) {
                 style={styles.deleteButton}
                 color={Colors.red400}
                 mode="contained"
-                onPress={() => setDisplayDeletePlantModal(true)}
+                onPress={() => {
+                  Keyboard.dismiss();
+                  setDisplayDeletePlantModal(true);
+                }}
               >
                 <Text style={{color: 'white'}}>Delete Plant</Text>
               </Button>
