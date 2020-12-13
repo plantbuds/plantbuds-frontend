@@ -14,7 +14,7 @@ import * as ImagePicker from 'expo-image-picker';
 import {useSelector, useDispatch} from 'react-redux';
 import DeletePlantModal from '../components/DeletePlantModal';
 import {RootState} from '../../store/store';
-import {deletePlant, getAllPlants, editPlantProfile} from '../../store/plantgroup/actions';
+import {setDeletedPlant, deletePlant, getAllPlants, editPlantProfile} from '../../store/plantgroup/actions';
 
 // declare types for your props here
 interface Props {
@@ -172,10 +172,12 @@ export default function EditPlantProfileScreen(props: Props) {
               </Button>
               <DeletePlantModal
                 displayModal={displayDeletePlantModal}
-                onPress={() => {
-                  dispatch(deletePlant(plantID));
-                  dispatch(getAllPlants(username));
+                onPress={async () => {
+                  await dispatch(setDeletedPlant(true));
+                  await dispatch(deletePlant(plantID));
+                  await dispatch(getAllPlants(username));
                   navigation.navigate('Home');
+                  await dispatch(setDeletedPlant(false));
                   setDisplayDeletePlantModal(false);
                 }}
                 onExit={() => setDisplayDeletePlantModal(false)}

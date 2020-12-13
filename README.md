@@ -2,27 +2,35 @@ PlantBuds
 --
 
 # Quickstart Instruction
-## Installation 
-```
-$ npm install
-```
 
-## Running the Application
-```
-$ npm start
-```
-Expo should then open a tab in your default browser as shown below: 
+## Installation
+For installation, just download the Expo Client App on your phone. It should look something like this in the iOS App Store: 
+<img src="https://miro.medium.com/max/2400/1*0hyTqJ_7z9rvXE9qFdcAEg.png" width="400" height="250"/>
 
-![Expo localhost](https://miro.medium.com/max/4284/1*ICbUGO11EmaHoGyXKNINCg.png)
+After you have installed the Expo app, please use the provided account to login to Expo: 
 
-Make sure to switch the connection to "Tunnel" before you scan the QR Code. Expo should then open on your device once you scan the Tunnel QR Code :)
+Username: `plantbudstest@gmail.com`  
+Password: `YoureWelcomeExclamation110`  
 
-## Seeing your changes in code in Expo 
-Sometimes if you save/update a file (eg: Updating styling of a button), it does not show automatically in Expo. In that case, shake your phone until the Dev Menu pictured below pops up from the bottom of the screen: 
+## Running the PlantBuds App
 
-![Expo Dev Menu](https://docs.expo.io/static/images/developer-menu.png)
+Once you have installed Expo, please use your camera app to scan the QR code below using your iPhone X (or above):
+<img src="https://i.imgur.com/QaeLoMe.png" width="300" height="300"/>
 
-Pressing "Refresh" will then refresh the app to reflect the changes you made in code. 
+You should see a banner that looks like this on your phone screen : 
+<img src="https://i.imgur.com/snMpuD7.jpeg" width="200" height="400"/>
 
-## Inspecting elements in Expo 
-In the Dev Menu pressing on "Show Element Inspector" will allow you to inspect your elements much like how you would inspect elements of a webpage. 
+Click on the banner to be taken to the landing page of the application, which should look like the one below: 
+<img src="https://i.imgur.com/DunqwMN.jpeg"  width="200" height="400"/>
+
+And you're in! 
+
+## Troubleshooting
+1. *Sometimes theres a `Downloaded with 100%` bar below the screen that doesn't go away on the Plantbuds Landing screen. Is this a bug?*
+No, this is just Expo's Tunnel downloading the dependencies onto your phone. If the bar does not go away, just shake your phone and this screen should appear: 
+
+<img src="https://docs.expo.io/static/images/developer-menu.png" width="300">
+
+Just press refresh and the app will reload, removing the download bar on the bottom once it is done. 
+
+2. *I noticed that when I do actions in quick succession, such as pressing delete a plant and then pressing on the deleted plant, the homepage shows a blank plant* 

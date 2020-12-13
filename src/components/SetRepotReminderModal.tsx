@@ -100,6 +100,8 @@ export default function SetRepotReminderModal(props: Props) {
             year: selectedDateObj.getFullYear(),
             hour: selectedTime.getHours(),
             minute: selectedTime.getMinutes(),
+            seconds: 0,
+            millisecond: 0,
           })
           .add(1, 'days')
           .format()
@@ -241,11 +243,7 @@ export default function SetRepotReminderModal(props: Props) {
               style={styles.freqButton}
               onPress={() => setShowRepotModal(true)}
             >
-              {!repFreq || repFreq === 0
-                ? 'Only once'
-                : repFreq === 1
-                ? 'Every day'
-                : 'Every ' + repFreq.toString() + ' days'}
+              {!repFreq || repFreq === 0 ? 'Only once' : repFreq === 1 ? 'Daily' : 'Weekly'}
             </Button>
             <SetRepotFreqModal
               displayModal={showRepotModal}

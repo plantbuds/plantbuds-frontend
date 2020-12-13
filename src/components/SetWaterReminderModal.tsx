@@ -100,6 +100,8 @@ export default function SetWaterReminderModal(props: Props) {
             year: selectedDateObj.getFullYear(),
             hour: selectedTime.getHours(),
             minute: selectedTime.getMinutes(),
+            seconds: 0, 
+            millisecond: 0
           })
           .add(1, 'days')
           .format()
@@ -241,7 +243,7 @@ export default function SetWaterReminderModal(props: Props) {
               style={styles.freqButton}
               onPress={() => setShowWaterModal(true)}
             >
-              {!watFreq || watFreq === 0 ? 'Only once' : watFreq === 1 ? 'Every day' : 'Every week'}
+              {!watFreq || watFreq === 0 ? 'Only once' : watFreq === 1 ? 'Daily' : 'Weekly'}
             </Button>
             <SetWaterFreqModal
               displayModal={showWaterModal}
