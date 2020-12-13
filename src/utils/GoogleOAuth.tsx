@@ -11,7 +11,6 @@ export async function signInWithGoogleAsync() {
     if (result.type === 'success') {
       return result.accessToken;
     } else {
-      console.log('cancelled google oauth');
       return {cancelled: true};
     }
   } catch (e) {
@@ -32,7 +31,6 @@ export async function signUpWithGoogleAsync() {
       tokens.push(result.accessToken);
       return tokens;
     } else {
-      console.log('cancelled google oauth');
       return {cancelled: true};
     }
   } catch (e) {
