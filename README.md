@@ -17,7 +17,7 @@ Password: `YoureWelcomeExclamation110`
 ## Running the PlantBuds App  
   
 Once you have installed Expo, please use your camera app to scan the QR code below using your iPhone X (or above):  
-<img src="https://i.imgur.com/QaeLoMe.png" width="300" height="300"/>  
+<img src="https://i.imgur.com/rxi33b9.png" width="300" height="300"/>  
   
 You should see a banner that looks like this on your phone screen :   
 <img src="https://i.imgur.com/snMpuD7.jpeg" width="200" height="400"/>  
